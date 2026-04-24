@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Update Role</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-100 p-6">
+    <div
+      class="max-w-4xl mx-auto bg-white rounded-xl shadow border border-gray-200"
+    >
+      <!-- Header -->
+      <div class="flex justify-between items-start px-6 py-5">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-800 mb-2">Update Role</h1>
+          <p class="text-sm text-gray-500">
+            Fill in the details below to create a new role.
+          </p>
+        </div>
+
+        <button class="text-gray-400 hover:text-gray-600">✕</button>
+      </div>
+
+      <div class="p-6 space-y-6">
+        <!-- Input Section -->
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              Permission Label (ex. Super Admin)
+            </label>
+            <input
+              type="text"
+              value="Super Admin"
+              class="w-full border border-gray-200 shadow-sm rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-black outline-none"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              Description
+            </label>
+            <textarea
+              rows="3"
+              class="w-full border border-gray-200 shadow-sm rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-black outline-none"
+            >
+Role for managing super admin</textarea
+            >
+          </div>
+        </div>
+
+        <!-- Permissions -->
+        <div>
+          <h2 class="font-semibold text-gray-800">Permissions</h2>
+
+          <!-- Categories -->
+          <div class="pt-4">
+            <p class="text-sm font-medium text-gray-500 mb-3">Categories</p>
+
+            <div class="grid md:grid-cols-3 gap-3">
+              <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked class="accent-blue-600" />
+                View Categories
+              </label>
+
+              <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked class="accent-blue-600" />
+                Edit Category
+              </label>
+
+              <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked class="accent-blue-600" />
+                Delete Category
+              </label>
+
+              <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked class="accent-blue-600" />
+                Create Category
+              </label>
+
+              <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked class="accent-blue-600" />
+                Access Categories Module
+              </label>
+            </div>
+          </div>
+
+          <!-- Products -->
+          <div class="border-t pt-4 mt-6">
+            <p class="text-sm font-medium text-gray-500 mb-3">Products</p>
+
+            <label class="flex items-center gap-2 text-sm">
+              <input type="checkbox" checked class="accent-blue-600" />
+              Access Products Module
+            </label>
+          </div>
+
+          <!-- Roles -->
+          <div class="border-t pt-4 mt-6">
+            <p class="text-sm font-medium text-gray-500 mb-3">Roles</p>
+
+            <div class="grid md:grid-cols-3 gap-3">
+              <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked class="accent-blue-600" />
+                Access Roles Module
+              </label>
+
+              <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked class="accent-blue-600" />
+                Create Role
+              </label>
+
+              <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked class="accent-blue-600" />
+                View Role
+              </label>
+
+              <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked class="accent-blue-600" />
+                Edit Role
+              </label>
+
+              <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked class="accent-blue-600" />
+                Delete Role
+              </label>
+            </div>
+          </div>
+
+          <!-- Users -->
+          <div class="border-t pt-4 mt-6">
+            <p class="text-sm font-medium text-gray-500 mb-3">Users</p>
+
+            <div class="grid md:grid-cols-3 gap-3">
+              <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked class="accent-blue-600" />
+                Access Users Module
+              </label>
+
+              <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked class="accent-blue-600" />
+                View User
+              </label>
+
+              <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" />
+                Edit User
+              </label>
+
+              <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" />
+                Delete User
+              </label>
+
+              <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked class="accent-blue-600" />
+                Create User
+              </label>
+            </div>
+          </div>
+
+          <!-- Permissions -->
+          <div class="border-t pt-4 mt-6 border-b py-6">
+            <p class="text-sm font-medium text-gray-500 mb-3">Permissions</p>
+
+            <div class="grid md:grid-cols-3 gap-3">
+              <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked class="accent-blue-600" />
+                Access Permissions Module
+              </label>
+
+              <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked class="accent-blue-600" />
+                Create Permission
+              </label>
+
+              <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" />
+                View Permission
+              </label>
+
+              <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked class="accent-blue-600" />
+                Edit Permission
+              </label>
+
+              <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" />
+                Delete Permission
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="flex justify-end items-center gap-4 px-6 py-4">
+        <button class="text-sm text-gray-600 hover:text-black">Cancel</button>
+
+        <button
+          class="bg-black text-white text-sm px-5 py-2 rounded-lg hover:bg-gray-900"
+        >
+          Save Role
+        </button>
+      </div>
+    </div>
+  </body>
+</html>
