@@ -30,6 +30,34 @@ class User extends Authenticatable
         'password',
     ];
 
+    public function doctorProfile()
+    {
+        return $this->hasOne(DoctorProfile::class);
+    }
+
+    public function doctorSetting()
+    {
+        return $this->hasOne(DoctorSetting::class, 'doctor_id');
+    }
+
+    // as doctor
+    public function prescriptionsGiven()
+    {
+        return $this->hasMany(Prescription::class, 'doctor_id');
+    }
+
+    // as patient
+    public function prescriptionsTaken()
+    {
+        return $this->hasMany(Prescription::class, 'patient_id');
+    }
+
+    // polymorphic phones
+    public function phones()
+    {
+        return $this->morphMany(Phone::class, 'phoneable');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

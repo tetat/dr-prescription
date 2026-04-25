@@ -18,4 +18,14 @@ class Medicine extends Model
         'manufacturer',
         'medicine_group_id'
     ];
+
+    public function group()
+    {
+        return $this->belongsTo(MedicineGroup::class);
+    }
+
+    public function prescriptionMedicines()
+    {
+        return $this->hasMany(PrescriptionMedicine::class);
+    }
 }

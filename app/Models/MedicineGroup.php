@@ -14,4 +14,9 @@ class MedicineGroup extends Model
         'name',
         'description'
     ];
+
+    public function medicines()
+    {
+        return $this->hasMany(Medicine::class);
+    }
 }

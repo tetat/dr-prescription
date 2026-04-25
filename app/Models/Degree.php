@@ -15,4 +15,9 @@ class Degree extends Model
         'institute',
         'passing_year'
     ];
+
+    public function doctors()
+    {
+        return $this->belongsToMany(User::class, 'degree_doctor', 'degree_id', 'doctor_id');
+    }
 }

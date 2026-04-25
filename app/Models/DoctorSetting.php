@@ -18,4 +18,9 @@ class DoctorSetting extends Model
         'followup_valid_days',
         'allow_free_followup',
     ];
+
+    public function doctor()
+    {
+        return $this->belongsTo(User::class, 'doctor_id');
+    }
 }

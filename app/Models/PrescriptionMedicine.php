@@ -18,11 +18,22 @@ class PrescriptionMedicine extends Model
         'duration',
         'duration_type',
         'before_food',
-        'morning',
-        'noon',
-        'night',
+        'first_dose',
+        'second_dose',
+        'third_dose',
+        'fourth_dose',
         'instructions'
     ];
+
+    public function prescription()
+    {
+        return $this->belongsTo(Prescription::class);
+    }
+
+    public function medicine()
+    {
+        return $this->belongsTo(Medicine::class);
+    }
 
     protected function casts(): array
     {

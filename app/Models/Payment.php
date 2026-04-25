@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Enums\Enums\PaymentMethod;
-use App\Enums\Enums\PaymentStatus;
+use App\Enums\PaymentMethod;
+use App\Enums\PaymentStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,6 +19,11 @@ class Payment extends Model
         'status',
         'paid_at'
     ];
+
+    public function prescription()
+    {
+        return $this->belongsTo(Prescription::class);
+    }
 
     protected function casts(): array
     {

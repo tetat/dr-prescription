@@ -15,4 +15,10 @@ class Examination extends Model
         'abbreviation',
         'unit'
     ];
+
+    public function prescriptions()
+    {
+        return $this->belongsToMany(Prescription::class, 'prescription_examinations')
+            ->withPivot(['result', 'interpretation']);
+    }
 }

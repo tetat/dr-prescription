@@ -11,4 +11,9 @@ class Speciality extends Model
     use HasFactory;
 
     protected $fillable = ['title'];
+
+    public function doctors()
+    {
+        return $this->belongsToMany(User::class, 'doctor_speciality', 'speciality_id', 'doctor_id');
+    }
 }

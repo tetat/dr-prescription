@@ -17,4 +17,14 @@ class Hospital extends Model
         'moto',
         'address'
     ];
+
+    public function prescriptions()
+    {
+        return $this->hasMany(Prescription::class);
+    }
+
+    public function phones()
+    {
+        return $this->morphMany(Phone::class, 'phoneable');
+    }
 }

@@ -14,4 +14,10 @@ class Test extends Model
         'name',
         'description',
     ];
+
+    public function prescriptions()
+    {
+        return $this->belongsToMany(Prescription::class, 'prescription_tests')
+            ->withPivot(['result', 'status']);
+    }
 }
