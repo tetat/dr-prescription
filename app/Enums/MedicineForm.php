@@ -7,9 +7,11 @@ enum MedicineForm: string
     case TABLET = 'tablet';
     case CAPSULE = 'capsule';
     case SYRUP = 'syrup';
-
     case INJECTION = 'injection';
     case INFUSION = 'infusion';
-
     case ORS = 'ors';
+
+    public static function  values() : array {
+        return array_column(self::cases(), 'value');
+    }
 }
