@@ -15,11 +15,9 @@ return new class extends Migration
             $table->foreignId('doctor_id')
                 ->constrained('users')
                 ->cascadeOnDelete();
-
             $table->foreignId('degree_id')
                 ->constrained()
                 ->cascadeOnDelete();
-
             $table->primary(['doctor_id', 'degree_id']);
         });
     }

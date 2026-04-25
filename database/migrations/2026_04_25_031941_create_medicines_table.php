@@ -11,14 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('doctor_profiles', function (Blueprint $table) {
+        Schema::create('medicines', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')
+            $table->string('name');
+            $table->string('generic_name')->nullable();
+            $table->string('form');
+            $table->string('strength');
+            $table->string('manufacturer')->nullable();
+            $table->foreignId('medicine_group_id')
+                ->nullable()
                 ->constrained()
-                ->cascadeOnDelete();
-            $table->string('title');
-            $table->string('licence_no')->nullable();
-            $table->text('bio')->nullable();
+                ->nullOnDelete();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -29,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('doctor_profiles');
+        Schema::dropIfExists('medicines');
     }
 };

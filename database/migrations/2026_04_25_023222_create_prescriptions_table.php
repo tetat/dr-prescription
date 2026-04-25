@@ -13,19 +13,15 @@ return new class extends Migration
     {
         Schema::create('prescriptions', function (Blueprint $table) {
             $table->id();
-            
             $table->foreignId('patient_id')->constrained('users');
             $table->foreignId('doctor_id')->constrained('users');
             $table->foreignId('hospital_id')->constrained();
-
             $table->text('chief_complaint');
-
             $table->decimal('patient_weight', 5, 2)->nullable();
             $table->decimal('patient_height', 5, 2)->nullable();
-
             $table->date('next_visit')->nullable();
-
             $table->decimal('consultation_fee', 10, 2);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

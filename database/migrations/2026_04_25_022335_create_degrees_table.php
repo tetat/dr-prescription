@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('institute');
             $table->year('passing_year')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
