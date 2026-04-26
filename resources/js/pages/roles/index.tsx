@@ -1,5 +1,11 @@
-import { destroy, edit } from '@/actions/App/Http/Controllers/RoleController';
+import {
+    destroy,
+    edit,
+    show,
+} from '@/actions/App/Http/Controllers/RoleController';
 import { Paginate } from '@/components/paginate';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
     Table,
     TableBody,
@@ -12,8 +18,8 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import { create, index } from '@/routes/roles';
 import { Role } from '@/types';
-import { Head, Link, router } from '@inertiajs/react';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
+import { Eye, Pencil, Trash2, X } from 'lucide-react';
 
 interface LinkProps {
     active: boolean;
@@ -21,10 +27,14 @@ interface LinkProps {
     url: string | null;
 }
 
+interface FilterProps {
+    search: string;
+    perPage: string;
+}
+
 interface RolePagination {
     data: Role[];
     links: LinkProps[];
-    perPage: number;
     from: number;
     to: number;
     total: number;
@@ -32,18 +42,54 @@ interface RolePagination {
 
 interface IndexProps {
     roles: RolePagination;
-    perPage: string;
-    totalCount: number;
-    filteredCount: number;
+    filters: FilterProps;
 }
 
-const RoleIndex = ({ roles, perPage }: IndexProps) => {
-    const handlePerPageChange = (value: string) => {
+const RoleIndex = ({ roles, filters }: IndexProps) => {
+    const { data, setData } = useForm({
+        search: filters.search || '',
+        perPage: filters.perPage || '10',
+    });
+
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setData('search', value);
+
         const queryString = {
-            ...(value && { perPage: value }),
+            ...(value && { search: value }),
+            ...(data.perPage && { perPage: data.perPage }),
         };
 
-        router.get(index().url, queryString, {
+        router.get(index(), queryString, {
+            preserveState: true,
+            preserveScroll: true,
+        });
+    };
+
+    const handleReset = () => {
+        setData('search', '');
+        setData('perPage', '10');
+
+        router.get(
+            index(),
+            {},
+            {
+                preserveState: true,
+                preserveScroll: true,
+            },
+        );
+    };
+
+    // Handle Per Page Change
+    const handlePerPageChange = (value: string) => {
+        setData('perPage', value);
+
+        const queryString = {
+            ...(value && { perPage: value }),
+            ...(data.search && { search: data.search }),
+        };
+
+        router.get(index(), queryString, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -55,14 +101,34 @@ const RoleIndex = ({ roles, perPage }: IndexProps) => {
 
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
                 <div className="relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 p-4 md:min-h-min dark:border-sidebar-border">
-                    <h1>Roles</h1>
+                    {/* <h1>Roles</h1> */}
                     <div className="flex justify-end">
-                        <Link
-                            href={create().url}
-                            className="mx-4 inline-block rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-                        >
-                            Create Role
-                        </Link>
+                        <div className="mb-4 flex w-full items-center justify-between gap-4">
+                            <Input
+                                value={data.search}
+                                onChange={handleSearch}
+                                className="h-10 w-1/3"
+                                type="text"
+                                placeholder="Search Roles..."
+                                name="search"
+                            />
+
+                            <Button
+                                onClick={handleReset}
+                                className="h-10 cursor-pointer bg-red-600 hover:bg-red-500"
+                            >
+                                <X size={20} />
+                            </Button>
+
+                            <div className="ml-auto">
+                                <Link
+                                    href={create().url}
+                                    className="mx-4 inline-block rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                                >
+                                    Create Role
+                                </Link>
+                            </div>
+                        </div>
                     </div>
                     <Table>
                         <TableCaption>A list of roles.</TableCaption>
@@ -81,12 +147,18 @@ const RoleIndex = ({ roles, perPage }: IndexProps) => {
                             {roles.data?.map((role, index) => (
                                 <TableRow key={role.id}>
                                     <TableCell className="font-medium">
-                                        {index + 1}
+                                        {index + roles.from}
                                     </TableCell>
                                     <TableCell>{role.name}</TableCell>
                                     <TableCell>{role.slug}</TableCell>
                                     <TableCell>{role.guard_name}</TableCell>
                                     <TableCell className="flex justify-end">
+                                        <Link
+                                            href={show(role)}
+                                            className="mr-2 rounded bg-slate-400 px-3 py-1 text-white hover:bg-slate-600"
+                                        >
+                                            <Eye size={18} />
+                                        </Link>
                                         <Link
                                             href={edit(role)}
                                             className="mr-2 rounded bg-green-500 px-3 py-1 text-white hover:bg-green-700"
@@ -107,7 +179,7 @@ const RoleIndex = ({ roles, perPage }: IndexProps) => {
                     <Paginate
                         links={roles.links}
                         handlePerPageChange={handlePerPageChange}
-                        perPage={perPage}
+                        perPage={data.perPage}
                     />
                 </div>
             </div>

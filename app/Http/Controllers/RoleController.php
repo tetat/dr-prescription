@@ -14,11 +14,20 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
-        $perPage = (int) ($request->perPage ?? "10");
+        $per_page = (int) ($request->per_page ?? "10");
         $roleQuery = Role::query();
-        $filteredCount = $roleQuery->count();
+        $totalCount = $roleQuery->count();
 
-        if ($perPage === -1) {
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $roleQuery->where(fn($query) => 
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('slug', 'like', "%{$search}")
+            );
+        }
+
+        if ($per_page === -1) {
             $allRoles = $roleQuery->latest()
                 ->get()
                 ->map(fn($role) => [
@@ -30,14 +39,13 @@ class RoleController extends Controller
                 );
             $roles = [
                 'data' => $allRoles,
-                'total' => $filteredCount,
-                'perPage' => $perPage,
+                'total' => $totalCount,
                 'from' => 1,
-                'to' => $filteredCount,
+                'to' => $totalCount,
                 'links' => [],
             ];
         } else {
-            $roles = $roleQuery->latest()->paginate($perPage)->withQueryString();
+            $roles = $roleQuery->latest()->paginate($per_page)->withQueryString();
 
             $roles->getCollection()->transform(fn($role) => [
                 'id' => $role->id,
@@ -49,7 +57,7 @@ class RoleController extends Controller
 
         return inertia('roles/index', [
             'roles' => $roles,
-            'perPage' => (string) $perPage,
+            'filters' => $request->only('search', 'perPage'),
         ]);
     }
 
