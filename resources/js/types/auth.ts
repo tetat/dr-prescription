@@ -23,3 +23,23 @@ export type TwoFactorSetupData = {
 export type TwoFactorSecretKey = {
     secretKey: string;
 };
+
+export type Role = {
+    id: number;
+    name: string;
+    slug: string;
+    guard_name: string;
+    created_at: string;
+    updated_at: string;
+    permissions?: Permission[];
+};
+
+export type Permission = {
+    id: number;
+    name: string;
+    slug: string;
+    guard_name: string;
+    created_at: string;
+    updated_at: string;
+    roles?: Role[];
+};
