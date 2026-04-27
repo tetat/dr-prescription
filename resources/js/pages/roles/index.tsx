@@ -4,8 +4,7 @@ import {
     show,
 } from '@/actions/App/Http/Controllers/RoleController';
 import { Paginate } from '@/components/paginate';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import TableSearch from '@/components/table-search';
 import {
     Table,
     TableBody,
@@ -19,7 +18,7 @@ import AppLayout from '@/layouts/app-layout';
 import { create, index } from '@/routes/roles';
 import { Role } from '@/types';
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { Eye, Pencil, Trash2, X } from 'lucide-react';
+import { Eye, Pencil, Trash2 } from 'lucide-react';
 
 interface LinkProps {
     active: boolean;
@@ -51,36 +50,6 @@ const RoleIndex = ({ roles, filters }: IndexProps) => {
         perPage: filters.perPage || '10',
     });
 
-    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setData('search', value);
-
-        const queryString = {
-            ...(value && { search: value }),
-            ...(data.perPage && { perPage: data.perPage }),
-        };
-
-        router.get(index(), queryString, {
-            preserveState: true,
-            preserveScroll: true,
-        });
-    };
-
-    const handleReset = () => {
-        setData('search', '');
-        setData('perPage', '10');
-
-        router.get(
-            index(),
-            {},
-            {
-                preserveState: true,
-                preserveScroll: true,
-            },
-        );
-    };
-
-    // Handle Per Page Change
     const handlePerPageChange = (value: string) => {
         setData('perPage', value);
 
@@ -95,8 +64,15 @@ const RoleIndex = ({ roles, filters }: IndexProps) => {
         });
     };
 
+    const breadcrumbsData = [
+        {
+            title: 'Manage Roles',
+            href: index().url,
+        },
+    ];
+
     return (
-        <AppLayout>
+        <AppLayout breadcrumbs={breadcrumbsData}>
             <Head title="Role Management" />
 
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
@@ -104,21 +80,11 @@ const RoleIndex = ({ roles, filters }: IndexProps) => {
                     {/* <h1>Roles</h1> */}
                     <div className="flex justify-end">
                         <div className="mb-4 flex w-full items-center justify-between gap-4">
-                            <Input
-                                value={data.search}
-                                onChange={handleSearch}
-                                className="h-10 w-1/3"
-                                type="text"
-                                placeholder="Search Roles..."
-                                name="search"
+                            <TableSearch
+                                data={data}
+                                setData={setData}
+                                route={index().url}
                             />
-
-                            <Button
-                                onClick={handleReset}
-                                className="h-10 cursor-pointer bg-red-600 hover:bg-red-500"
-                            >
-                                <X size={20} />
-                            </Button>
 
                             <div className="ml-auto">
                                 <Link
@@ -144,36 +110,47 @@ const RoleIndex = ({ roles, filters }: IndexProps) => {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {roles.data?.map((role, index) => (
-                                <TableRow key={role.id}>
-                                    <TableCell className="font-medium">
-                                        {index + roles.from}
-                                    </TableCell>
-                                    <TableCell>{role.name}</TableCell>
-                                    <TableCell>{role.slug}</TableCell>
-                                    <TableCell>{role.guard_name}</TableCell>
-                                    <TableCell className="flex justify-end">
-                                        <Link
-                                            href={show(role)}
-                                            className="mr-2 rounded bg-slate-400 px-3 py-1 text-white hover:bg-slate-600"
-                                        >
-                                            <Eye size={18} />
-                                        </Link>
-                                        <Link
-                                            href={edit(role)}
-                                            className="mr-2 rounded bg-green-500 px-3 py-1 text-white hover:bg-green-700"
-                                        >
-                                            <Pencil size={18} />
-                                        </Link>
-                                        <Link
-                                            href={destroy(role)}
-                                            className="rounded bg-red-500 px-3 py-1 text-white hover:bg-red-700"
-                                        >
-                                            <Trash2 size={18} />
-                                        </Link>
+                            {roles.data.length > 0 ? (
+                                roles.data?.map((role, index) => (
+                                    <TableRow key={role.id}>
+                                        <TableCell className="font-medium">
+                                            {index + roles.from}
+                                        </TableCell>
+                                        <TableCell>{role.name}</TableCell>
+                                        <TableCell>{role.slug}</TableCell>
+                                        <TableCell>{role.guard_name}</TableCell>
+                                        <TableCell className="flex justify-end">
+                                            <Link
+                                                href={show(role)}
+                                                className="mr-2 rounded bg-slate-400 px-3 py-1 text-white hover:bg-slate-600"
+                                            >
+                                                <Eye size={18} />
+                                            </Link>
+                                            <Link
+                                                href={edit(role)}
+                                                className="mr-2 rounded bg-green-500 px-3 py-1 text-white hover:bg-green-700"
+                                            >
+                                                <Pencil size={18} />
+                                            </Link>
+                                            <Link
+                                                href={destroy(role)}
+                                                className="rounded bg-red-500 px-3 py-1 text-white hover:bg-red-700"
+                                            >
+                                                <Trash2 size={18} />
+                                            </Link>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell
+                                        colSpan={5}
+                                        className="h-24 text-center"
+                                    >
+                                        No roles found!
                                     </TableCell>
                                 </TableRow>
-                            ))}
+                            )}
                         </TableBody>
                     </Table>
                     <Paginate
@@ -185,15 +162,6 @@ const RoleIndex = ({ roles, filters }: IndexProps) => {
             </div>
         </AppLayout>
     );
-};
-
-RoleIndex.layout = {
-    breadcrumbs: [
-        {
-            title: 'Manage Roles',
-            href: index().url,
-        },
-    ],
 };
 
 export default RoleIndex;
