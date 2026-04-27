@@ -62,6 +62,7 @@ const TableSearch = ({ data, setData, route, delay = 200 }: Props) => {
             <Button
                 onClick={handleReset}
                 className="size-8 cursor-pointer bg-red-600 hover:bg-red-500"
+                disabled={data.search === ''}
             >
                 <X size={16} />
             </Button>

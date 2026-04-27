@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class RoleController extends Controller
 {
@@ -66,7 +68,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('roles/create');
     }
 
     /**
@@ -74,7 +76,20 @@ class RoleController extends Controller
      */
     public function store(StoreRoleRequest $request)
     {
-        //
+        try {
+            $role = Role::create([
+                'name' => $request->name,
+                'slug' => Str::slug($request->name),
+                'guard_name' => $request->guard_name,
+            ]);
+
+            if ($role) {
+                return redirect()->route('roles.index')->with('success', 'Role created successfully.');
+            }
+            return redirect()->route('roles.index')->with('error', 'Unable to create role.');
+        } catch (Exception $e) {
+            return redirect()->route('roles.index')->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -82,7 +97,9 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        //
+        return inertia('roles/show', [
+            'role' => $role,
+        ]);
     }
 
     /**
@@ -90,7 +107,9 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        //
+        return inertia('roles/edit', [
+            'role' => $role,
+        ]);
     }
 
     /**
@@ -98,7 +117,21 @@ class RoleController extends Controller
      */
     public function update(UpdateRoleRequest $request, Role $role)
     {
-        //
+        try {
+            if ($role) {
+                $role->name = $request->name;
+                $role->slug = Str::slug($request->name);
+                $role->guard_name = $request->guard_name;
+
+                $role->save();
+
+                return redirect()->route('roles.index')->with('success', 'Role updated successfully.');
+            }
+
+            return redirect()->route('roles.index')->with('error', 'Unable to update role.');
+        } catch (Exception $e) {
+            return redirect()->route('roles.index')->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -106,6 +139,16 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        //
+        try {
+            if ($role) {
+                $role->delete();
+                
+                return redirect()->route('roles.index')->with('deleted', 'Role deleted successfully.');
+            }
+
+            return redirect()->back()->with('error', 'Unable to delete role.');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 }
