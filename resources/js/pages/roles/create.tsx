@@ -1,4 +1,5 @@
 import RoleController from '@/actions/App/Http/Controllers/RoleController';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
@@ -72,7 +73,6 @@ const RoleCreate = ({ permissions }: Props) => {
                 </h2>
 
                 <form onSubmit={onSubmit} className="flex flex-col gap-6">
-                    {/* ROLE NAME */}
                     <div className="grid gap-2">
                         <Label>Name</Label>
                         <Input
@@ -87,15 +87,13 @@ const RoleCreate = ({ permissions }: Props) => {
                         )}
                     </div>
 
-                    {/* GUARD */}
                     <div className="grid gap-2">
                         <Label>Guard Name</Label>
-                        <Input value={data.guard_name} readOnly />
+                        <Input defaultValue={data.guard_name} readOnly />
                     </div>
 
                     {/* PERMISSIONS */}
                     <div className="space-y-4">
-                        {/* HEADER */}
                         <div className="flex items-center justify-between">
                             <Label className="text-lg font-semibold">
                                 Permissions
@@ -110,7 +108,6 @@ const RoleCreate = ({ permissions }: Props) => {
                             </button>
                         </div>
 
-                        {/* GROUPS */}
                         {Object.entries(permissions).map(([group, items]) => {
                             const typedItems = items as Permission[];
 
@@ -163,14 +160,13 @@ const RoleCreate = ({ permissions }: Props) => {
                         })}
                     </div>
 
-                    {/* SUBMIT */}
-                    <button
+                    <Button
                         type="submit"
                         disabled={processing}
-                        className="rounded bg-indigo-600 py-2 text-white"
+                        className="cursor-pointer rounded bg-indigo-600 py-2 text-white hover:bg-indigo-700"
                     >
                         Create Role
-                    </button>
+                    </Button>
                 </form>
             </div>
         </AppLayout>

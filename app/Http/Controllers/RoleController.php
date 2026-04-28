@@ -126,8 +126,21 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
+        $permissions = Permission::all()
+            ->groupBy('group')
+            ->map(function ($group) {
+                return $group->map(function ($permission) {
+                    return [
+                        'id' => $permission->id,
+                        'name' => $permission->name,
+                        'slug' => $permission->slug,
+                    ];
+                });
+            });
+
         return inertia('roles/edit', [
-            'role' => $role,
+            'role' => $role->load('permissions'),
+            'permissions' => $permissions,
         ]);
     }
 
@@ -141,6 +154,10 @@ class RoleController extends Controller
                 $role->name = $request->name;
                 $role->slug = Str::slug($request->name);
                 $role->guard_name = $request->guard_name;
+
+                if ($request->has('permissions')) {
+                    $role->permissions()->sync($request->permissions);
+                }
 
                 $role->save();
 

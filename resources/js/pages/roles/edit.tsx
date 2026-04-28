@@ -1,24 +1,71 @@
 import RoleController from '@/actions/App/Http/Controllers/RoleController';
-import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
 import AppLayout from '@/layouts/app-layout';
 import { edit, index } from '@/routes/roles';
-import { Role } from '@/types';
-import { Form, Head } from '@inertiajs/react';
+import { Permission, Role } from '@/types';
+import { Head, useForm } from '@inertiajs/react';
 
-const RoleEdit = ({ role }: { role: Role }) => {
+interface Props {
+    role: Role & {
+        permissions?: Permission[];
+    };
+    permissions: Record<string, Permission[]>;
+}
+
+const RoleEdit = ({ role, permissions }: Props) => {
+    const { data, setData, put, processing, errors } = useForm({
+        name: role.name,
+        guard_name: role.guard_name,
+        permissions: role.permissions?.map((p) => p.id) || [],
+    });
+
+    const groupedPermissions = permissions;
+
+    const selected = data.permissions;
+
+    const allIds = Object.values(permissions)
+        .flat()
+        .map((p) => p.id);
+
+    const allSelected =
+        allIds.length > 0 && allIds.every((id) => selected.includes(id));
+
+    const toggleAll = () => {
+        setData('permissions', allSelected ? [] : allIds);
+    };
+
+    const toggleGroup = (items: Permission[]) => {
+        const ids = items.map((p) => p.id);
+
+        const allGroupSelected = ids.every((id) => selected.includes(id));
+
+        setData(
+            'permissions',
+            allGroupSelected
+                ? selected.filter((id) => !ids.includes(id))
+                : [...new Set([...selected, ...ids])],
+        );
+    };
+
+    const toggleSingle = (id: number) => {
+        setData(
+            'permissions',
+            selected.includes(id)
+                ? selected.filter((i) => i !== id)
+                : [...selected, id],
+        );
+    };
+
+    const onSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        put(RoleController.update(role.id).url);
+    };
+
     const breadcrumbsData = [
-        {
-            title: 'Manage Roles',
-            href: index().url,
-        },
-        {
-            title: 'Edit Role',
-            href: edit(role).url,
-        },
+        { title: 'Manage Roles', href: index().url },
+        { title: 'Edit Role', href: edit(role).url },
     ];
 
     return (
@@ -29,59 +76,105 @@ const RoleEdit = ({ role }: { role: Role }) => {
                 <h2 className="py-3 text-center text-2xl font-bold">
                     Edit Role
                 </h2>
-                <Form
-                    {...RoleController.update.form(role)}
-                    disableWhileProcessing
-                    className="flex flex-col gap-6"
-                >
-                    {({ processing, errors }) => (
-                        <>
-                            <div className="grid gap-6">
-                                <div className="grid gap-2">
-                                    <Label htmlFor="name">Name</Label>
-                                    <Input
-                                        id="name"
-                                        type="text"
-                                        autoFocus
-                                        tabIndex={1}
-                                        autoComplete="name"
-                                        name="name"
-                                        defaultValue={role.name}
-                                        placeholder="Role name (ex: Admin)"
-                                    />
-                                    <InputError
-                                        message={errors.name}
-                                        className="mt-2"
-                                    />
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="guard_name">
-                                        Guard Name
-                                    </Label>
-                                    <Input
-                                        id="guard_name"
-                                        type="text"
-                                        tabIndex={2}
-                                        autoComplete="guard_name"
-                                        name="guard_name"
-                                        defaultValue="web"
-                                        readOnly
-                                    />
-                                    <InputError message={errors.guard_name} />
-                                </div>
 
-                                <Button
-                                    type="submit"
-                                    className="mt-4 h-11 w-full cursor-pointer rounded-lg bg-indigo-600 text-white shadow hover:bg-indigo-700"
-                                    tabIndex={3}
-                                    data-test="register-role-button"
-                                >
-                                    {processing && <Spinner />}Update Role
-                                </Button>
-                            </div>
-                        </>
-                    )}
-                </Form>
+                <form onSubmit={onSubmit} className="flex flex-col gap-6">
+                    <div className="grid gap-2">
+                        <Label>Name</Label>
+                        <Input
+                            value={data.name}
+                            onChange={(e) => setData('name', e.target.value)}
+                            placeholder="Role name"
+                        />
+                        {errors.name && (
+                            <p className="text-sm text-red-500">
+                                {errors.name}
+                            </p>
+                        )}
+                    </div>
+
+                    <div className="grid gap-2">
+                        <Label>Guard Name</Label>
+                        <Input value={data.guard_name} readOnly />
+                    </div>
+
+                    {/* PERMISSIONS */}
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                            <Label className="text-lg font-semibold">
+                                Permissions
+                            </Label>
+
+                            <Button
+                                type="button"
+                                onClick={toggleAll}
+                                size="sm"
+                                className="bg-indigo-600 hover:bg-indigo-700"
+                            >
+                                {allSelected ? 'Unselect All' : 'Select All'}
+                            </Button>
+                        </div>
+
+                        {Object.entries(groupedPermissions).map(
+                            ([group, items]) => {
+                                const groupSelected = items.every((p) =>
+                                    selected.includes(p.id),
+                                );
+
+                                return (
+                                    <div
+                                        key={group}
+                                        className="rounded-lg border bg-muted/30 p-4 shadow-sm"
+                                    >
+                                        {/* GROUP HEADER */}
+                                        <div className="mb-3 flex items-center gap-2">
+                                            <input
+                                                type="checkbox"
+                                                checked={groupSelected}
+                                                onChange={() =>
+                                                    toggleGroup(items)
+                                                }
+                                            />
+                                            <Label className="text-sm font-semibold capitalize">
+                                                {group.replace('_', ' ')}
+                                            </Label>
+                                        </div>
+
+                                        {/* PERMISSIONS */}
+                                        <div className="grid grid-cols-2 gap-2 pl-6">
+                                            {items.map((permission) => (
+                                                <label
+                                                    key={permission.id}
+                                                    className="flex items-center gap-2 rounded px-2 py-1 text-sm hover:bg-muted"
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selected.includes(
+                                                            permission.id,
+                                                        )}
+                                                        onChange={() =>
+                                                            toggleSingle(
+                                                                permission.id,
+                                                            )
+                                                        }
+                                                    />
+                                                    {permission.name}
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+                                );
+                            },
+                        )}
+                    </div>
+
+                    <Button
+                        type="submit"
+                        disabled={processing}
+                        className="mt-2 w-full cursor-pointer bg-green-600 py-2 text-base font-semibold hover:bg-green-700"
+                    >
+                        Update Role
+                    </Button>
+                </form>
             </div>
         </AppLayout>
     );
