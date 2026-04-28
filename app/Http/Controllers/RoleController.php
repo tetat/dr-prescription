@@ -117,7 +117,7 @@ class RoleController extends Controller
     public function show(Role $role)
     {
         return inertia('roles/show', [
-            'role' => $role,
+            'role' => $role->load('permissions'),
         ]);
     }
 
