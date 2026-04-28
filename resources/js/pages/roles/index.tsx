@@ -87,12 +87,13 @@ const RoleIndex = ({ roles, filters }: IndexProps) => {
             <Head title="Role Management" />
 
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
-                <div className="relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 p-4 md:min-h-min dark:border-sidebar-border">
+                <div className="relative min-h-[100vh] flex-1 rounded-xl border border-sidebar-border/70 p-4 md:min-h-min dark:border-sidebar-border">
                     <div className="flex justify-end">
                         <div className="mb-4 flex w-full items-center justify-between gap-4">
                             <TableSearch
                                 data={data}
                                 setData={setData}
+                                placeHolderMsg="Roles"
                                 route={index().url}
                             />
 

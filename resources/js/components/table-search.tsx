@@ -11,10 +11,17 @@ interface Props {
     route: string;
     data: FilterProps;
     setData: (key: keyof FilterProps, value: string) => void;
+    placeHolderMsg?: string;
     delay?: number;
 }
 
-const TableSearch = ({ data, setData, route, delay = 200 }: Props) => {
+const TableSearch = ({
+    data,
+    setData,
+    route,
+    placeHolderMsg = 'Users',
+    delay = 200,
+}: Props) => {
     const debounce = (fn: Function, delay: number) => {
         let timeout: ReturnType<typeof setTimeout>;
 
@@ -49,24 +56,24 @@ const TableSearch = ({ data, setData, route, delay = 200 }: Props) => {
     };
 
     return (
-        <>
+        <div className="relative w-1/3">
             <Input
                 value={data.search}
                 onChange={handleSearch}
-                className="h-10 w-1/3"
+                className="h-10 pr-10"
                 type="text"
-                placeholder="Search Roles..."
+                placeholder={`Search ${placeHolderMsg}...`}
                 name="search"
             />
 
             <Button
                 onClick={handleReset}
-                className="size-8 cursor-pointer bg-red-600 hover:bg-red-500"
+                className="absolute top-1/2 right-2 size-8 -translate-y-1/2 rounded bg-red-500 p-1 hover:bg-red-500"
                 disabled={data.search === ''}
             >
                 <X size={16} />
             </Button>
-        </>
+        </div>
     );
 };
 

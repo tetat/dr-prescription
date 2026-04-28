@@ -16,7 +16,7 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
-        $per_page = (int) ($request->per_page ?? "10");
+        $perPage = (int) ($request->perPage ?? "10");
         $roleQuery = Role::query();
         $totalCount = $roleQuery->count();
 
@@ -29,7 +29,7 @@ class RoleController extends Controller
             );
         }
 
-        if ($per_page === -1) {
+        if ($perPage === -1) {
             $allRoles = $roleQuery->latest()
                 ->get()
                 ->map(fn($role) => [
@@ -47,7 +47,7 @@ class RoleController extends Controller
                 'links' => [],
             ];
         } else {
-            $roles = $roleQuery->latest()->paginate($per_page)->withQueryString();
+            $roles = $roleQuery->latest()->paginate($perPage)->withQueryString();
 
             $roles->getCollection()->transform(fn($role) => [
                 'id' => $role->id,

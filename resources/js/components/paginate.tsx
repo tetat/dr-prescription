@@ -37,10 +37,21 @@ export function Paginate({ links, handlePerPageChange, perPage }: Props) {
                     onValueChange={handlePerPageChange}
                     defaultValue={perPage}
                 >
-                    <SelectTrigger className="w-20" id="select-rows-per-page">
+                    <SelectTrigger
+                        className="h-9 w-24"
+                        id="select-rows-per-page"
+                    >
                         <SelectValue />
                     </SelectTrigger>
-                    <SelectContent align="start">
+                    <SelectContent
+                        position="popper"
+                        side="bottom"
+                        align="start"
+                        sideOffset={4}
+                        avoidCollisions
+                        collisionPadding={8}
+                        className="max-h-60 overflow-y-auto"
+                    >
                         <SelectGroup>
                             <SelectItem value="10">10</SelectItem>
                             <SelectItem value="25">25</SelectItem>

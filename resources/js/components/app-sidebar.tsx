@@ -12,10 +12,11 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
+import permissions from '@/routes/permissions';
 import roles from '@/routes/roles';
 import type { NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid, Lock } from 'lucide-react';
+import { BookOpen, FolderGit2, LayoutGrid, Lock, Shield } from 'lucide-react';
 
 const mainNavItems: NavItem[] = [
     {
@@ -27,6 +28,11 @@ const mainNavItems: NavItem[] = [
         title: 'Roles',
         href: roles.index().url,
         icon: Lock,
+    },
+    {
+        title: 'Permissions',
+        href: permissions.index().url,
+        icon: Shield,
     },
 ];
 
