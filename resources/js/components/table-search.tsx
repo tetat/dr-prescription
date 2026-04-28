@@ -68,7 +68,7 @@ const TableSearch = ({
 
             <Button
                 onClick={handleReset}
-                className="absolute top-1/2 right-2 size-8 -translate-y-1/2 rounded bg-red-500 p-1 hover:bg-red-500"
+                className="absolute top-1/2 right-2 size-8 -translate-y-1/2 rounded bg-red-500 p-1 hover:bg-red-600"
                 disabled={data.search === ''}
             >
                 <X size={16} />

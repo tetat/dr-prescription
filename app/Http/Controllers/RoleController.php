@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
+use App\Models\Permission;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -68,7 +69,21 @@ class RoleController extends Controller
      */
     public function create()
     {
-        return inertia('roles/create');
+        $permissions = Permission::all()
+            ->groupBy('group')
+            ->map(function ($group) {
+                return $group->map(function ($permission) {
+                    return [
+                        'id' => $permission->id,
+                        'name' => $permission->name,
+                        'slug' => $permission->slug,
+                    ];
+                });
+            });
+
+        return inertia('roles/create', [
+            'permissions' => $permissions,
+        ]);
     }
 
     /**
@@ -82,6 +97,10 @@ class RoleController extends Controller
                 'slug' => Str::slug($request->name),
                 'guard_name' => $request->guard_name,
             ]);
+
+            if ($request->has('permissions')) {
+                $role->permissions()->sync($request->permissions);
+            }
 
             if ($role) {
                 return redirect()->route('roles.index')->with('success', 'Role created successfully.');
