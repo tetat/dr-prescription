@@ -20,7 +20,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'Edit User', 'slug' => 'edit-user', 'group' => 'users'],
             ['name' => 'Delete User', 'slug' => 'delete-user', 'group' => 'users'],
             ['name' => 'Permanent Delete User', 'slug' => 'permanent-delete-user', 'group' => 'users'],
-            ['name' => 'Restore User', 'slug' => 'restore-user', 'gruop' => 'users'],
+            ['name' => 'Restore User', 'slug' => 'restore-user', 'group' => 'users'],
             // 🏥 HOSPITALS
             ['name' => 'Hospital Access', 'slug' => 'hospital-access', 'group' => 'hospitals'],
             ['name' => 'Create Hospital', 'slug' => 'create-hospital', 'group' => 'hospitals'],
