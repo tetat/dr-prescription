@@ -17,6 +17,11 @@ class Phone extends Model
         'number',
     ];
 
+    public function getFullNumberAttribute()
+    {
+        return $this->country_code . $this->number;
+    }
+
     public function phoneable()
     {
         return $this->morphTo();
