@@ -1,4 +1,5 @@
 import RoleController from '@/actions/App/Http/Controllers/RoleController';
+import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -80,11 +81,7 @@ const RoleCreate = ({ permissions }: Props) => {
                             onChange={(e) => setData('name', e.target.value)}
                             placeholder="Role name"
                         />
-                        {errors.name && (
-                            <p className="text-sm text-red-500">
-                                {errors.name}
-                            </p>
-                        )}
+                        <InputError message={errors.name} />
                     </div>
 
                     <div className="grid gap-2">
