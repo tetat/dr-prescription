@@ -12,6 +12,7 @@ export type User = {
     two_factor_enabled?: boolean;
     created_at: string;
     updated_at: string;
+    phones: Phone[];
     [key: string]: unknown;
 };
 
@@ -47,4 +48,9 @@ export type Permission = {
     created_at: string;
     updated_at: string;
     roles?: Role[];
+};
+
+export type Phone = {
+    country_code: string;
+    number: string;
 };

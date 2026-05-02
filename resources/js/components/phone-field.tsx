@@ -1,11 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import CountrySelect from './country-select';
+import { Phone } from '@/types';
 
-export type Phone = {
-    country_code: string;
-    number: string;
-};
 
 type Props = {
     phones: Phone[];

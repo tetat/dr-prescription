@@ -197,7 +197,7 @@ const PatientCreate = () => {
                     <Button
                         type="submit"
                         disabled={processing}
-                        className="bg-indigo-600 text-white hover:bg-indigo-700"
+                        className="cursor-pointer bg-indigo-600 text-white hover:bg-indigo-700"
                     >
                         Create Patient
                     </Button>

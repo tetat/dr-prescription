@@ -19,8 +19,7 @@ class PatientController extends Controller
     public function index(Request $request)
     {
         $perPage = (int) ($request->perPage ?? "10");
-        $patientQuery = User::query();
-        $totalCount = $patientQuery->count();
+        $patientQuery = User::role('patient');
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -30,6 +29,7 @@ class PatientController extends Controller
                     ->orWhere('blood_group', 'like', "%{$search}")
             );
         }
+        $totalCount = $patientQuery->count();
 
         if ($perPage === -1) {
             $allPatients = $patientQuery->latest()
@@ -38,7 +38,7 @@ class PatientController extends Controller
                         'id' => $patient->id,
                         'name' => $patient->name,
                         'email' => $patient->email ?? 'Not Given',
-                        'gender' => $patient->gender,
+                        'gender' => ucfirst($patient->gender->value),
                         'age' => $patient->age,
                         'blood_group' => $patient->blood_group ?? 'Not Given',
                         'address' => $patient->address ?? 'Not Given',
@@ -58,7 +58,7 @@ class PatientController extends Controller
                 'id' => $patient->id,
                 'name' => $patient->name,
                 'email' => $patient->email ?? 'Not Given',
-                'gender' => $patient->gender,
+                'gender' => ucfirst($patient->gender->value),
                 'age' => $patient->age,
                 'blood_group' => $patient->blood_group ?? 'Not Given',
                 'address' => $patient->address ?? 'Not Given',
@@ -88,11 +88,11 @@ class PatientController extends Controller
         try {
             $data = $request->validated();
 
-            $patientRole = Role::where('slug', 'patient')->firstOrFail();
+            $patientRole = Role::where('name', 'patient')->firstOrFail();
 
             DB::beginTransaction();
 
-            $user = User::create([
+            $patient = User::create([
                 'name' => $data['name'],
                 'email' => $data['email'] ?? null,
                 'gender' => $data['gender'],
@@ -102,26 +102,20 @@ class PatientController extends Controller
                 'password' => $data['name'],
             ]);
 
-            $user->assignRole($patientRole);
+            $patient->assignRole($patientRole);
 
             if (!empty($data['phones'])) {
-                foreach ($data['phones'] as $phone) {
-                    $user->phones()->create([
-                        'country_code' => $phone['country_code'],
-                        'number' => $phone['number'],
-                    ]);
-                }
+                $patient->phones()->createMany($data['phones']);
             }
 
-            if ($user) {
+            if ($patient) {
                 DB::commit();
                 return redirect()
                     ->route('patients.index')
                     ->with('success', 'Patient created successfully.');
             }
 
-            DB::rollBack();
-            return redirect()->route('patients.index')->with('error', 'Unable to create Patient.');
+            throw new Exception('Unable to create patient.');
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->route('patients.index')->with('error', $e->getMessage());
@@ -131,40 +125,80 @@ class PatientController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(User $patient)
     {
-        $user->load('phones');
+        $patient->load('phones');
 
         return inertia('patients/show', [
-            'user' => $user,
+            'patient' => $patient,
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
+    public function edit(User $patient)
     {
-        $user->load('phones');
+        $patient->load('phones');
 
         return inertia('patients/edit', [
-            'user' => $user,
+            'patient' => $patient,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePatientRequest $request, User $user)
+    public function update(UpdatePatientRequest $request, User $patient)
     {
-        //
+        try {
+            $data = $request->validated();
+
+            DB::transaction(function () use ($patient, $data) {
+
+                // update patient
+                $patient->update([
+                    'name' => $data['name'],
+                    'email' => $data['email'] ?? null,
+                    'gender' => $data['gender'],
+                    'dob' => $data['dob'],
+                    'blood_group' => $data['blood_group'] ?? null,
+                    'address' => $data['address'] ?? null,
+                ]);
+
+                // replace phones
+                $patient->phones()->delete();
+
+                $patient->phones()->createMany($data['phones']);
+            });
+
+            return redirect()
+                ->route('patients.index')
+                ->with('success', 'Patient updated successfully.');
+
+        } catch (Exception $e) {
+            return redirect()
+                ->route('patients.index')
+                ->with('error', $e->getMessage());
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(User $patient)
     {
-        //
+        try {
+            if ($patient) {
+                $patient->phones()->delete();
+                $patient->delete();
+                
+                return redirect()->route('patients.index')->with('deleted', 'Patient deleted successfully.');
+            }
+
+            throw new Exception('Unable to delete patient.');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 }
