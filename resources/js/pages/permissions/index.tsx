@@ -104,8 +104,8 @@ const PermissionIndex = ({ permissions, filters }: IndexProps) => {
                                         <TableCell className="font-medium">
                                             {index + permissions.from}
                                         </TableCell>
+                                        <TableCell>{permission.label}</TableCell>
                                         <TableCell>{permission.name}</TableCell>
-                                        <TableCell>{permission.slug}</TableCell>
                                         <TableCell>
                                             {permission.group}
                                         </TableCell>

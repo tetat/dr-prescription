@@ -22,9 +22,8 @@ class RoleSeeder extends Seeder
 
         foreach ($roles as $role) {
             Role::firstOrCreate([
-                'name' => $role,
-            ], [
-                'slug' => Str::slug($role),
+                'label' => $role,
+                'name' => Str::slug($role),
                 'guard_name' => 'web',
             ]);
         }

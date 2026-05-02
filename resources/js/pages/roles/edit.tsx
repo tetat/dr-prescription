@@ -17,7 +17,7 @@ interface Props {
 
 const RoleEdit = ({ role, permissions }: Props) => {
     const { data, setData, put, processing, errors } = useForm({
-        name: role.name,
+        label: role.label,
         guard_name: role.guard_name,
         permissions: role.permissions?.map((p) => p.id) || [],
     });
@@ -82,11 +82,11 @@ const RoleEdit = ({ role, permissions }: Props) => {
                     <div className="grid gap-2">
                         <Label>Name</Label>
                         <Input
-                            value={data.name}
-                            onChange={(e) => setData('name', e.target.value)}
+                            value={data.label}
+                            onChange={(e) => setData('label', e.target.value)}
                             placeholder="Role name"
                         />
-                        <InputError message={errors.name} />
+                        <InputError message={errors.label} />
                     </div>
 
                     <div className="grid gap-2">
@@ -154,7 +154,7 @@ const RoleEdit = ({ role, permissions }: Props) => {
                                                             )
                                                         }
                                                     />
-                                                    {permission.name}
+                                                    {permission.label}
                                                 </label>
                                             ))}
                                         </div>

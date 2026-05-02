@@ -14,7 +14,7 @@ type Props = {
 
 const RoleCreate = ({ permissions }: Props) => {
     const { data, setData, post, processing, errors } = useForm({
-        name: '',
+        label: '',
         guard_name: 'web',
         permissions: [] as number[],
     });
@@ -77,11 +77,11 @@ const RoleCreate = ({ permissions }: Props) => {
                     <div className="grid gap-2">
                         <Label>Name</Label>
                         <Input
-                            value={data.name}
-                            onChange={(e) => setData('name', e.target.value)}
+                            value={data.label}
+                            onChange={(e) => setData('label', e.target.value)}
                             placeholder="Role name"
                         />
-                        <InputError message={errors.name} />
+                        <InputError message={errors.label} />
                     </div>
 
                     <div className="grid gap-2">
@@ -147,7 +147,7 @@ const RoleCreate = ({ permissions }: Props) => {
                                                     }
                                                 />
                                                 <span className="text-sm">
-                                                    {permission.name}
+                                                    {permission.label}
                                                 </span>
                                             </label>
                                         ))}

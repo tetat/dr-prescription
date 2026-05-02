@@ -52,7 +52,7 @@ const RoleShow = ({ role }: Props) => {
                                     Name
                                 </Label>
                                 <p className="mt-1 text-lg font-semibold">
-                                    {role.name}
+                                    {role.label}
                                 </p>
                             </div>
 
@@ -61,7 +61,7 @@ const RoleShow = ({ role }: Props) => {
                                     Slug
                                 </Label>
                                 <p className="mt-1 w-fit rounded bg-muted px-2 py-1 font-mono text-sm text-blue-600">
-                                    {role.slug}
+                                    {role.name}
                                 </p>
                             </div>
 
@@ -98,7 +98,7 @@ const RoleShow = ({ role }: Props) => {
                                                         key={perm.id}
                                                         className="rounded-md border bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 dark:border-blue-800 dark:bg-blue-900 dark:text-blue-200"
                                                     >
-                                                        {perm.name}
+                                                        {perm.label}
                                                     </span>
                                                 ))}
                                             </div>

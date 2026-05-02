@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
             'password' => '12435687',
         ]);
 
-        $role_sp = Role::where('slug', 'super-admin')->first();
+        $role_sp = Role::where('name', 'super-admin')->first();
         $permissions = Permission::all();
 
         if ($role_sp) {

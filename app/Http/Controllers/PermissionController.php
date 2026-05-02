@@ -19,8 +19,8 @@ class PermissionController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
 
-            $permissionQuery->where(fn($query) => $query->where('name', 'like', "%{$search}%"))
-                ->orWhere('slug', 'like', "%{$search}%")
+            $permissionQuery->where(fn($query) => $query->where('label', 'like', "%{$search}%"))
+                ->orWhere('name', 'like', "%{$search}%")
                 ->orWhere('group', 'like', "%{$search}%");
         }
         
@@ -29,8 +29,8 @@ class PermissionController extends Controller
                 ->get()
                 ->map(fn($permission) => [
                     'id' => $permission->id,
+                    'label' => $permission->label,
                     'name' => $permission->name,
-                    'slug' => $permission->slug,
                     'group' => $permission->group,
                     'guard_name' => $permission->guard_name,
                 ]);
@@ -46,8 +46,8 @@ class PermissionController extends Controller
 
             $permissions->getCollection()->transform(fn($permission) => [
                 'id' => $permission->id,
+                'label' => $permission->label,
                 'name' => $permission->name,
-                'slug' => $permission->slug,
                 'group' => $permission->group,
                 'guard_name' => $permission->guard_name,
             ]);

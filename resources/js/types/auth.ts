@@ -31,7 +31,7 @@ export type TwoFactorSecretKey = {
 export type Role = {
     id: number;
     name: string;
-    slug: string;
+    label: string;
     guard_name: string;
     created_at: string;
     updated_at: string;
@@ -41,7 +41,7 @@ export type Role = {
 export type Permission = {
     id: number;
     name: string;
-    slug: string;
+    label: string;
     group: string;
     guard_name: string;
     created_at: string;

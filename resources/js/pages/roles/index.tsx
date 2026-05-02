@@ -127,8 +127,8 @@ const RoleIndex = ({ roles, filters }: IndexProps) => {
                                         <TableCell className="font-medium">
                                             {index + roles.from}
                                         </TableCell>
+                                        <TableCell>{role.label}</TableCell>
                                         <TableCell>{role.name}</TableCell>
-                                        <TableCell>{role.slug}</TableCell>
                                         <TableCell>{role.guard_name}</TableCell>
                                         <TableCell className="flex items-center justify-end gap-2">
                                             <Link

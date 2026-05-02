@@ -25,8 +25,8 @@ class RoleController extends Controller
             $search = $request->search;
 
             $roleQuery->where(fn($query) => 
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('slug', 'like', "%{$search}")
+                $query->where('label', 'like', "%{$search}%")
+                    ->orWhere('name', 'like', "%{$search}")
             );
         }
 
@@ -35,8 +35,8 @@ class RoleController extends Controller
                 ->get()
                 ->map(fn($role) => [
                         'id' => $role->id,
+                        'label' => $role->label,
                         'name' => $role->name,
-                        'slug' => $role->slug,
                         'guard_name' => $role->guard_name,
                     ]
                 );
@@ -52,8 +52,8 @@ class RoleController extends Controller
 
             $roles->getCollection()->transform(fn($role) => [
                 'id' => $role->id,
+                'label' => $role->label,
                 'name' => $role->name,
-                'slug' => $role->slug,
                 'guard_name' => $role->guard_name,
             ]);
         }
@@ -75,8 +75,8 @@ class RoleController extends Controller
                 return $group->map(function ($permission) {
                     return [
                         'id' => $permission->id,
+                        'label' => $permission->label,
                         'name' => $permission->name,
-                        'slug' => $permission->slug,
                     ];
                 });
             });
@@ -93,8 +93,8 @@ class RoleController extends Controller
     {
         try {
             $role = Role::create([
-                'name' => $request->name,
-                'slug' => Str::slug($request->name),
+                'label' => $request->label,
+                'name' => Str::slug($request->label),
                 'guard_name' => $request->guard_name,
             ]);
 
@@ -132,8 +132,8 @@ class RoleController extends Controller
                 return $group->map(function ($permission) {
                     return [
                         'id' => $permission->id,
-                        'name' => $permission->name,
-                        'slug' => $permission->slug,
+                        'label' => $permission->label,
+                        'name' => $permission->label,
                     ];
                 });
             });
@@ -151,8 +151,8 @@ class RoleController extends Controller
     {
         try {
             if ($role) {
-                $role->name = $request->name;
-                $role->slug = Str::slug($request->name);
+                $role->label = $request->label;
+                $role->name = Str::slug($request->label);
                 $role->guard_name = $request->guard_name;
 
                 if ($request->has('permissions')) {
