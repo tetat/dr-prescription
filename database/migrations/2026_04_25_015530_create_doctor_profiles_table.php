@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('user_id')
                 ->constrained()
                 ->cascadeOnDelete();
-            $table->string('title');
-            $table->string('licence_no')->nullable();
+            $table->string('title')->nullable();
+            $table->string('licence_no');
             $table->text('bio')->nullable();
             $table->softDeletes();
             $table->timestamps();

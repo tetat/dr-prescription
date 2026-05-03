@@ -17,24 +17,26 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
-            RoleSeeder::class,
-            PermissionSeeder::class,
-        ]);
+        if (!User::first()) {
+           $this->call([
+               RoleSeeder::class,
+               PermissionSeeder::class,
+           ]);
 
-        $user = User::firstOrCreate([
-            'name' => 'Admin',
-            'email' => 'admin@example.com',
-            'password' => '12435687',
-        ]);
+            $user = User::create([
+                'name' => 'Admin',
+                'email' => 'admin@example.com',
+                'password' => 'admin123',
+            ]);
 
-        $role_sp = Role::where('name', 'super-admin')->first();
-        $permissions = Permission::all();
+            $role_sp = Role::where('name', 'super-admin')->first();
+            $permissions = Permission::all();
 
-        if ($role_sp) {
-            $user->assignRole($role_sp);
+            if ($role_sp) {
+                $user->assignRole($role_sp);
 
-            $role_sp->syncPermissions($permissions);
+                $role_sp->syncPermissions($permissions);
+            }
         }
     }
 }

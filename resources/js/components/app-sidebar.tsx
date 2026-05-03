@@ -12,6 +12,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
+import doctors from '@/routes/doctors';
 import patients from '@/routes/patients';
 import permissions from '@/routes/permissions';
 import roles from '@/routes/roles';
@@ -24,6 +25,7 @@ import {
     Lock,
     Shield,
     Users,
+    Stethoscope,
 } from 'lucide-react';
 
 const mainNavItems: NavItem[] = [
@@ -31,6 +33,11 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+    },
+    {
+        title: 'Doctors',
+        href: doctors.index().url,
+        icon: Stethoscope,
     },
     {
         title: 'Patients',

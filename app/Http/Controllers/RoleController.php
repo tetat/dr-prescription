@@ -19,16 +19,17 @@ class RoleController extends Controller
     {
         $perPage = (int) ($request->perPage ?? "10");
         $roleQuery = Role::query();
-        $totalCount = $roleQuery->count();
 
         if ($request->filled('search')) {
             $search = $request->search;
 
             $roleQuery->where(fn($query) => 
                 $query->where('label', 'like', "%{$search}%")
-                    ->orWhere('name', 'like', "%{$search}")
+                    ->orWhere('name', 'like', "%{$search}%")
             );
         }
+        
+        $totalCount = $roleQuery->count();
 
         if ($perPage === -1) {
             $allRoles = $roleQuery->latest()
