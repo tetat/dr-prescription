@@ -51,6 +51,7 @@ export type Permission = {
 };
 
 export type Phone = {
+    id: number;
     country_code: string;
     number: string;
 };
