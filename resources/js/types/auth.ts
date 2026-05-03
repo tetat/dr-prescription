@@ -51,7 +51,13 @@ export type Permission = {
 };
 
 export type Phone = {
-    id: number;
     country_code: string;
     number: string;
+};
+
+export type DoctorProfile = {
+    user_id: number;
+    title: string;
+    licence_no: string;
+    bio: string;
 };

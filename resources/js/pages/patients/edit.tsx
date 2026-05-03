@@ -13,20 +13,22 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
-import { create, edit, index } from '@/routes/patients';
+import { edit, index } from '@/routes/patients';
 import { Phone, User } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 
+interface PatientProps {
+    name: string;
+    email: string;
+    gender: string;
+    dob: string;
+    blood_group: string;
+    address: string;
+    phones: Phone[];
+}
+
 const PatientEdit = ({ patient }: { patient: User }) => {
-    const { data, setData, put, processing, errors } = useForm<{
-        name: string;
-        email: string;
-        gender: string;
-        dob: string;
-        blood_group: string;
-        address: string;
-        phones: Phone[];
-    }>({
+    const { data, setData, put, processing, errors } = useForm<PatientProps>({
         name: patient.name,
         email: patient.email ?? '',
         gender: patient.gender ?? '',

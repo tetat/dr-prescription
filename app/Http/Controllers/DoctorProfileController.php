@@ -78,7 +78,7 @@ class DoctorProfileController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('doctors/create');
     }
 
     /**

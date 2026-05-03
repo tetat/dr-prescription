@@ -101,7 +101,7 @@ const PatientShow = ({ patient }: Props) => {
 
                             <div className="mt-4 space-y-5">
                                 {patient.phones.map((phone) => (
-                                    <div key={phone.id}>
+                                    <div key={phone.country_code + phone.number}>
                                         <p className="mb-2 text-sm font-bold tracking-wide text-muted-foreground uppercase">
                                             {phone.country_code} {phone.number}
                                         </p>
