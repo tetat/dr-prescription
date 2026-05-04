@@ -64,12 +64,19 @@ export type DoctorProfile = {
 
 export type Degree = {
     id: number;
-    title: string;
-    institute: string;
-    passing_year?: number;
+    name: string;
+    abbreviation: string;
+
 };
 
 export type Specialty = {
     id: number;
-    title: string;
+    name: string;
+    abbreviation: string;
+};
+
+export type Institute = {
+    id: number;
+    name: string;
+    abbreviation: string;
 };

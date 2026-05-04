@@ -93,7 +93,7 @@ const DegreeIndex = ({ degrees, filters }: IndexProps) => {
                             <TableSearch
                                 data={data}
                                 setData={setData}
-                                placeHolderMsg="Roles"
+                                placeHolderMsg="Degrees"
                                 route={index().url}
                             />
 
@@ -112,9 +112,8 @@ const DegreeIndex = ({ degrees, filters }: IndexProps) => {
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="w-[100px]">#</TableHead>
-                                <TableHead>Title</TableHead>
-                                <TableHead>Institute</TableHead>
-                                <TableHead>Passing Year</TableHead>
+                                <TableHead>Name</TableHead>
+                                <TableHead>Abbreviation</TableHead>
                                 <TableHead className="text-right">
                                     Actions
                                 </TableHead>
@@ -127,9 +126,8 @@ const DegreeIndex = ({ degrees, filters }: IndexProps) => {
                                         <TableCell className="font-medium">
                                             {index + degrees.from}
                                         </TableCell>
-                                        <TableCell>{degree.title}</TableCell>
-                                        <TableCell>{degree.institute}</TableCell>
-                                        <TableCell>{degree.passing_year}</TableCell>
+                                        <TableCell>{degree.name}</TableCell>
+                                        <TableCell>{degree.abbreviation}</TableCell>
                                         <TableCell className="flex items-center justify-end gap-2">
                                             <Link
                                                 href={show(degree.id)}

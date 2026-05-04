@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateDegreeRequest extends FormRequest
+class StoreInstituteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class UpdateDegreeRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'abbreviation' => ['required', 'string', 'max:255'],
+            'abbreviation' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

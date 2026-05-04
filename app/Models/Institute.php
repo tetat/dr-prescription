@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Degree extends Model
+class Institute extends Model
 {
-    /** @use HasFactory<\Database\Factories\DegreeFactory> */
+    /** @use HasFactory<\Database\Factories\InstituteFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -15,8 +15,8 @@ class Degree extends Model
         'abbreviation',
     ];
 
-    public function doctors()
+    public function doctors(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'degree_doctor', 'degree_id', 'doctor_id');
+        return $this->belongsToMany(User::class, 'doctor_institute', 'institute_id', 'doctor_id');
     }
 }

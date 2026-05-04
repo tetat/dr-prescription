@@ -10,7 +10,10 @@ class Speciality extends Model
     /** @use HasFactory<\Database\Factories\SpecialityFactory> */
     use HasFactory;
 
-    protected $fillable = ['title'];
+    protected $fillable = [
+        'name',
+        'abbreviation',
+    ];
 
     public function doctors()
     {
