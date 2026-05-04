@@ -12,10 +12,12 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
+import degrees from '@/routes/degrees';
 import doctors from '@/routes/doctors';
 import patients from '@/routes/patients';
 import permissions from '@/routes/permissions';
 import roles from '@/routes/roles';
+import specialities from '@/routes/specialities';
 import type { NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import {
@@ -26,6 +28,8 @@ import {
     Shield,
     Users,
     Stethoscope,
+    GraduationCap,
+    Layers,
 } from 'lucide-react';
 
 const mainNavItems: NavItem[] = [
@@ -38,6 +42,16 @@ const mainNavItems: NavItem[] = [
         title: 'Doctors',
         href: doctors.index().url,
         icon: Stethoscope,
+    },
+    {
+        title: 'Degrees',
+        href: degrees.index().url,
+        icon: GraduationCap,
+    },
+    {
+        title: 'Specialities',
+        href: specialities.index().url,
+        icon: Layers,
     },
     {
         title: 'Patients',

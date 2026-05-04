@@ -14,7 +14,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { create, index } from '@/routes/patients';
-import { Phone, User } from '@/types';
+import { Phone } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 
 interface PatientProps {

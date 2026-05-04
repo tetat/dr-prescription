@@ -61,3 +61,15 @@ export type DoctorProfile = {
     licence_no: string;
     bio: string;
 };
+
+export type Degree = {
+    id: number;
+    title: string;
+    institute: string;
+    passing_year?: number;
+};
+
+export type Specialty = {
+    id: number;
+    title: string;
+};
