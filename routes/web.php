@@ -3,7 +3,7 @@
 use App\Http\Controllers\InstituteController;
 use App\Http\Controllers\DegreeController;
 use App\Http\Controllers\DoctorProfileController;
-use App\Http\Controllers\SpecialtyController;
+use App\Http\Controllers\SpecialityController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
@@ -21,7 +21,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('doctors', DoctorProfileController::class);
     Route::resource('institutes', InstituteController::class);
     Route::resource('degrees', DegreeController::class);
-    Route::resource('specialities', SpecialtyController::class);
+    Route::resource('specialities', SpecialityController::class);
     Route::resource('patients', PatientController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class)->only('index');

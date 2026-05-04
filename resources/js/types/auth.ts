@@ -69,7 +69,7 @@ export type Degree = {
 
 };
 
-export type Specialty = {
+export type Speciality = {
     id: number;
     name: string;
     abbreviation: string;

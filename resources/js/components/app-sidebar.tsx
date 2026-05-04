@@ -31,7 +31,7 @@ import {
     Stethoscope,
     GraduationCap,
     Layers,
-    Building2,
+    Building,
 } from 'lucide-react';
 
 const mainNavItems: NavItem[] = [
@@ -48,7 +48,7 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Institutes',
         href: institutes.index().url,
-        icon: Building2,
+        icon: Building,
     },
     {
         title: 'Degrees',

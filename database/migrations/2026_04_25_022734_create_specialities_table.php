@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('specialities', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('name');
             $table->string('abbreviation')->nullable();
             $table->softDeletes();
             $table->timestamps();
