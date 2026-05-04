@@ -24,7 +24,7 @@ class UpdateInstituteRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'abbreviation' => ['nullable', 'string', 'max:255'],
+            'abbreviation' => ['required', 'string', 'max:255'],
         ];
     }
 }

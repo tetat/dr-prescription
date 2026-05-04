@@ -14,6 +14,7 @@ import {
 import { dashboard } from '@/routes';
 import degrees from '@/routes/degrees';
 import doctors from '@/routes/doctors';
+import institutes from '@/routes/institutes';
 import patients from '@/routes/patients';
 import permissions from '@/routes/permissions';
 import roles from '@/routes/roles';
@@ -30,6 +31,7 @@ import {
     Stethoscope,
     GraduationCap,
     Layers,
+    Building2,
 } from 'lucide-react';
 
 const mainNavItems: NavItem[] = [
@@ -42,6 +44,11 @@ const mainNavItems: NavItem[] = [
         title: 'Doctors',
         href: doctors.index().url,
         icon: Stethoscope,
+    },
+    {
+        title: 'Institutes',
+        href: institutes.index().url,
+        icon: Building2,
     },
     {
         title: 'Degrees',

@@ -2,7 +2,7 @@ import {
     destroy,
     edit,
     show,
-} from '@/actions/App/Http/Controllers/DegreeController';
+} from '@/actions/App/Http/Controllers/InstituteController';
 import { Paginate } from '@/components/paginate';
 import TableSearch from '@/components/table-search';
 import { Button } from '@/components/ui/button';
@@ -17,8 +17,8 @@ import {
 } from '@/components/ui/table';
 import { useFlashToast } from '@/hooks/use-flash-toast';
 import AppLayout from '@/layouts/app-layout';
-import { create, index } from '@/routes/degrees';
-import { Degree } from '@/types';
+import { create, index } from '@/routes/institutes';
+import { Institute } from '@/types';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import { Eye, Pencil, Trash2 } from 'lucide-react';
 
@@ -33,8 +33,8 @@ interface FilterProps {
     perPage: string;
 }
 
-interface DegreePagination {
-    data: Degree[];
+interface InstitutePagination {
+    data: Institute[];
     links: LinkProps[];
     from: number;
     to: number;
@@ -42,11 +42,11 @@ interface DegreePagination {
 }
 
 interface IndexProps {
-    degrees: DegreePagination;
+    institutes: InstitutePagination;
     filters: FilterProps;
 }
 
-const DegreeIndex = ({ degrees, filters }: IndexProps) => {
+const InstitueIndex = ({ institutes, filters }: IndexProps) => {
     useFlashToast();
 
     const { data, setData } = useForm({
@@ -68,23 +68,23 @@ const DegreeIndex = ({ degrees, filters }: IndexProps) => {
         });
     };
 
-    const handleDelete = (degree: Degree) => {
-        router.delete(destroy(degree.id).url, {
+    const handleDelete = (institute: Institute) => {
+        router.delete(destroy(institute.id).url, {
             onBefore: () =>
-                confirm('Are you sure you want to delete this degree?'),
+                confirm('Are you sure you want to delete this institute?'),
         });
     };
 
     const breadcrumbsData = [
         {
-            title: 'Manage Degrees',
+            title: 'Manage Institutes',
             href: index().url,
         },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbsData}>
-            <Head title="Degree Management" />
+            <Head title="Institute Management" />
 
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
                 <div className="relative min-h-[100vh] flex-1 rounded-xl border border-sidebar-border/70 p-4 md:min-h-min dark:border-sidebar-border">
@@ -93,7 +93,7 @@ const DegreeIndex = ({ degrees, filters }: IndexProps) => {
                             <TableSearch
                                 data={data}
                                 setData={setData}
-                                placeHolderMsg="Degrees"
+                                placeHolderMsg="Institutes"
                                 route={index().url}
                             />
 
@@ -102,13 +102,13 @@ const DegreeIndex = ({ degrees, filters }: IndexProps) => {
                                     href={create().url}
                                     className="mx-4 inline-block rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                                 >
-                                    Create Degree
+                                    Create Institute
                                 </Link>
                             </div>
                         </div>
                     </div>
                     <Table>
-                        <TableCaption>A list of degrees.</TableCaption>
+                        <TableCaption>A list of institutes.</TableCaption>
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="w-[100px]">#</TableHead>
@@ -120,30 +120,30 @@ const DegreeIndex = ({ degrees, filters }: IndexProps) => {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {degrees.data.length > 0 ? (
-                                degrees.data?.map((degree, index) => (
-                                    <TableRow key={degree.id}>
+                            {institutes.data.length > 0 ? (
+                                institutes.data?.map((institute, index) => (
+                                    <TableRow key={institute.id}>
                                         <TableCell className="font-medium">
-                                            {index + degrees.from}
+                                            {index + institutes.from}
                                         </TableCell>
-                                        <TableCell>{degree.name}</TableCell>
-                                        <TableCell>{degree.abbreviation}</TableCell>
+                                        <TableCell>{institute.name}</TableCell>
+                                        <TableCell>{institute.abbreviation}</TableCell>
                                         <TableCell className="flex items-center justify-end gap-2">
                                             <Link
-                                                href={show(degree.id)}
+                                                href={show(institute.id)}
                                                 className="flex items-center justify-center rounded bg-slate-400 px-3 py-2 text-white hover:bg-slate-600"
                                             >
                                                 <Eye size={18} />
                                             </Link>
                                             <Link
-                                                href={edit(degree.id)}
+                                                href={edit(institute.id)}
                                                 className="flex items-center justify-center rounded bg-green-500 px-3 py-2 text-white hover:bg-green-700"
                                             >
                                                 <Pencil size={18} />
                                             </Link>
                                             <Button
                                                 onClick={() =>
-                                                    handleDelete(degree)
+                                                    handleDelete(institute)
                                                 }
                                                 className="flex items-center justify-center rounded bg-red-500 px-3 py-2 text-white hover:bg-red-700"
                                             >
@@ -158,14 +158,14 @@ const DegreeIndex = ({ degrees, filters }: IndexProps) => {
                                         colSpan={5}
                                         className="h-24 text-center"
                                     >
-                                        No degress found!
+                                        No institutes found!
                                     </TableCell>
                                 </TableRow>
                             )}
                         </TableBody>
                     </Table>
                     <Paginate
-                        links={degrees.links}
+                        links={institutes.links}
                         handlePerPageChange={handlePerPageChange}
                         perPage={data.perPage}
                     />
@@ -175,4 +175,4 @@ const DegreeIndex = ({ degrees, filters }: IndexProps) => {
     );
 };
 
-export default DegreeIndex;
+export default InstitueIndex;
