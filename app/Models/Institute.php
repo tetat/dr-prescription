@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Institute extends Model
 {
@@ -15,8 +16,10 @@ class Institute extends Model
         'abbreviation',
     ];
 
-    public function doctors(): BelongsToMany
+    public function doctors()
     {
-        return $this->belongsToMany(User::class, 'doctor_institute', 'institute_id', 'doctor_id');
+        return $this->belongsToMany(User::class, 'degree_doctor', 'institute_id', 'doctor_id')
+            ->withPivot('degree_id', 'passing_year')
+            ->withTimestamps();
     }
 }

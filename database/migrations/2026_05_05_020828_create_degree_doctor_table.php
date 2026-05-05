@@ -12,13 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('degree_doctor', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('doctor_id')
                 ->constrained('users')
                 ->cascadeOnDelete();
             $table->foreignId('degree_id')
                 ->constrained()
                 ->cascadeOnDelete();
-            $table->primary(['doctor_id', 'degree_id']);
+            $table->foreignId('institute_id')
+                ->constrained()
+                ->cascadeOnDelete();
+            $table->string('passing_year')->nullable();
+            $table->unique(['doctor_id', 'degree_id', 'institute_id']);
+            $table->timestamps();
         });
     }
 

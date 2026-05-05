@@ -10,6 +10,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\Degree;
+use App\Models\Institute;
 
 class User extends Authenticatable
 {
@@ -56,6 +58,20 @@ class User extends Authenticatable
     public function doctorProfile()
     {
         return $this->hasOne(DoctorProfile::class);
+    }
+
+    public function degrees()
+    {
+        return $this->belongsToMany(Degree::class, 'degree_doctor', 'doctor_id', 'degree_id')
+            ->withPivot('institute_id', 'passing_year')
+            ->withTimestamps();
+    }
+
+    public function institutes()
+    {
+        return $this->belongsToMany(Institute::class, 'degree_doctor', 'doctor_id', 'institute_id')
+            ->withPivot('degree_id', 'passing_year')
+            ->withTimestamps();
     }
 
     public function doctorSetting()
