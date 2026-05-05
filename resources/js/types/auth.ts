@@ -86,3 +86,10 @@ export type Test = {
     name: string;
     description: string;
 }
+
+export type Examination = {
+    id: number;
+    name: string;
+    abbreviation: string;
+    unit: string;
+}

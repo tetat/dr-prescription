@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\InstituteController;
+use App\Http\Controllers\ExaminationController;
 use App\Http\Controllers\DegreeController;
 use App\Http\Controllers\DoctorProfileController;
 use App\Http\Controllers\SpecialityController;
@@ -27,6 +28,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class)->only('index');
     Route::resource('tests', TestController::class);
+    Route::resource('examinations', ExaminationController::class);
 });
 
 require __DIR__.'/settings.php';

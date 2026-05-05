@@ -14,6 +14,7 @@ import {
 import { dashboard } from '@/routes';
 import degrees from '@/routes/degrees';
 import doctors from '@/routes/doctors';
+import examinations from '@/routes/examinations';
 import institutes from '@/routes/institutes';
 import patients from '@/routes/patients';
 import permissions from '@/routes/permissions';
@@ -34,6 +35,8 @@ import {
     Layers,
     Building,
     TestTube2,
+    Activity,
+    HeartPulse,
 } from 'lucide-react';
 
 const mainNavItems: NavItem[] = [
@@ -71,6 +74,11 @@ const mainNavItems: NavItem[] = [
         title: 'Tests',
         href: tests.index().url,
         icon: TestTube2,
+    },
+    {
+        title: 'Examinations',
+        href: examinations.index().url,
+        icon: HeartPulse,
     },
     {
         title: 'Roles',

@@ -12,7 +12,7 @@ class StoreExaminationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,9 @@ class StoreExaminationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:255'],
+            'abbreviation' => ['required', 'string', 'max:255'],
+            'unit' => ['required', 'string', 'max:255'],
         ];
     }
 }
