@@ -80,3 +80,9 @@ export type Institute = {
     name: string;
     abbreviation: string;
 };
+
+export type Test = {
+    id: number;
+    name: string;
+    description: string;
+}

@@ -7,6 +7,7 @@ use App\Http\Controllers\SpecialityController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
@@ -25,6 +26,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('patients', PatientController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class)->only('index');
+    Route::resource('tests', TestController::class);
 });
 
 require __DIR__.'/settings.php';

@@ -19,6 +19,7 @@ import patients from '@/routes/patients';
 import permissions from '@/routes/permissions';
 import roles from '@/routes/roles';
 import specialities from '@/routes/specialities';
+import tests from '@/routes/tests';
 import type { NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import {
@@ -32,6 +33,7 @@ import {
     GraduationCap,
     Layers,
     Building,
+    TestTube2,
 } from 'lucide-react';
 
 const mainNavItems: NavItem[] = [
@@ -64,6 +66,11 @@ const mainNavItems: NavItem[] = [
         title: 'Patients',
         href: patients.index().url,
         icon: Users,
+    },
+    {
+        title: 'Tests',
+        href: tests.index().url,
+        icon: TestTube2,
     },
     {
         title: 'Roles',
