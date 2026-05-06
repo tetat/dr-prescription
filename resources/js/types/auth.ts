@@ -93,3 +93,11 @@ export type Examination = {
     abbreviation: string;
     unit: string;
 }
+
+export type Hospital = {
+    id: number;
+    name: string;
+    full_name: string;
+    moto: string;
+    address: string;
+}

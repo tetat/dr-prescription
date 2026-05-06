@@ -3,7 +3,6 @@ import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { create, index } from '@/routes/examinations';
 import { Examination } from '@/types';
@@ -87,7 +86,7 @@ const ExaminationCreate = () => {
                         disabled={processing}
                         className="cursor-pointer bg-indigo-600 text-white hover:bg-indigo-700"
                     >
-                        Create Test
+                        Create Examination
                     </Button>
                 </form>
             </div>
