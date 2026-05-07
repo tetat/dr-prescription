@@ -46,7 +46,7 @@ class DoctorProfileController extends Controller
                         'name' => $doctor->name,
                         'title' => $doctor->doctorProfile->title ?? 'Not Given',
                         'email' => $doctor->email,
-                        'gender' => $doctor->gender,
+                        'gender' => ucfirst($doctor->gender->value),
                         'licence_no' => $doctor->doctorProfile->licence_no,
                         'address' => $doctor->address ?? 'Not Given',
                     ]
@@ -66,7 +66,7 @@ class DoctorProfileController extends Controller
                 'name' => $doctor->name,
                 'title' => $doctor->doctorProfile->title ?? 'Not Given',
                 'email' => $doctor->email,
-                'gender' => $doctor->gender,
+                'gender' => ucfirst($doctor->gender->value),
                 'licence_no' => $doctor->doctorProfile->licence_no,
                 'address' => $doctor->address ?? 'Not Given',
             ]);
@@ -121,9 +121,9 @@ class DoctorProfileController extends Controller
                 'bio' => $request->bio,
             ]);
 
-            $doctorProfile->specialities()->attach($request->specialities);
+            $user->specialities()->sync($request->speciality_ids);
 
-            $doctorProfile->degrees()->attach($request->degrees);
+            $user->degrees()->sync($request->degrees);
 
             if (!$user || !$doctorProfile) {
                 throw new Exception("Unable to create doctor profile.");
@@ -144,7 +144,7 @@ class DoctorProfileController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(DoctorProfile $doctorProfile)
+    public function show(User $doctor)
     {
         //
     }
@@ -152,7 +152,7 @@ class DoctorProfileController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(DoctorProfile $doctorProfile)
+    public function edit(User $doctor)
     {
         //
     }
@@ -160,7 +160,7 @@ class DoctorProfileController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateDoctorProfileRequest $request, DoctorProfile $doctorProfile)
+    public function update(UpdateDoctorProfileRequest $request, User $doctor)
     {
         //
     }
@@ -168,8 +168,21 @@ class DoctorProfileController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(DoctorProfile $doctorProfile)
+    public function destroy(User $doctor)
     {
-        //
+        try {
+            if ($doctor) {
+                $doctor->specialities()->detach();
+                $doctor->degrees()->detach();
+                $doctor->doctorProfile()->delete();
+                $doctor->delete();
+                
+                return redirect()->route('doctors.index')->with('deleted', 'Doctor deleted successfully.');
+            }
+
+            throw new Exception('Unable to delete doctor.');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 }

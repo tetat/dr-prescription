@@ -12,6 +12,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\Degree;
 use App\Models\Institute;
+use App\Models\Speciality;
 
 class User extends Authenticatable
 {
@@ -67,11 +68,9 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
-    public function institutes()
+    public function specialities()
     {
-        return $this->belongsToMany(Institute::class, 'degree_doctor', 'doctor_id', 'institute_id')
-            ->withPivot('degree_id', 'passing_year')
-            ->withTimestamps();
+        return $this->belongsToMany(Speciality::class, 'doctor_speciality', 'doctor_id', 'speciality_id');
     }
 
     public function doctorSetting()

@@ -22,13 +22,13 @@ class DoctorProfile extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function degrees()
-    {
-        return $this->belongsToMany(Degree::class, 'degree_doctor', 'doctor_id', 'degree_id')->withPivot('passing_year');
-    }
+    // public function degrees()
+    // {
+    //     return $this->belongsToMany(Degree::class, 'degree_doctor', 'doctor_id', 'degree_id')->withPivot('passing_year');
+    // }
 
-    public function specialities()
-    {
-        return $this->belongsToMany(Speciality::class, 'doctor_speciality', 'doctor_id', 'speciality_id');
-    }
+    // public function specialities()
+    // {
+    //     return $this->belongsToMany(Speciality::class, 'doctor_speciality', 'doctor_id', 'speciality_id');
+    // }
 }
