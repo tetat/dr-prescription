@@ -9,6 +9,12 @@ use App\Models\User;
 use Database\Seeders\PermissionSeeder;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Database\Seeder;
+use Database\Seeders\DegreeSeeder;
+use Database\Seeders\SpecialitySeeder;
+use Database\Seeders\ExaminationSeeder;
+use Database\Seeders\InstituteSeeder;
+use Database\Seeders\HospitalSeeder;
+use Database\Seeders\TestSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -21,6 +27,12 @@ class DatabaseSeeder extends Seeder
            $this->call([
                RoleSeeder::class,
                PermissionSeeder::class,
+               DegreeSeeder::class,
+               SpecialitySeeder::class,
+               ExaminationSeeder::class,
+               InstituteSeeder::class,
+               HospitalSeeder::class,
+               TestSeeder::class,
            ]);
 
             $user = User::create([

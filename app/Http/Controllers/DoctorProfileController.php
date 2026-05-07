@@ -8,6 +8,11 @@ use App\Http\Requests\UpdateDoctorProfileRequest;
 use Illuminate\Http\Request;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Speciality;
+use App\Models\Degree;
+use App\Models\Institute;
+use Illuminate\Support\Facades\DB;
+use Exception;
 
 class DoctorProfileController extends Controller
 {
@@ -39,10 +44,10 @@ class DoctorProfileController extends Controller
                 ->map(fn($doctor) => [
                         'id' => $doctor->id,
                         'name' => $doctor->name,
-                        'title' => $doctor->profile->title ?? 'Not Given',
+                        'title' => $doctor->doctorProfile->title ?? 'Not Given',
                         'email' => $doctor->email,
                         'gender' => $doctor->gender,
-                        'licence_no' => $doctor->profile->licence_no,
+                        'licence_no' => $doctor->doctorProfile->licence_no,
                         'address' => $doctor->address ?? 'Not Given',
                     ]
                 );
@@ -59,10 +64,10 @@ class DoctorProfileController extends Controller
             $doctors->getCollection()->transform(fn($doctor) => [
                 'id' => $doctor->id,
                 'name' => $doctor->name,
-                'title' => $doctor->profile->title ?? 'Not Given',
+                'title' => $doctor->doctorProfile->title ?? 'Not Given',
                 'email' => $doctor->email,
                 'gender' => $doctor->gender,
-                'licence_no' => $doctor->profile->licence_no,
+                'licence_no' => $doctor->doctorProfile->licence_no,
                 'address' => $doctor->address ?? 'Not Given',
             ]);
         }
@@ -78,7 +83,14 @@ class DoctorProfileController extends Controller
      */
     public function create()
     {
-        return inertia('doctors/create');
+        $degrees = Degree::all();
+        $institutes = Institute::all();
+        $specialities = Speciality::all();
+        return inertia('doctors/create', [
+            'degrees' => $degrees,
+            'institutes' => $institutes,
+            'specialities' => $specialities,
+        ]);
     }
 
     /**
@@ -86,7 +98,47 @@ class DoctorProfileController extends Controller
      */
     public function store(StoreDoctorProfileRequest $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $validated = $request->validated();
+            
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'gender' => $validated['gender'],
+                'blood_group' => $validated['blood_group'],
+                'address' => $validated['address'],
+                'password' => $validated['email'],
+            ]);
+
+            $user->assignRole('doctor');
+
+            $doctorProfile = DoctorProfile::create([
+                'user_id' => $user->id,
+                'title' => $request->title,
+                'licence_no' => $request->licence_no,
+                'bio' => $request->bio,
+            ]);
+
+            $doctorProfile->specialities()->attach($request->specialities);
+
+            $doctorProfile->degrees()->attach($request->degrees);
+
+            if (!$user || !$doctorProfile) {
+                throw new Exception("Unable to create doctor profile.");
+            }
+
+            DB::commit();
+
+            return redirect()->route('doctors.index')
+                ->with('success', 'Doctor created successfully.');
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e->getMessage());
+            return redirect()->route('doctors.index')
+                ->with('error', $e->getMessage());
+        }
     }
 
     /**

@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import CountrySelect from './country-select';
 import { Phone } from '@/types';
+import { X } from 'lucide-react';
 
 
 type Props = {
@@ -49,9 +50,9 @@ const PhoneField = ({ phones, setPhones }: Props) => {
                     <Button
                         type="button"
                         onClick={() => removePhone(index)}
-                        className="bg-red-500 text-white hover:bg-red-600"
+                        className="bg-red-500 w-10 h-9 text-white hover:bg-red-600"
                     >
-                        Remove
+                        <X />
                     </Button>
                 </div>
             ))}

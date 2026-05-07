@@ -121,7 +121,7 @@ const DoctorIndex = ({ doctors, filters }: IndexProps) => {
                                 <TableHead>Title</TableHead>
                                 <TableHead>Email</TableHead>
                                 <TableHead>Gender</TableHead>
-                                <TableHead>licence_no</TableHead>
+                                <TableHead>licence No</TableHead>
                                 <TableHead>Address</TableHead>
                                 <TableHead className="text-right">
                                     Actions

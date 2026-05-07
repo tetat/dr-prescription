@@ -24,7 +24,7 @@ class DoctorProfile extends Model
 
     public function degrees()
     {
-        return $this->belongsToMany(Degree::class, 'degree_doctor', 'doctor_id', 'degree_id');
+        return $this->belongsToMany(Degree::class, 'degree_doctor', 'doctor_id', 'degree_id')->withPivot('passing_year');
     }
 
     public function specialities()

@@ -1,5 +1,7 @@
-import PatientController from '@/actions/App/Http/Controllers/PatientController';
+import DoctorProfileController from '@/actions/App/Http/Controllers/DoctorProfileController';
+import DegreeField from '@/components/degree-field';
 import InputError from '@/components/input-error';
+import MultiSelect from '@/components/multi-select';
 import PhoneField from '@/components/phone-field';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,45 +15,59 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
-import { create, index } from '@/routes/patients';
-import { DoctorProfile, Phone } from '@/types';
+import { create, index } from '@/routes/doctors';
+import { Degree, DoctorProfile, Institute, Phone, Speciality } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 
-interface DoctorProps {
+interface DoctorProps extends DoctorProfile {
     name: string;
     email: string;
     gender: string;
     blood_group?: string;
     address?: string;
     phones: Phone[];
-    doctorProfile: DoctorProfile;
+    degrees: {
+        degree_id: number | string;
+        institute_id: number | string;
+        passing_year: string;
+    }[];
+    speciality_ids: string[];
 }
 
+interface Props {
+    degrees: Degree[];
+    institutes: Institute[];
+    specialities: Speciality[];
+}
 
-const DoctorCreate = () => {
+const DoctorCreate = ({ degrees, institutes, specialities }: Props) => {
     const { data, setData, post, processing, errors } = useForm<DoctorProps>({
         name: '',
         email: '',
         gender: '',
         blood_group: '',
         address: '',
+        user_id: 0,
+        title: '',
+        licence_no: '',
+        bio: '',
         phones: [
             {
                 country_code: '+880',
                 number: '',
             },
         ],
-        doctorProfile: {
-            user_id: 0,
-            title: '',
-            licence_no: '',
-            bio: '',
-        },
+        degrees: [{
+            degree_id: '',
+            institute_id: '',
+            passing_year: '',
+        }],
+        speciality_ids: [],
     });
 
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(PatientController.store.url());
+        post(DoctorProfileController.store.url());
     };
 
     const breadcrumbsData = [
@@ -59,28 +75,30 @@ const DoctorCreate = () => {
         { title: 'Create Doctor', href: create().url },
     ];
 
-    const typedErrors = errors as Record<string, string>;
-
     return (
         <AppLayout breadcrumbs={breadcrumbsData}>
-            <Head title="Create Patient" />
+            <Head title="Create Doctor" />
             <p className="mt-2 text-right text-sm text-muted-foreground">
                 Fields marked with <span className="text-red-500">*</span> are
                 required
             </p>
 
-            <div className="mx-auto mt-6 w-2xl p-4">
+            <div className="mx-auto mt-6 w-3xl p-4">
                 <h2 className="py-3 text-center text-2xl font-bold">
                     Create Doctor
                 </h2>
 
-                <form onSubmit={onSubmit} className="flex flex-col gap-5">
+                <form
+                    onSubmit={onSubmit}
+                    className="grid grid-cols-1 gap-5 md:grid-cols-2"
+                >
                     {/* Name */}
                     <div>
                         <Label>
                             Name <span className="ml-1 text-red-500">*</span>
                         </Label>
                         <Input
+                            autoFocus
                             value={data.name}
                             onChange={(e) => setData('name', e.target.value)}
                             placeholder="Full name"
@@ -88,13 +106,25 @@ const DoctorCreate = () => {
                         <InputError message={errors.name} />
                     </div>
 
+                    {/* Title */}
+                    <div>
+                        <Label>Doctor's Title</Label>
+                        <Input
+                            value={data.title}
+                            onChange={(e) => setData('title', e.target.value)}
+                            placeholder="e.g. Dr."
+                        />
+                        <InputError message={errors.title} />
+                    </div>
+
                     {/* Email */}
                     <div>
-                        <Label>Email</Label>
+                        <Label>Email <span className="ml-1 text-red-500">*</span></Label>
                         <Input
+                            type="email"
                             value={data.email}
                             onChange={(e) => setData('email', e.target.value)}
-                            placeholder="Email"
+                            placeholder="Enter email"
                         />
                         <InputError message={errors.email} />
                     </div>
@@ -111,7 +141,6 @@ const DoctorCreate = () => {
                             <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Select Gender" />
                             </SelectTrigger>
-
                             <SelectContent>
                                 <SelectItem value="male">Male</SelectItem>
                                 <SelectItem value="female">Female</SelectItem>
@@ -124,47 +153,99 @@ const DoctorCreate = () => {
                     {/* Blood Group */}
                     <div>
                         <Label>Blood Group</Label>
-
                         <Select
                             value={data.blood_group}
-                            onValueChange={(value) =>
-                                setData('blood_group', value)
-                            }
+                            onValueChange={(value) => setData('blood_group', value)}
                         >
                             <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Select Blood Group" />
                             </SelectTrigger>
-
                             <SelectContent>
-                                <SelectItem value="A+">A+</SelectItem>
-                                <SelectItem value="A-">A-</SelectItem>
-                                <SelectItem value="B+">B+</SelectItem>
-                                <SelectItem value="B-">B-</SelectItem>
-                                <SelectItem value="AB+">AB+</SelectItem>
-                                <SelectItem value="AB-">AB-</SelectItem>
-                                <SelectItem value="O+">O+</SelectItem>
-                                <SelectItem value="O-">O-</SelectItem>
+                                {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map(
+                                    (group) => (
+                                        <SelectItem key={group} value={group}>
+                                            {group}
+                                        </SelectItem>
+                                    )
+                                )}
                             </SelectContent>
                         </Select>
                         <InputError message={errors.blood_group} />
                     </div>
 
-                    {/* Address */}
 
+
+                    {/* Licence */}
+                    <div>
+                        <Label>
+                            Licence Number <span className="ml-1 text-red-500">*</span>
+                        </Label>
+                        <Input
+                            value={data.licence_no}
+                            onChange={(e) => setData('licence_no', e.target.value)}
+                            placeholder="e.g. A-123456"
+                        />
+                        <InputError message={errors.licence_no} />
+                    </div>
+
+                    {/* Address - full width */}
                     <div>
                         <Label>Address</Label>
                         <Textarea
                             value={data.address}
                             onChange={(e) => setData('address', e.target.value)}
                             placeholder="Enter full address"
-                            className="w-full"
                             rows={3}
                         />
                         <InputError message={errors.address} />
                     </div>
 
-                    {/* Phones */}
-                    <div className="space-y-2">
+                    {/* Bio*/}
+                    <div >
+                        <Label>Doctor's Bio</Label>
+                        <Textarea
+                            value={data.bio}
+                            onChange={(e) => setData('bio', e.target.value)}
+                            placeholder="Enter doctor's bio"
+                            rows={3}
+                        />
+                        <InputError message={errors.bio} />
+                    </div>
+
+
+                    {/* Speciality */}
+                    <div className="md:col-span-2">
+                        <Label>Specialties</Label>
+                        <MultiSelect
+                            options={specialities}
+                            value={data.speciality_ids}
+                            onChange={(val) => setData('speciality_ids', val)}
+                            label="Select Specialities"
+                        />
+                    </div>
+
+                    {/* Degree */}
+                    <div className="md:col-span-2">
+                        <Label>
+                            Degrees <span className="ml-1 text-red-500">*</span>
+                        </Label>
+                        <DegreeField
+                            degrees={data.degrees}
+                            setDegrees={(val) => setData('degrees', val)}
+                            degreeOptions={degrees}
+                            instituteOptions={institutes}
+                        />
+                        {Object.entries(errors)
+                            .filter(([key]) => key.startsWith('degrees'))
+                            .map(([key, message]) => (
+                                <InputError key={key} message={message} />
+                            ))}
+                    </div>
+
+
+
+                    {/* Phones - full width */}
+                    <div className="space-y-2 md:col-span-2">
                         <Label>
                             Phones <span className="ml-1 text-red-500">*</span>
                         </Label>
@@ -172,24 +253,23 @@ const DoctorCreate = () => {
                             phones={data.phones}
                             setPhones={(phones) => setData('phones', phones)}
                         />
-                        {/* show all phone errors */}
-                        {Object.keys(errors)
-                            .filter((key) => key.startsWith('phones'))
-                            .map((key) => (
-                                <InputError
-                                    key={key}
-                                    message={typedErrors[key]}
-                                />
+
+                        {Object.entries(errors)
+                            .filter(([key]) => key.startsWith('phones'))
+                            .map(([key, message]) => (
+                                <InputError key={key} message={message} />
                             ))}
                     </div>
+
+
 
                     {/* Submit */}
                     <Button
                         type="submit"
                         disabled={processing}
-                        className="cursor-pointer bg-indigo-600 text-white hover:bg-indigo-700"
+                        className="md:col-span-2 cursor-pointer bg-indigo-600 text-white hover:bg-indigo-700"
                     >
-                        Create Doctor
+                        {processing ? 'Creating...' : 'Create Doctor'}
                     </Button>
                 </form>
             </div>
