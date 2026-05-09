@@ -102,7 +102,7 @@ class DoctorProfileController extends Controller
             DB::beginTransaction();
 
             $validated = $request->validated();
-            
+
             $user = User::create([
                 'name' => $validated['name'],
                 'email' => $validated['email'],
@@ -112,31 +112,36 @@ class DoctorProfileController extends Controller
                 'password' => $validated['email'],
             ]);
 
-            $user->assignRole('doctor');
-
-            $doctorProfile = DoctorProfile::create([
-                'user_id' => $user->id,
-                'title' => $request->title,
-                'licence_no' => $request->licence_no,
-                'bio' => $request->bio,
+            $user->doctorSetting()->create([
+                'consultation_fee' => 500,
+                'followup_fee' => 400,
+                'emergency_fee' => 700,
+                'followup_valid_days' => 14,
+                'allow_free_followup' => false,
             ]);
 
-            $user->specialities()->sync($request->speciality_ids);
+            $user->assignRole('doctor');
 
-            $user->degrees()->sync($request->degrees);
+            $doctorProfile = $user->doctorProfile()->create([
+                'title' => $validated['title'],
+                'licence_no' => $validated['licence_no'],
+                'bio' => $validated['bio'],
+            ]);
 
-            if (!$user || !$doctorProfile) {
-                throw new Exception("Unable to create doctor profile.");
-            }
+            $user->specialities()->sync($validated['speciality_ids']);
+
+            $user->degrees()->sync($validated['degrees']);
 
             DB::commit();
 
-            return redirect()->route('doctors.index')
+            return redirect()
+                ->route('doctors.index')
                 ->with('success', 'Doctor created successfully.');
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e->getMessage());
-            return redirect()->route('doctors.index')
+
+            return redirect()
+                ->route('doctors.index')
                 ->with('error', $e->getMessage());
         }
     }
@@ -146,7 +151,13 @@ class DoctorProfileController extends Controller
      */
     public function show(User $doctor)
     {
-        //
+        $doctor->loads('phones');
+        $doctor->loads('specialities');
+        $doctor->loads('degrees');
+
+        return inertia('doctors/show', [
+            'doctor' => $doctor,
+        ]);
     }
 
     /**
