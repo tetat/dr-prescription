@@ -222,6 +222,8 @@ const DoctorCreate = ({ degrees, institutes, specialities }: Props) => {
                             onChange={(val) => setData('speciality_ids', val)}
                             label="Select Specialities"
                         />
+
+                        <InputError message={errors.speciality_ids} />
                     </div>
 
                     {/* Degree */}

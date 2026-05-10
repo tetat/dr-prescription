@@ -41,37 +41,7 @@ class StorePatientRequest extends FormRequest
             'address' => ['nullable', 'string', 'max:1000'],
 
             // phones array
-            'phones' => [
-                'required',
-                'array',
-                function ($attribute, $value, $fail) {
-
-                    $seen = [];
-
-                    foreach ($value as $index => $phone) {
-                        $key = $phone['country_code'] . '-' . $phone['number'];
-
-                        // 1. check duplicate in request
-                        if (in_array($key, $seen)) {
-                            $fail("Duplicate phone number in request.");
-                            return;
-                        }
-
-                        $seen[] = $key;
-
-                        // 2. check DB (polymorphic safe)
-                        $exists = Phone::where('phoneable_type', User::class)
-                            ->where('country_code', $phone['country_code'])
-                            ->where('number', $phone['number'])
-                            ->exists();
-
-                        if ($exists) {
-                            $fail("Phone {$phone['number']} already exists.");
-                            return;
-                        }
-                    }
-                }
-            ],
+            'phones' => ['required', 'array'],
 
             'phones.*.country_code' => [
                 'required',
@@ -87,6 +57,41 @@ class StorePatientRequest extends FormRequest
                 'regex:/^[0-9]{6,15}$/',
             ],
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+
+            $phones = $this->input('phones', []);
+            $seen = [];
+            $userId = $this->route('patient')->id;
+
+            foreach ($phones as $phone) {
+
+                $key = $phone['country_code'].'-'.$phone['number'];
+
+                // duplicate in request
+                if (in_array($key, $seen)) {
+                    $validator->errors()->add('phones', 'Duplicate phone in request.');
+                    return;
+                }
+
+                $seen[] = $key;
+
+                // DB check (exclude current user)
+                $exists = Phone::where('phoneable_type', User::class)
+                    ->where('phoneable_id', '!=', $userId)
+                    ->where('country_code', $phone['country_code'])
+                    ->where('number', $phone['number'])
+                    ->exists();
+
+                if ($exists) {
+                    $validator->errors()->add('phones', "Phone {$phone['country_code']}{$phone['number']} already exists.");
+                    return;
+                }
+            }
+        });
     }
 
     public function messages(): array

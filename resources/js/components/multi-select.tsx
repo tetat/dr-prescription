@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Speciality } from '@/types';
@@ -13,6 +13,7 @@ type Props = {
 
 const MultiSelect = ({ options, value, onChange, label }: Props) => {
     const [open, setOpen] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
 
     const toggleValue = (id: string) => {
         if (value.includes(id)) {
@@ -22,18 +23,30 @@ const MultiSelect = ({ options, value, onChange, label }: Props) => {
         }
     };
 
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (ref.current && !ref.current.contains(event.target as Node)) {
+                setOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () =>
+            document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
     const selectedNames = options
         .filter((opt) => value.includes(opt.id.toString()))
         .map((opt) => opt.name);
 
     return (
-        <div className="relative w-full">
+        <div ref={ref} className="relative w-full">
             {/* Button */}
             <Button
                 type="button"
                 variant="outline"
                 className="w-full justify-between"
-                onClick={() => setOpen(!open)}
+                onClick={() => setOpen((prev) => !prev)}
             >
                 <span className="truncate text-muted-foreground">
                     {selectedNames.length > 0

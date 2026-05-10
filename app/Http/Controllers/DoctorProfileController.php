@@ -103,7 +103,7 @@ class DoctorProfileController extends Controller
 
             $validated = $request->validated();
 
-            $user = User::create([
+            $doctor = User::create([
                 'name' => $validated['name'],
                 'email' => $validated['email'],
                 'gender' => $validated['gender'],
@@ -112,9 +112,9 @@ class DoctorProfileController extends Controller
                 'password' => $validated['email'],
             ]);
 
-            $user->assignRole('doctor');
+            $doctor->assignRole('doctor');
 
-            $user->doctorSetting()->create([
+            $doctor->doctorSetting()->create([
                 'consultation_fee' => 500,
                 'followup_fee' => 400,
                 'emergency_fee' => 700,
@@ -122,17 +122,27 @@ class DoctorProfileController extends Controller
                 'allow_free_followup' => false,
             ]);
 
-            $user->phones()->createMany($validated['phones']);
+            // phones
+            $doctor->phones()->createMany($validated['phones']);
 
-            $doctorProfile = $user->doctorProfile()->create([
+            $doctorProfile = $doctor->doctorProfile()->create([
                 'title' => $validated['title'],
                 'licence_no' => $validated['licence_no'],
                 'bio' => $validated['bio'],
             ]);
 
-            $user->specialities()->sync($validated['speciality_ids']);
+            // specialities
+            $doctor->specialities()->sync($validated['speciality_ids']);
 
-            $user->degrees()->sync($validated['degrees']);
+            // degrees
+            $degrees = [];
+            foreach ($validated['degrees'] as $degree) {
+                $degrees[$degree['degree_id']] = [
+                    'institute_id' => $degree['institute_id'],
+                    'passing_year' => $degree['passing_year'],
+                ];
+            }
+            $doctor->degrees()->sync($degrees);
 
             DB::commit();
 
@@ -176,7 +186,48 @@ class DoctorProfileController extends Controller
      */
     public function edit(User $doctor)
     {
-        //
+        $doctor->load([
+            'phones',
+            'specialities',
+            'degrees',
+            'doctorProfile',
+        ]);
+
+        $doctor_data = [
+            'id' => $doctor->id,
+            'name' => $doctor->name,
+            'email' => $doctor->email,
+            'gender' => $doctor->gender,
+            'blood_group' => $doctor->blood_group,
+            'address' => $doctor->address,
+
+            'title' => $doctor->doctorProfile?->title,
+            'licence_no' => $doctor->doctorProfile?->licence_no,
+            'bio' => $doctor->doctorProfile?->bio,
+
+            'phones' => $doctor->phones->map(fn ($phone) => [
+                'country_code' => $phone->country_code,
+                'number' => $phone->number,
+            ]),
+
+            'speciality_ids' => $doctor->specialities
+                ->pluck('id')
+                ->map(fn ($id) => (string) $id)
+                ->values(),
+
+            'degrees' => $doctor->degrees->map(fn ($degree) => [
+                'degree_id' => (string) $degree->id,
+                'institute_id' => (string) $degree->pivot->institute_id,
+                'passing_year' => $degree->pivot->passing_year,
+            ]),
+        ];
+
+        return inertia('doctors/edit', [
+            'doctor' => $doctor_data,
+            'degrees' => Degree::select('id', 'name')->get(),
+            'institutes' => Institute::select('id', 'name')->get(),
+            'specialities' => Speciality::select('id', 'name')->get(),
+        ]);
     }
 
     /**
@@ -184,7 +235,57 @@ class DoctorProfileController extends Controller
      */
     public function update(UpdateDoctorProfileRequest $request, User $doctor)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+
+            $validated = $request->validated();
+
+            $doctor->update([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'gender' => $validated['gender'],
+                'blood_group' => $validated['blood_group'],
+                'address' => $validated['address'],
+            ]);
+
+            $doctor->doctorProfile()->update([
+                'title' => $validated['title'],
+                'licence_no' => $validated['licence_no'],
+                'bio' => $validated['bio'],
+            ]);
+
+            // phones
+            $doctor->phones()->delete();
+            $doctor->phones()->createMany($validated['phones']);
+
+            // specialities
+            $doctor->specialities()->sync($validated['speciality_ids']);
+
+            // degrees
+            $degrees = [];
+            foreach ($validated['degrees'] as $degree) {
+                $degrees[$degree['degree_id']] = [
+                    'institute_id' => $degree['institute_id'],
+                    'passing_year' => $degree['passing_year'],
+                ];
+            }
+            $doctor->degrees()->sync($degrees);
+
+            DB::commit();
+
+            return redirect()
+                ->route('doctors.index')
+                ->with('success', 'Doctor updated successfully.');
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return redirect()
+                ->back()
+                ->with('error', $e->getMessage());
+        }
     }
 
     /**

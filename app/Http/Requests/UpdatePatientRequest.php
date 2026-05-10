@@ -88,7 +88,7 @@ class UpdatePatientRequest extends FormRequest
                     ->exists();
 
                 if ($exists) {
-                    $validator->errors()->add('phones', "Phone {$phone['number']} already exists.");
+                    $validator->errors()->add('phones', "Phone {$phone['country_code']}{$phone['number']} already exists.");
                     return;
                 }
             }
