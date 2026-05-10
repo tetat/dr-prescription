@@ -48,7 +48,7 @@ const DoctorCreate = ({ degrees, institutes, specialities }: Props) => {
         blood_group: '',
         address: '',
         user_id: 0,
-        title: '',
+        title: 'Dr.',
         licence_no: '',
         bio: '',
         phones: [
@@ -108,7 +108,7 @@ const DoctorCreate = ({ degrees, institutes, specialities }: Props) => {
 
                     {/* Title */}
                     <div>
-                        <Label>Doctor's Title</Label>
+                        <Label>Doctor's Title <span className="ml-1 text-red-500">*</span></Label>
                         <Input
                             value={data.title}
                             onChange={(e) => setData('title', e.target.value)}
@@ -247,7 +247,7 @@ const DoctorCreate = ({ degrees, institutes, specialities }: Props) => {
                     {/* Phones - full width */}
                     <div className="space-y-2 md:col-span-2">
                         <Label>
-                            Phones <span className="ml-1 text-red-500">*</span>
+                            Contact Numbers <span className="ml-1 text-red-500">*</span>
                         </Label>
                         <PhoneField
                             phones={data.phones}

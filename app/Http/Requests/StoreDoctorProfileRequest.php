@@ -25,7 +25,7 @@ class StoreDoctorProfileRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'title' => ['nullable', 'string'],
+            'title' => ['required', 'string'],
             'email' => ['required', 'string', 'email', 'unique:users,email'],
             'gender' => ['required', 'string'],
             'blood_group' => ['nullable', 'string', Rule::in(BloodGroup::options())],

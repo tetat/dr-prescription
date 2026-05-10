@@ -104,18 +104,13 @@ class PatientController extends Controller
 
             $patient->assignRole($patientRole);
 
-            if (!empty($data['phones'])) {
-                $patient->phones()->createMany($data['phones']);
-            }
+            $patient->phones()->createMany($data['phones']);
 
-            if ($patient) {
-                DB::commit();
-                return redirect()
-                    ->route('patients.index')
-                    ->with('success', 'Patient created successfully.');
-            }
-
-            throw new Exception('Unable to create patient.');
+            DB::commit();
+            
+            return redirect()
+                ->route('patients.index')
+                ->with('success', 'Patient created successfully.');
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->route('patients.index')->with('error', $e->getMessage());

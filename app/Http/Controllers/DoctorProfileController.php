@@ -112,6 +112,8 @@ class DoctorProfileController extends Controller
                 'password' => $validated['email'],
             ]);
 
+            $user->assignRole('doctor');
+
             $user->doctorSetting()->create([
                 'consultation_fee' => 500,
                 'followup_fee' => 400,
@@ -120,7 +122,7 @@ class DoctorProfileController extends Controller
                 'allow_free_followup' => false,
             ]);
 
-            $user->assignRole('doctor');
+            $user->phones()->createMany($validated['phones']);
 
             $doctorProfile = $user->doctorProfile()->create([
                 'title' => $validated['title'],
@@ -151,9 +153,18 @@ class DoctorProfileController extends Controller
      */
     public function show(User $doctor)
     {
-        $doctor->loads('phones');
-        $doctor->loads('specialities');
-        $doctor->loads('degrees');
+        $doctor->load([
+            'phones',
+            'specialities',
+            'degrees',
+            'doctorProfile',
+        ]);
+
+        $doctor->degrees->each(function ($degree) {
+            $degree->pivot->institute = Institute::find(
+                $degree->pivot->institute_id
+            );
+        });
 
         return inertia('doctors/show', [
             'doctor' => $doctor,

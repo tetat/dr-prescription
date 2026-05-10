@@ -23,7 +23,7 @@ class DegreeDoctor extends Pivot
         return $this->belongsTo(Degree::class);
     }
 
-    public function institution()
+    public function institute()
     {
         return $this->belongsTo(Institution::class);
     }
