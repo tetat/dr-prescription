@@ -11,7 +11,7 @@ class UserPolicy
      */
     public function viewAny(User $authUser): bool
     {
-        return false;
+        return $authUser->can('user-access');
     }
 
     /**
@@ -19,7 +19,7 @@ class UserPolicy
      */
     public function view(User $authUser, User $user): bool
     {
-        return false;
+        return $authUser->can('show-user');
     }
 
     /**
@@ -27,7 +27,7 @@ class UserPolicy
      */
     public function create(User $authUser): bool
     {
-        return false;
+        return $authUser->can('create-user');
     }
 
     /**
@@ -35,7 +35,14 @@ class UserPolicy
      */
     public function update(User $authUser, User $user): bool
     {
-        return false;
+        if (
+            $user->hasRole('super-admin') &&
+            !$authUser->hasRole('super-admin')
+        ) {
+            return false;
+        }
+
+        return $authUser->can('edit-user');
     }
 
     /**
@@ -43,7 +50,20 @@ class UserPolicy
      */
     public function delete(User $authUser, User $user): bool
     {
-        return false;
+        // prevent self delete
+        if ($authUser->id === $user->id) {
+            return false;
+        }
+
+        // protect super-admin
+        if (
+            $user->hasRole('super-admin') &&
+            !$authUser->hasRole('super-admin')
+        ) {
+            return false;
+        }
+
+        return $authUser->can('delete-user');
     }
 
     /**
@@ -51,7 +71,7 @@ class UserPolicy
      */
     public function restore(User $authUser, User $user): bool
     {
-        return false;
+        return $authUser->can('restore-user');
     }
 
     /**
@@ -59,6 +79,6 @@ class UserPolicy
      */
     public function forceDelete(User $authUser, User $user): bool
     {
-        return false;
+        return $authUser->can('permanent-delete-user');
     }
 }

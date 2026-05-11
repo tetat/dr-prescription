@@ -14,7 +14,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { edit, index } from '@/routes/users';
-import { Phone, Role, User } from '@/types';
+import { Phone, Role } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 
 interface UserProps {

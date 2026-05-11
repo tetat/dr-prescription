@@ -143,7 +143,7 @@ const UserIndex = ({ users, filters }: IndexProps) => {
                                         <TableCell>{user.address}</TableCell>
                                         <TableCell>
                                             <div className="flex gap-1.5">
-                                                {user.roles.map((role) => (
+                                                {user.roles?.map((role) => (
                                                     <Badge className='bg-blue-100 text-blue-900' key={role}>{role}</Badge>
                                                 ))}
                                             </div>
