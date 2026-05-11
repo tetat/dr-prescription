@@ -2,14 +2,15 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\BloodGroup;
-use App\Enums\UserGender;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use App\Models\Phone;
 use App\Models\User;
+use App\Enums\BloodGroup;
+use App\Enums\UserGender;
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class StorePatientRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,10 +29,9 @@ class StorePatientRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['nullable', 'email', 'max:255', Rule::unique('users', 'email')],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($this->route('user'))],
+            'role_name' => ['required', Rule::exists('roles', 'name'), Rule::notIn(['super-admin', 'doctor', 'patient'])],
             'gender' => ['required', Rule::in(UserGender::options())],
-
-            'dob' => ['required', 'date', 'before:today'],
 
             'blood_group' => [
                 'nullable',
@@ -65,6 +65,7 @@ class StorePatientRequest extends FormRequest
 
             $phones = $this->input('phones', []);
             $seen = [];
+            $user_id = $this->route('user')->id;
 
             foreach ($phones as $phone) {
 
@@ -80,6 +81,7 @@ class StorePatientRequest extends FormRequest
 
                 // DB check
                 $exists = Phone::where('phoneable_type', User::class)
+                    ->where('phoneable_id', '!=', $user_id)
                     ->where('country_code', $phone['country_code'])
                     ->where('number', $phone['number'])
                     ->exists();

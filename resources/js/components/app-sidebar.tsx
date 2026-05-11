@@ -22,6 +22,7 @@ import permissions from '@/routes/permissions';
 import roles from '@/routes/roles';
 import specialities from '@/routes/specialities';
 import tests from '@/routes/tests';
+import users from '@/routes/users';
 import type { NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import {
@@ -85,6 +86,11 @@ const mainNavItems: NavItem[] = [
         title: 'Examinations',
         href: examinations.index().url,
         icon: HeartPulse,
+    },
+    {
+        title: 'Users',
+        href: users.index().url,
+        icon: Users,
     },
     {
         title: 'Roles',

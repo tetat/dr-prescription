@@ -100,7 +100,7 @@ const DoctorEdit = ({
 
                     {/* Name */}
                     <div>
-                        <Label>Name</Label>
+                        <Label>Name <span className="text-red-500">*</span></Label>
 
                         <Input
                             value={data.name}
@@ -128,7 +128,7 @@ const DoctorEdit = ({
 
                     {/* Email */}
                     <div>
-                        <Label>Email</Label>
+                        <Label>Email <span className="text-red-500">*</span></Label>
 
                         <Input
                             type="email"
@@ -143,7 +143,7 @@ const DoctorEdit = ({
 
                     {/* Gender */}
                     <div>
-                        <Label>Gender</Label>
+                        <Label>Gender <span className="text-red-500">*</span></Label>
 
                         <Select
                             value={data.gender}
@@ -200,7 +200,7 @@ const DoctorEdit = ({
 
                     {/* Licence */}
                     <div>
-                        <Label>Licence Number</Label>
+                        <Label>Licence Number <span className="text-red-500">*</span></Label>
 
                         <Input
                             value={data.licence_no}
@@ -245,6 +245,8 @@ const DoctorEdit = ({
 
                     {/* Specialities */}
                     <div className="md:col-span-2">
+                        <Label>Specialities</Label>
+
                         <MultiSelect
                             options={specialities}
                             value={data.speciality_ids}
@@ -259,6 +261,8 @@ const DoctorEdit = ({
 
                     {/* Degrees */}
                     <div className="md:col-span-2">
+                        <Label>Degrees <span className="text-red-500">*</span></Label>
+
                         <DegreeField
                             degrees={data.degrees}
                             setDegrees={(val) =>
@@ -277,6 +281,7 @@ const DoctorEdit = ({
 
                     {/* Phones */}
                     <div className="md:col-span-2">
+                        <Label>Phones <span className="text-red-500">*</span></Label>
                         <PhoneField
                             phones={data.phones}
                             setPhones={(phones) =>

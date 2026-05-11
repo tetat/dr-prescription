@@ -1,28 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 
 interface ImagePreviewProps {
     file: File | null;
     className?: string;
-    fallback?: string; // optional existing image (edit mode)
+    fallback?: string;
 }
 
 const ImagePreview = ({ file, className, fallback }: ImagePreviewProps) => {
-    const [preview, setPreview] = useState<string | null>(null);
-
-    useEffect(() => {
-        if (!file || !(file instanceof File)) {
-            setPreview(null);
-            return;
-        }
-
-        const objectUrl = URL.createObjectURL(file);
-        setPreview(objectUrl);
-
-        return () => URL.revokeObjectURL(objectUrl);
+    const preview = useMemo(() => {
+        if (!file || !(file instanceof File)) return null;
+        return URL.createObjectURL(file);
     }, [file]);
 
     const src = preview || fallback;
 
+    useEffect(() => {
+        return () => {
+            if (preview) {
+                URL.revokeObjectURL(preview);
+            }
+        };
+    }, [preview]);
 
     if (!src) return null;
 
@@ -30,10 +28,7 @@ const ImagePreview = ({ file, className, fallback }: ImagePreviewProps) => {
         <img
             src={src}
             alt="Preview"
-            className={
-                className ||
-                'h-24 w-40 rounded-md border object-cover'
-            }
+            className={className || 'h-24 w-40 rounded-md border object-cover'}
         />
     );
 };

@@ -2,14 +2,15 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\BloodGroup;
-use App\Enums\UserGender;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use App\Models\Phone;
 use App\Models\User;
+use App\Enums\BloodGroup;
+use App\Enums\UserGender;
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class StorePatientRequest extends FormRequest
+class StoreUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,10 +29,9 @@ class StorePatientRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['nullable', 'email', 'max:255', Rule::unique('users', 'email')],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')],
+            'role_name' => ['required', Rule::exists('roles', 'name')],
             'gender' => ['required', Rule::in(UserGender::options())],
-
-            'dob' => ['required', 'date', 'before:today'],
 
             'blood_group' => [
                 'nullable',

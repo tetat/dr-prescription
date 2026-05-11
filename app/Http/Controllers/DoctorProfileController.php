@@ -278,8 +278,7 @@ class DoctorProfileController extends Controller
                 ->route('doctors.index')
                 ->with('success', 'Doctor updated successfully.');
 
-        } catch (\Exception $e) {
-
+        } catch (Exception $e) {
             DB::rollBack();
 
             return redirect()

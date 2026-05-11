@@ -10,6 +10,7 @@ use App\Http\Controllers\HospitalController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
@@ -27,6 +28,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('specialities', SpecialityController::class);
     Route::resource('hospitals', HospitalController::class);
     Route::resource('patients', PatientController::class);
+    Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class)->only('index');
     Route::resource('tests', TestController::class);

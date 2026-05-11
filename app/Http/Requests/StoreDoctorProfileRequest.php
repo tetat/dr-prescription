@@ -63,7 +63,6 @@ class StoreDoctorProfileRequest extends FormRequest
 
             $phones = $this->input('phones', []);
             $seen = [];
-            $userId = $this->route('doctor')->id;
 
             foreach ($phones as $phone) {
 
@@ -79,7 +78,6 @@ class StoreDoctorProfileRequest extends FormRequest
 
                 // DB check (exclude current user)
                 $exists = Phone::where('phoneable_type', User::class)
-                    ->where('phoneable_id', '!=', $userId)
                     ->where('country_code', $phone['country_code'])
                     ->where('number', $phone['number'])
                     ->exists();

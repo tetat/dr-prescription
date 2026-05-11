@@ -76,7 +76,6 @@ class PatientController extends Controller
      */
     public function create()
     {
-
         return inertia('patients/create');
     }
 
@@ -146,35 +145,34 @@ class PatientController extends Controller
      */
     public function update(UpdatePatientRequest $request, User $patient)
     {
+        DB::beginTransaction();
         try {
             $data = $request->validated();
 
-            DB::transaction(function () use ($patient, $data) {
+            // update patient
+            $patient->update([
+                'name' => $data['name'],
+                'email' => $data['email'] ?? null,
+                'gender' => $data['gender'],
+                'dob' => $data['dob'],
+                'blood_group' => $data['blood_group'] ?? null,
+                'address' => $data['address'] ?? null,
+            ]);
 
-                // update patient
-                $patient->update([
-                    'name' => $data['name'],
-                    'email' => $data['email'] ?? null,
-                    'gender' => $data['gender'],
-                    'dob' => $data['dob'],
-                    'blood_group' => $data['blood_group'] ?? null,
-                    'address' => $data['address'] ?? null,
-                ]);
+            // replace phones
+            $patient->phones()->delete();
 
-                // replace phones
-                $patient->phones()->delete();
+            $patient->phones()->createMany($data['phones']);
 
-                $patient->phones()->createMany($data['phones']);
-            });
+            DB::commit();
 
             return redirect()
                 ->route('patients.index')
                 ->with('success', 'Patient updated successfully.');
 
         } catch (Exception $e) {
-            return redirect()
-                ->route('patients.index')
-                ->with('error', $e->getMessage());
+            DB::rollBack();
+            return redirect()->route('patients.index')->with('error', $e->getMessage());
         }
     }
 
@@ -184,14 +182,10 @@ class PatientController extends Controller
     public function destroy(User $patient)
     {
         try {
-            if ($patient) {
-                $patient->phones()->delete();
-                $patient->delete();
-                
-                return redirect()->route('patients.index')->with('deleted', 'Patient deleted successfully.');
-            }
-
-            throw new Exception('Unable to delete patient.');
+            $patient->phones()->delete();
+            $patient->delete();
+            
+            return redirect()->route('patients.index')->with('deleted', 'Patient deleted successfully.');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
