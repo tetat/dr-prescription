@@ -5,6 +5,7 @@ import {
 } from '@/actions/App/Http/Controllers/DoctorProfileController';
 import { Paginate } from '@/components/paginate';
 import TableSearch from '@/components/table-search';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
     Table,
@@ -36,6 +37,7 @@ interface FilterProps {
 interface DoctorData extends User {
     licence_no: string;
     title: string;
+    roles: string[];
 }
 
 interface UserPagination {
@@ -122,7 +124,7 @@ const DoctorIndex = ({ doctors, filters }: IndexProps) => {
                                 <TableHead>Email</TableHead>
                                 <TableHead>Gender</TableHead>
                                 <TableHead>licence No</TableHead>
-                                <TableHead>Address</TableHead>
+                                <TableHead>Roles</TableHead>
                                 <TableHead className="text-right">
                                     Actions
                                 </TableHead>
@@ -140,7 +142,13 @@ const DoctorIndex = ({ doctors, filters }: IndexProps) => {
                                         <TableCell>{doctor.email}</TableCell>
                                         <TableCell>{doctor.gender}</TableCell>
                                         <TableCell>{doctor.licence_no}</TableCell>
-                                        <TableCell>{doctor.address}</TableCell>
+                                        <TableCell>
+                                            <div className="flex flex-col gap-1.5">
+                                                {doctor.roles?.map((role) => (
+                                                    <Badge className='bg-blue-100 text-blue-900' key={role}>{role}</Badge>
+                                                ))}
+                                            </div>
+                                        </TableCell>
                                         <TableCell className="flex items-center justify-end gap-2">
                                             <Link
                                                 href={show(doctor.id)}

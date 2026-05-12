@@ -9,24 +9,32 @@ type Props = {
     value: string[];
     onChange: (value: string[]) => void;
     label?: string;
+    is_role?: boolean;
 };
 
-const MultiSelect = ({ options, value, onChange, label }: Props) => {
+const MultiSelect = ({ options, value, onChange, label, is_role = false }: Props) => {
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
 
     // Get dynamic value
     const getOptionValue = (opt: Speciality | Role) => {
-        // If role => use name
-        if ('label' in opt) {
+        if (is_role) {
             return opt.name;
         }
 
-        // If speciality => use id
         return opt.id.toString();
     };
 
+    const doctorRoleAlert = () => {
+        alert('Doctor Role must be need for Doctor!');
+    }
+
     const toggleValue = (val: string) => {
+        if (is_role && val === 'doctor') {
+            doctorRoleAlert();
+            return;
+        }
+
         if (value.includes(val)) {
             onChange(value.filter((v) => v !== val));
         } else {
@@ -56,7 +64,11 @@ const MultiSelect = ({ options, value, onChange, label }: Props) => {
         .filter((opt) =>
             value.includes(getOptionValue(opt))
         )
-        .map((opt) => opt.name);
+        .map((opt) => {
+            return is_role
+                ? (opt as Role).label
+                : (opt as Speciality).name
+        });
 
     return (
         <div ref={ref} className="relative w-full">
@@ -92,14 +104,12 @@ const MultiSelect = ({ options, value, onChange, label }: Props) => {
                                     checked={value.includes(
                                         optionValue
                                     )}
-                                    onCheckedChange={() =>
-                                        toggleValue(
-                                            optionValue
-                                        )
-                                    }
+                                    onCheckedChange={() => toggleValue(optionValue)}
                                 />
 
-                                <span>{opt.name}</span>
+                                <span>{is_role
+                                    ? (opt as Role).label
+                                    : (opt as Speciality).name}</span>
                             </label>
                         );
                     })}

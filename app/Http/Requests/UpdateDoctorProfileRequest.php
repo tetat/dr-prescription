@@ -35,6 +35,13 @@ class UpdateDoctorProfileRequest extends FormRequest
             'licence_no' => ['required', 'string', 'max:100'],
             'bio' => ['nullable', 'string'],
 
+            'role_ids' => ['required', 'array'],
+            'role_ids.*' => [
+                                'required', 
+                                Rule::in(['super-admin', 'doctor']),
+                                Rule::exists('roles', 'name')->where('guard_name', 'web'),
+                            ],
+
             'speciality_ids' => ['nullable', 'array'],
             'speciality_ids.*' => ['integer', 'exists:specialities,id'],
 
@@ -133,6 +140,9 @@ class UpdateDoctorProfileRequest extends FormRequest
             'degrees.*.passing_year.required' => 'Passing year is required.',
             'degrees.*.passing_year.string' => 'Passing year must be a string.',
             'degrees.*.passing_year.max' => 'Passing year must be at most 4 characters.',
+            'role_ids.required' => 'Role is required.',
+            'role_ids.min' => 'Role must have at least 1 element.',
+            'role_ids.*.exists' => 'Role not exist in our records.',
         ];
     }
 }

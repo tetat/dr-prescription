@@ -34,6 +34,14 @@ class StoreDoctorProfileRequest extends FormRequest
             'licence_no' => ['required', 'string', 'unique:doctor_profiles,licence_no', 'regex:/^[A-Z]-[0-9]{6}$/',],
             'address' => ['nullable', 'string'],
             'bio' => ['nullable', 'string'],
+
+            'role_ids' => ['required', 'array'],
+            'role_ids.*' => [
+                                'required', 
+                                Rule::in(['super-admin', 'doctor']),
+                                Rule::exists('roles', 'name')->where('guard_name', 'web'),
+                            ],
+                            
             // phones array
             'phones' => ['required', 'array'],
             'phones.*.country_code' => [
@@ -128,6 +136,9 @@ class StoreDoctorProfileRequest extends FormRequest
             'degrees.*.passing_year.required' => 'Passing year is required.',
             'degrees.*.passing_year.string' => 'Passing year must be a string.',
             'degrees.*.passing_year.max' => 'Passing year must be at most 4 characters.',
+            'role_ids.required' => 'Role is required.',
+            'role_ids.min' => 'Role must have at least 1 element.',
+            'role_ids.*.exists' => 'Role not exist in our records.',
         ];
     }
 }

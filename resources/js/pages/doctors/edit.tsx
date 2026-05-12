@@ -21,6 +21,7 @@ import {
     DoctorProfile,
     Institute,
     Phone,
+    Role,
     Speciality,
 } from '@/types';
 
@@ -43,6 +44,8 @@ interface DoctorProps extends DoctorProfile {
     }[];
 
     speciality_ids: string[];
+
+    role_ids: string[];
 }
 
 interface Props {
@@ -50,6 +53,7 @@ interface Props {
     degrees: Degree[];
     institutes: Institute[];
     specialities: Speciality[];
+    roles: Role[];
 }
 
 const DoctorEdit = ({
@@ -57,6 +61,7 @@ const DoctorEdit = ({
     degrees,
     institutes,
     specialities,
+    roles,
 }: Props) => {
 
     const { data, setData, put, processing, errors } =
@@ -243,6 +248,24 @@ const DoctorEdit = ({
                         <InputError message={errors.bio} />
                     </div>
 
+                    {/* Roles */}
+                    <div className="md:col-span-2">
+                        <Label>Roles</Label>
+
+                        <MultiSelect
+                            options={roles}
+                            value={data.role_ids}
+                            onChange={(val) => setData('role_ids', val)}
+                            is_role={true}
+                        />
+
+                        {Object.entries(errors)
+                            .filter(([key]) => key.startsWith('role_ids'))
+                            .map(([key, message]) => (
+                                <InputError key={key} message={message} />
+                            ))}
+                    </div>
+
                     {/* Specialities */}
                     <div className="md:col-span-2">
                         <Label>Specialities</Label>
@@ -256,7 +279,11 @@ const DoctorEdit = ({
                             label="Select Specialities"
                         />
 
-                        <InputError message={errors.speciality_ids} />
+                        {Object.entries(errors)
+                            .filter(([key]) => key.startsWith('speciality_ids'))
+                            .map(([key, message]) => (
+                                <InputError key={key} message={message} />
+                            ))}
                     </div>
 
                     {/* Degrees */}

@@ -16,7 +16,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { create, index } from '@/routes/doctors';
-import { Degree, DoctorProfile, Institute, Phone, Speciality } from '@/types';
+import { Degree, DoctorProfile, Institute, Phone, Role, Speciality } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 
 interface DoctorProps extends DoctorProfile {
@@ -32,15 +32,17 @@ interface DoctorProps extends DoctorProfile {
         passing_year: string;
     }[];
     speciality_ids: string[];
+    role_ids: string[];
 }
 
 interface Props {
     degrees: Degree[];
     institutes: Institute[];
     specialities: Speciality[];
+    roles: Role[];
 }
 
-const DoctorCreate = ({ degrees, institutes, specialities }: Props) => {
+const DoctorCreate = ({ degrees, institutes, specialities, roles }: Props) => {
     const { data, setData, post, processing, errors } = useForm<DoctorProps>({
         name: '',
         email: '',
@@ -62,7 +64,8 @@ const DoctorCreate = ({ degrees, institutes, specialities }: Props) => {
             institute_id: '',
             passing_year: '',
         }],
-        speciality_ids: [],
+        speciality_ids: [''],
+        role_ids: ['doctor'],
     });
 
     const onSubmit = (e: React.FormEvent) => {
@@ -212,6 +215,22 @@ const DoctorCreate = ({ degrees, institutes, specialities }: Props) => {
                         <InputError message={errors.bio} />
                     </div>
 
+                    {/* Roles */}
+                    <div className="md:col-span-2">
+                        <Label>Roles <span className="ml-1 text-red-500">*</span></Label>
+                        <MultiSelect
+                            options={roles}
+                            value={data.role_ids}
+                            onChange={(val) => setData('role_ids', val)}
+                            label="Select Roles"
+                            is_role={true}
+                        />
+                        {Object.entries(errors)
+                            .filter(([key]) => key.startsWith('role_ids'))
+                            .map(([key, message]) => (
+                                <InputError key={key} message={message} />
+                            ))}
+                    </div>
 
                     {/* Speciality */}
                     <div className="md:col-span-2">
@@ -222,8 +241,11 @@ const DoctorCreate = ({ degrees, institutes, specialities }: Props) => {
                             onChange={(val) => setData('speciality_ids', val)}
                             label="Select Specialities"
                         />
-
-                        <InputError message={errors.speciality_ids} />
+                        {Object.entries(errors)
+                            .filter(([key]) => key.startsWith('speciality_ids'))
+                            .map(([key, message]) => (
+                                <InputError key={key} message={message} />
+                            ))}
                     </div>
 
                     {/* Degree */}
