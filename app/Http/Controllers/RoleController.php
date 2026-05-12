@@ -2,62 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Role;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
-use App\Models\Permission;
+use App\Services\RoleService;
+use App\Services\PermissionService;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use App\Models\Role;
+
 
 class RoleController extends Controller
 {
+    public function __construct(
+        private RoleService $roleService,
+        private PermissionService $permissionService
+    ){}
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $perPage = (int) ($request->perPage ?? "10");
-        $roleQuery = Role::query();
-
-        if ($request->filled('search')) {
-            $search = $request->search;
-
-            $roleQuery->where(fn($query) => 
-                $query->where('label', 'like', "%{$search}%")
-                    ->orWhere('name', 'like', "%{$search}%")
-            );
-        }
-        
-        $totalCount = $roleQuery->count();
-
-        if ($perPage === -1) {
-            $allRoles = $roleQuery->latest()
-                ->get()
-                ->map(fn($role) => [
-                        'id' => $role->id,
-                        'label' => $role->label,
-                        'name' => $role->name,
-                        'guard_name' => $role->guard_name,
-                    ]
-                );
-            $roles = [
-                'data' => $allRoles,
-                'total' => $totalCount,
-                'from' => 1,
-                'to' => $totalCount,
-                'links' => [],
-            ];
-        } else {
-            $roles = $roleQuery->latest()->paginate($perPage)->withQueryString();
-
-            $roles->getCollection()->transform(fn($role) => [
-                'id' => $role->id,
-                'label' => $role->label,
-                'name' => $role->name,
-                'guard_name' => $role->guard_name,
-            ]);
-        }
+        $roles = $this->roleService->getRolesTableData($request);
 
         return inertia('roles/index', [
             'roles' => $roles,
@@ -70,17 +35,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $permissions = Permission::all()
-            ->groupBy('group')
-            ->map(function ($group) {
-                return $group->map(function ($permission) {
-                    return [
-                        'id' => $permission->id,
-                        'label' => $permission->label,
-                        'name' => $permission->name,
-                    ];
-                });
-            });
+        $permissions = $this->permissionService->getGroupedPermissions();
 
         return inertia('roles/create', [
             'permissions' => $permissions,
@@ -93,20 +48,9 @@ class RoleController extends Controller
     public function store(StoreRoleRequest $request)
     {
         try {
-            $role = Role::create([
-                'label' => $request->label,
-                'name' => Str::slug($request->label),
-                'guard_name' => $request->guard_name,
-            ]);
+            $role = $this->roleService->createRole($request->validated());
 
-            if ($request->has('permissions')) {
-                $role->permissions()->sync($request->permissions);
-            }
-
-            if ($role) {
-                return redirect()->route('roles.index')->with('success', 'Role created successfully.');
-            }
-            return redirect()->route('roles.index')->with('error', 'Unable to create role.');
+            return redirect()->route('roles.index')->with('success', 'Role created successfully.');
         } catch (Exception $e) {
             return redirect()->route('roles.index')->with('error', $e->getMessage());
         }
@@ -127,17 +71,7 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        $permissions = Permission::all()
-            ->groupBy('group')
-            ->map(function ($group) {
-                return $group->map(function ($permission) {
-                    return [
-                        'id' => $permission->id,
-                        'label' => $permission->label,
-                        'name' => $permission->label,
-                    ];
-                });
-            });
+        $permissions = $this->permissionService->getGroupedPermissions();
 
         return inertia('roles/edit', [
             'role' => $role->load('permissions'),
@@ -151,21 +85,9 @@ class RoleController extends Controller
     public function update(UpdateRoleRequest $request, Role $role)
     {
         try {
-            if ($role) {
-                $role->label = $request->label;
-                $role->name = Str::slug($request->label);
-                $role->guard_name = $request->guard_name;
+            $this->roleService->updateRole($role, $request->validated());
 
-                if ($request->has('permissions')) {
-                    $role->permissions()->sync($request->permissions);
-                }
-
-                $role->save();
-
-                return redirect()->route('roles.index')->with('success', 'Role updated successfully.');
-            }
-
-            return redirect()->route('roles.index')->with('error', 'Unable to update role.');
+            return redirect()->route('roles.index')->with('success', 'Role updated successfully.');
         } catch (Exception $e) {
             return redirect()->route('roles.index')->with('error', $e->getMessage());
         }
@@ -177,13 +99,9 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
         try {
-            if ($role) {
-                $role->delete();
+            $this->roleService->deleteRole($role);
                 
-                return redirect()->route('roles.index')->with('deleted', 'Role deleted successfully.');
-            }
-
-            return redirect()->back()->with('error', 'Unable to delete role.');
+            return redirect()->route('roles.index')->with('deleted', 'Role deleted successfully.');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }

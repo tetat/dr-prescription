@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Services\UserService;
 use Illuminate\Http\Request;
-use App\Services\RoleService;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
@@ -13,8 +12,7 @@ use Exception;
 class UserController extends Controller
 {
     public function __construct(
-        private UserService $userService,
-        private RoleService $roleService
+        private UserService $userService
     ) {}
 
     /**
@@ -35,7 +33,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = $this->roleService->getAllRoles();
+        $roles = $this->userService->getFilteredRoles();
 
         return inertia('users/create', [
             'roles' => $roles,
@@ -78,9 +76,9 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $user->load('phones');
-        $user['role_name'] = $user->roles()->whereNotIn('name', ['doctor'])->first()->name;
+        $user['role_name'] = $user->roles()->first()->name;
 
-        $roles = $this->roleService->getAllRoles();
+        $roles = $this->userService->getFilteredRoles();
 
         return inertia('users/edit', [
             'user' => $user,

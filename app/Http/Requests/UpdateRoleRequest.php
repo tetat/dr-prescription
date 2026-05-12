@@ -24,6 +24,8 @@ class UpdateRoleRequest extends FormRequest
         return [
             'label' => ['required', 'string', 'min:2'],
             'guard_name' => ['required', 'string', 'min:2'],
+            'permissions' => ['nullable', 'array'],
+            'permissions.*' => ['integer', 'exists:permissions,id'],
         ];
     }
 }

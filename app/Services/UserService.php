@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class UserService
 {
@@ -19,21 +20,21 @@ class UserService
         $userQuery = User::with('roles');
         $authUser = auth()->user();
 
-        if ($authUser->hasRole('admin')) {
+        if ($authUser->hasRole('super-admin')) {
             $userQuery->whereDoesntHave('roles', function ($query) {
-                $query->whereIn('name', ['super-admin']);
+                $query->whereIn('name', ['doctor', 'patient']);
             });
-        } elseif ($authUser->hasRole('doctor')) {
+        } else if ($authUser->hasRole('admin')) {
             $userQuery->whereDoesntHave('roles', function ($query) {
-                $query->whereIn('name', ['super-admin', 'admin']);
+                $query->whereIn('name', ['super-admin', 'doctor', 'patient']);
             });
-        } elseif (!$authUser->hasRole('super-admin')) {
+        } else if ($authUser->hasRole('doctor')) {
             $userQuery->whereDoesntHave('roles', function ($query) {
-                $query->whereIn('name', [
-                    'super-admin',
-                    'admin',
-                    'doctor',
-                ]);
+                $query->whereIn('name', ['super-admin', 'admin', 'doctor', 'patient']);
+            });
+        } else {
+            $userQuery->whereDoesntHave('roles', function ($query) {
+                $query->whereIn('name', ['super-admin', 'admin', 'doctor', 'patient']);
             });
         }
 
@@ -91,6 +92,14 @@ class UserService
         }
 
         return $users;
+    }
+
+    public function getFilteredRoles(): Collection
+    {
+        return $this->roleService
+            ->getAllRoles()
+            ->whereNotIn('name', ['doctor', 'patient'])
+            ->values();
     }
 
     public function createUser(array $data): User

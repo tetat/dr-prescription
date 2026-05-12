@@ -6,6 +6,8 @@ use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class RoleService
 {
@@ -88,5 +90,47 @@ class RoleService
         }
 
         return $roles;
+    }
+
+    public function createRole(array $data): Role
+    {
+        return DB::transaction(function () use ($data) {
+
+            $role = Role::create([
+                'label' => $data['label'],
+                'name' => Str::slug($data['label']),
+                'guard_name' => $data['guard_name'] ?? 'web',
+            ]);
+
+            if (!empty($data['permissions'])) {
+                $role->permissions()->sync($data['permissions']);
+            }
+
+            return $role;
+        });
+    }
+
+    public function updateRole(Role $role, array $data): Role
+    {
+        return DB::transaction(function () use ($role, $data) {
+
+            $role->update([
+                'label' => $data['label'],
+                'name' => Str::slug($data['label']),
+                'guard_name' => $data['guard_name'] ?? 'web',
+            ]);
+
+            $role->permissions()->sync($data['permissions'] ?? []);
+
+            return $role;
+        });
+    }
+
+    public function deleteRole(Role $role): void
+    {
+        DB::transaction(function () use ($role) {
+            $role->permissions()->detach();
+            $role->delete();
+        });
     }
 }

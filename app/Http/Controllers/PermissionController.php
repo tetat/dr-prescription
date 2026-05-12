@@ -4,54 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Permission;
 use Illuminate\Http\Request;
+use App\Services\PermissionService;
 
 class PermissionController extends Controller
 {
+    public function __construct(
+        private readonly PermissionService $permissionService
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $perPage = (int) ($request->perPage ?? "10");
-        $permissionQuery = Permission::query();
-        $totalCount = $permissionQuery->count();
-
-        if ($request->filled('search')) {
-            $search = $request->search;
-
-            $permissionQuery->where(fn($query) => $query->where('label', 'like', "%{$search}%"))
-                ->orWhere('name', 'like', "%{$search}%")
-                ->orWhere('group', 'like', "%{$search}%");
-        }
-        
-        if ($perPage === -1) {
-            $allPermissions = $permissionQuery->latest()
-                ->get()
-                ->map(fn($permission) => [
-                    'id' => $permission->id,
-                    'label' => $permission->label,
-                    'name' => $permission->name,
-                    'group' => $permission->group,
-                    'guard_name' => $permission->guard_name,
-                ]);
-            $permissions = [
-                'data' => $allPermissions,
-                'total' => $totalCount,
-                'from' => 1,
-                'to' => $totalCount,
-                'links' => [],
-            ];
-        } else {
-            $permissions = $permissionQuery->latest()->paginate($perPage)->withQueryString();
-
-            $permissions->getCollection()->transform(fn($permission) => [
-                'id' => $permission->id,
-                'label' => $permission->label,
-                'name' => $permission->name,
-                'group' => $permission->group,
-                'guard_name' => $permission->guard_name,
-            ]);
-        }
+        $permissions = $this->permissionService->getPermissionsTableData($request);
         
         return inertia('permissions/index', [
             'permissions' => $permissions,
