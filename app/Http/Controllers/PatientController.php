@@ -10,60 +10,20 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Services\PatientService;
 
 class PatientController extends Controller
 {
+    public function __construct(
+        private readonly PatientService $patientService
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $perPage = (int) ($request->perPage ?? "10");
-        $patientQuery = User::role('patient');
-
-        if ($request->filled('search')) {
-            $search = $request->search;
-
-            $patientQuery->where(fn($query) => 
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('blood_group', 'like', "%{$search}")
-            );
-        }
-        $totalCount = $patientQuery->count();
-
-        if ($perPage === -1) {
-            $allPatients = $patientQuery->latest()
-                ->get()
-                ->map(fn($patient) => [
-                        'id' => $patient->id,
-                        'name' => $patient->name,
-                        'email' => $patient->email ?? 'Not Given',
-                        'gender' => ucfirst($patient->gender->value),
-                        'age' => $patient->age,
-                        'blood_group' => $patient->blood_group ?? 'Not Given',
-                        'address' => $patient->address ?? 'Not Given',
-                    ]
-                );
-            $patients = [
-                'data' => $allPatients,
-                'total' => $totalCount,
-                'from' => 1,
-                'to' => $totalCount,
-                'links' => [],
-            ];
-        } else {
-            $patients = $patientQuery->latest()->paginate($perPage)->withQueryString();
-
-            $patients->getCollection()->transform(fn($patient) => [
-                'id' => $patient->id,
-                'name' => $patient->name,
-                'email' => $patient->email ?? 'Not Given',
-                'gender' => ucfirst($patient->gender->value),
-                'age' => $patient->age,
-                'blood_group' => $patient->blood_group ?? 'Not Given',
-                'address' => $patient->address ?? 'Not Given',
-            ]);
-        }
+        $patients = $this->patientService->getPatientTableData($request);
 
         return inertia('patients/index', [
             'patients' => $patients,
@@ -85,33 +45,12 @@ class PatientController extends Controller
     public function store(StorePatientRequest $request)
     {
         try {
-            $data = $request->validated();
+            $this->patientService->createPatient($request->validated());
 
-            $patientRole = Role::where('name', 'patient')->firstOrFail();
-
-            DB::beginTransaction();
-
-            $patient = User::create([
-                'name' => $data['name'],
-                'email' => $data['email'] ?? null,
-                'gender' => $data['gender'],
-                'dob' => $data['dob'],
-                'blood_group' => $data['blood_group'] ?? null,
-                'address' => $data['address'] ?? null,
-                'password' => $data['name'],
-            ]);
-
-            $patient->assignRole($patientRole);
-
-            $patient->phones()->createMany($data['phones']);
-
-            DB::commit();
-            
             return redirect()
                 ->route('patients.index')
                 ->with('success', 'Patient created successfully.');
         } catch (Exception $e) {
-            DB::rollBack();
             return redirect()->route('patients.index')->with('error', $e->getMessage());
         }
     }
@@ -145,33 +84,14 @@ class PatientController extends Controller
      */
     public function update(UpdatePatientRequest $request, User $patient)
     {
-        DB::beginTransaction();
         try {
-            $data = $request->validated();
-
-            // update patient
-            $patient->update([
-                'name' => $data['name'],
-                'email' => $data['email'] ?? null,
-                'gender' => $data['gender'],
-                'dob' => $data['dob'],
-                'blood_group' => $data['blood_group'] ?? null,
-                'address' => $data['address'] ?? null,
-            ]);
-
-            // replace phones
-            $patient->phones()->delete();
-
-            $patient->phones()->createMany($data['phones']);
-
-            DB::commit();
+            $this->patientService->updatePatient($patient, $request->validated());
 
             return redirect()
                 ->route('patients.index')
                 ->with('success', 'Patient updated successfully.');
 
         } catch (Exception $e) {
-            DB::rollBack();
             return redirect()->route('patients.index')->with('error', $e->getMessage());
         }
     }
@@ -182,8 +102,7 @@ class PatientController extends Controller
     public function destroy(User $patient)
     {
         try {
-            $patient->phones()->delete();
-            $patient->delete();
+            $this->patientService->deletePatient($patient);
             
             return redirect()->route('patients.index')->with('deleted', 'Patient deleted successfully.');
         } catch (Exception $e) {

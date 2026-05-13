@@ -1,5 +1,5 @@
 // import AppLogoIcon from '@/components/app-logo-icon';
-import { ClipboardList, FileText, Pill, ReceiptText } from 'lucide-react';
+import { ReceiptText } from 'lucide-react';
 
 export default function AppLogo() {
     return (
