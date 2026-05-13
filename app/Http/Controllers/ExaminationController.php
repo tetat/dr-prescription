@@ -5,57 +5,23 @@ namespace App\Http\Controllers;
 use App\Models\Examination;
 use App\Http\Requests\StoreExaminationRequest;
 use App\Http\Requests\UpdateExaminationRequest;
+use App\Services\ExaminationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
 class ExaminationController extends Controller
 {
+    public function __construct(
+        private ExaminationService $examinationService
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $perPage = (int) ($request->perPage ?? "10");
-        $examinationQuery = Examination::query();
-
-        if ($request->filled('search')) {
-            $search = $request->search;
-
-            $examinationQuery->where(fn($query) => 
-                $query->where('name', 'like', "%{$search}%")
-            );
-        }
-        
-        $totalCount = $examinationQuery->count();
-
-        if ($perPage === -1) {
-            $allExaminations = $examinationQuery->latest()
-                ->get()
-                ->map(fn($examination) => [
-                        'id' => $examination->id,
-                        'name' => $examination->name,
-                        'abbreviation' => $examination->abbreviation ?? 'Not Given',
-                        'unit' => $examination->unit ?? 'Not Given',
-                    ]
-                );
-            $examinations = [
-                'data' => $allExaminations,
-                'total' => $totalCount,
-                'from' => 1,
-                'to' => $totalCount,
-                'links' => [],
-            ];
-        } else {
-            $examinations = $examinationQuery->latest()->paginate($perPage)->withQueryString();
-
-            $examinations->getCollection()->transform(fn($examination) => [
-                'id' => $examination->id,
-                'name' => $examination->name,
-                'abbreviation' => $examination->abbreviation ?? 'Not Given',
-                'unit' => $examination->unit ?? 'Not Given',
-            ]);
-        }
+        $examinations = $this->examinationService->getExaminationTableData($request);
 
         return inertia('examinations/index', [
             'examinations' => $examinations,
@@ -76,26 +42,11 @@ class ExaminationController extends Controller
      */
     public function store(StoreExaminationRequest $request)
     {
-        $validated = $request->validated();
-        
         try {
-            DB::beginTransaction();
-
-            $examination = Examination::create([
-                'name' => $validated['name'],
-                'abbreviation' => $validated['abbreviation'],
-                'unit' => $validated['unit'],
-            ]);
-
-            if (!$examination) {
-                throw new Exception('Unable to create examination.');
-            }
-
-            DB::commit();
+            $this->examinationService->createExamination($request->validated());
 
             return redirect()->route('examinations.index')->with('success', 'Examination created successfully.');
         } catch (Exception $e) {
-            DB::rollBack();
             return redirect()->route('examinations.index')->with('error', $e->getMessage());
         }
     }
