@@ -266,9 +266,7 @@ const DoctorCreate = ({ degrees, institutes, specialities, roles }: Props) => {
                             ))}
                     </div>
 
-
-
-                    {/* Phones - full width */}
+                    {/* Phones */}
                     <div className="space-y-2 md:col-span-2">
                         <Label>
                             Contact Numbers <span className="ml-1 text-red-500">*</span>
@@ -284,7 +282,6 @@ const DoctorCreate = ({ degrees, institutes, specialities, roles }: Props) => {
                                 <InputError key={key} message={message} />
                             ))}
                     </div>
-
 
 
                     {/* Submit */}

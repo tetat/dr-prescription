@@ -1,18 +1,20 @@
 import HospitalController from '@/actions/App/Http/Controllers/HospitalController';
 import ImagePreview from '@/components/image-preview';
 import InputError from '@/components/input-error';
+import PhoneField from '@/components/phone-field';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { edit, index } from '@/routes/hospitals';
-import { Hospital } from '@/types';
+import { Hospital, Phone } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 
 interface HospitalProps extends Hospital {
     logo: File | null;
     logo_url: string;
+    phones: Phone[];
 }
 
 const HospitalEdit = ({ hospital }: { hospital: HospitalProps }) => {
@@ -24,6 +26,7 @@ const HospitalEdit = ({ hospital }: { hospital: HospitalProps }) => {
         logo_url: hospital.logo_url ?? '',
         moto: hospital.moto ?? '',
         address: hospital.address ?? '',
+        phones: [...hospital.phones]
     });
 
     const onSubmit = (e: React.FormEvent) => {
@@ -120,6 +123,23 @@ const HospitalEdit = ({ hospital }: { hospital: HospitalProps }) => {
                             rows={3}
                         />
                         <InputError message={errors.address} />
+                    </div>
+
+                    {/* Phones */}
+                    <div className="md:col-span-2">
+                        <Label>Phones <span className="text-red-500">*</span></Label>
+                        <PhoneField
+                            phones={data.phones}
+                            setPhones={(phones) =>
+                                setData('phones', phones)
+                            }
+                        />
+
+                        {Object.entries(errors)
+                            .filter(([key]) => key.startsWith('phones'))
+                            .map(([key, message]) => (
+                                <InputError key={key} message={message} />
+                            ))}
                     </div>
 
                     {/* Submit */}

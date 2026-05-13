@@ -32,17 +32,20 @@ class Hospital extends Model
     protected static function booted()
     {
         static::deleted(function ($hospital) {
-            if ($hospital->logo) {
+            if (
+                $hospital->logo &&
+                Storage::disk('public')->exists($hospital->logo)
+            ) {
                 Storage::disk('public')->delete($hospital->logo);
             }
         });
 
         static::updated(function ($hospital) {
-            $original = $hospital->getOriginal();
-            $logo = $hospital->logo;
-            
-            if ($logo && array_key_exists('logo', $original) && !$original['logo']) {
-                Storage::disk('public')->delete($original['logo']);
+            if ($hospital->isDirty('logo')) {
+                $oldLogo = $hospital->getOriginal('logo');
+                if ($oldLogo && Storage::disk('public')->exists($oldLogo)) {
+                    Storage::disk('public')->delete($oldLogo);
+                }
             }
         });
     }

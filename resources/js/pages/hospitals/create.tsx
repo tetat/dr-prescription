@@ -1,17 +1,19 @@
 import HospitalController from '@/actions/App/Http/Controllers/HospitalController';
 import ImagePreview from '@/components/image-preview';
 import InputError from '@/components/input-error';
+import PhoneField from '@/components/phone-field';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { create, index } from '@/routes/hospitals';
-import { Hospital } from '@/types';
+import { Hospital, Phone } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 
 interface HospitalProps extends Hospital {
     logo: File | null;
+    phones: Phone[];
 }
 
 
@@ -23,6 +25,9 @@ const HospitalCreate = () => {
         logo: null,
         moto: '',
         address: '',
+        phones: [
+            { country_code: '+880', number: '' }
+        ],
     });
 
     const onSubmit = (e: React.FormEvent) => {
@@ -123,6 +128,23 @@ const HospitalCreate = () => {
                             rows={3}
                         />
                         <InputError message={errors.address} />
+                    </div>
+
+                    {/* Phones */}
+                    <div className="space-y-2 md:col-span-2">
+                        <Label>
+                            Contact Numbers <span className="ml-1 text-red-500">*</span>
+                        </Label>
+                        <PhoneField
+                            phones={data.phones}
+                            setPhones={(phones) => setData('phones', phones)}
+                        />
+
+                        {Object.entries(errors)
+                            .filter(([key]) => key.startsWith('phones'))
+                            .map(([key, message]) => (
+                                <InputError key={key} message={message} />
+                            ))}
                     </div>
 
                     {/* Submit */}
