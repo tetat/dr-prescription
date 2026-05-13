@@ -6,55 +6,21 @@ use App\Models\Degree;
 use App\Http\Requests\StoreDegreeRequest;
 use App\Http\Requests\UpdateDegreeRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Exception;
+use App\Services\DegreeService;
 
 class DegreeController extends Controller
 {
+    public function __construct(
+        private readonly DegreeService $degreeService
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $perPage = (int) ($request->perPage ?? "10");
-        $degreeQuery = Degree::query();
-
-        if ($request->filled('search')) {
-            $search = $request->search;
-
-            $degreeQuery->where(fn($query) => 
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('abbreviation', 'like', "%{$search}%")
-            );
-        }
-        
-        $totalCount = $degreeQuery->count();
-
-        if ($perPage === -1) {
-            $allDegrees = $degreeQuery->latest()
-                ->get()
-                ->map(fn($degree) => [
-                        'id' => $degree->id,
-                        'name' => $degree->name,
-                        'abbreviation' => $degree->abbreviation,
-                    ]
-                );
-            $degrees = [
-                'data' => $allDegrees,
-                'total' => $totalCount,
-                'from' => 1,
-                'to' => $totalCount,
-                'links' => [],
-            ];
-        } else {
-            $degrees = $degreeQuery->latest()->paginate($perPage)->withQueryString();
-
-            $degrees->getCollection()->transform(fn($degree) => [
-                'id' => $degree->id,
-                'name' => $degree->name,
-                'abbreviation' => $degree->abbreviation,
-            ]);
-        }
+        $degrees = $this->degreeService->getDegreeTableData($request);
 
         return inertia('degrees/index', [
             'degrees' => $degrees,
@@ -75,25 +41,11 @@ class DegreeController extends Controller
      */
     public function store(StoreDegreeRequest $request)
     {
-        $validated = $request->validated();
-        
         try {
-            DB::beginTransaction();
-
-            $degree = Degree::create([
-                'name' => $validated['name'],
-                'abbreviation' => $validated['abbreviation'],
-            ]);
-
-            if (!$degree) {
-                throw new Exception('Unable to create degree.');
-            }
-
-            DB::commit();
+            $this->degreeService->createDegree($request->validated());
 
             return redirect()->route('degrees.index')->with('success', 'Degree created successfully.');
         } catch (Exception $e) {
-            DB::rollBack();
             return redirect()->route('degrees.index')->with('error', $e->getMessage());
         }
     }
@@ -124,18 +76,10 @@ class DegreeController extends Controller
     public function update(UpdateDegreeRequest $request, Degree $degree)
     {
         try {
-            DB::beginTransaction();
-
-            $degree->update([
-                'name' => $request->validated('name'),
-                'abbreviation' => $request->validated('abbreviation'),
-            ]);
-
-            DB::commit();
+            $this->degreeService->updateDegree($degree, $request->validated());
 
             return redirect()->route('degrees.index')->with('success', 'Degree updated successfully.');
         } catch (Exception $e) {
-            DB::rollBack();
             return redirect()->route('degrees.index')->with('error', $e->getMessage());
         }
     }
@@ -146,15 +90,10 @@ class DegreeController extends Controller
     public function destroy(Degree $degree)
     {
         try {
-            DB::beginTransaction();
-
-            $degree->delete();
-
-            DB::commit();
+            $this->degreeService->deleteDegree($degree);
 
             return redirect()->route('degrees.index')->with('deleted', 'Degree deleted successfully.');
         } catch (Exception $e) {
-            DB::rollBack();
             return redirect()->route('degrees.index')->with('error', $e->getMessage());
         }
     }
