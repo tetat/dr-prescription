@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreInstituteRequest;
 use App\Http\Requests\UpdateInstituteRequest;
 use App\Models\Institute;
-use Illuminate\Support\Facades\DB;
 use Exception;
 use App\Services\InstituteService;
 

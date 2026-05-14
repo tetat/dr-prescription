@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Institute;
 use Illuminate\Support\Facades\DB;
-use Exception;
 use Illuminate\Http\Request;
 
 class InstituteService

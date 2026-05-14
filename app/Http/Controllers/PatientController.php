@@ -47,9 +47,7 @@ class PatientController extends Controller
         try {
             $this->patientService->createPatient($request->validated());
 
-            return redirect()
-                ->route('patients.index')
-                ->with('success', 'Patient created successfully.');
+            return redirect()->route('patients.index')->with('success', 'Patient created successfully.');
         } catch (Exception $e) {
             return redirect()->route('patients.index')->with('error', $e->getMessage());
         }
@@ -87,9 +85,7 @@ class PatientController extends Controller
         try {
             $this->patientService->updatePatient($patient, $request->validated());
 
-            return redirect()
-                ->route('patients.index')
-                ->with('success', 'Patient updated successfully.');
+            return redirect()->route('patients.index')->with('success', 'Patient updated successfully.');
 
         } catch (Exception $e) {
             return redirect()->route('patients.index')->with('error', $e->getMessage());

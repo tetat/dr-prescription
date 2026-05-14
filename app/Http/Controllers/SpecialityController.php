@@ -5,56 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\Speciality;
 use App\Http\Requests\StoreSpecialityRequest;
 use App\Http\Requests\UpdateSpecialityRequest;
-use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Http\Request;
+use App\Services\SpecialityService;
 
 class SpecialityController extends Controller
 {
+    public function __construct(
+        private readonly SpecialityService $specialityService
+    ) {}
+    
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $perPage = (int) ($request->perPage ?? "10");
-        $specialityQuery = Speciality::query();
-
-        if ($request->filled('search')) {
-            $search = $request->search;
-
-            $specialityQuery->where(fn($query) => 
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('abbreviation', 'like', "%{$search}%")
-            );
-        }
-        
-        $totalCount = $specialityQuery->count();
-
-        if ($perPage === -1) {
-            $allSpecialities = $specialityQuery->latest()
-                ->get()
-                ->map(fn($speciality) => [
-                        'id' => $speciality->id,
-                        'name' => $speciality->name,
-                        'abbreviation' => $speciality->abbreviation ?? 'Not Given',
-                    ]
-                );
-            $specialities = [
-                'data' => $allSpecialities,
-                'total' => $totalCount,
-                'from' => 1,
-                'to' => $totalCount,
-                'links' => [],
-            ];
-        } else {
-            $specialities = $specialityQuery->latest()->paginate($perPage)->withQueryString();
-
-            $specialities->getCollection()->transform(fn($speciality) => [
-                'id' => $speciality->id,
-                'name' => $speciality->name,
-                'abbreviation' => $speciality->abbreviation ?? 'Not Given',
-            ]);
-        }
+        $specialities = $this->specialityService->getSpecialityTableData($request);
 
         return inertia('specialities/index', [
             'specialities' => $specialities,
@@ -75,25 +41,11 @@ class SpecialityController extends Controller
      */
     public function store(StoreSpecialityRequest $request)
     {
-        $validated = $request->validated();
-        
         try {
-            DB::beginTransaction();
-
-            $speciality = Speciality::create([
-                'name' => $validated['name'],
-                'abbreviation' => $validated['abbreviation'],
-            ]);
-
-            if (!$speciality) {
-                throw new Exception('Unable to create speciality.');
-            }
-
-            DB::commit();
+            $this->specialityService->createSpeciality($request->validated());
 
             return redirect()->route('specialities.index')->with('success', 'Speciality created successfully.');
         } catch (Exception $e) {
-            DB::rollBack();
             return redirect()->route('specialities.index')->with('error', $e->getMessage());
         }
     }
@@ -124,18 +76,10 @@ class SpecialityController extends Controller
     public function update(UpdateSpecialityRequest $request, Speciality $speciality)
     {
         try {
-            DB::beginTransaction();
-
-            $speciality->update([
-                'name' => $request->validated('name'),
-                'abbreviation' => $request->validated('abbreviation'),
-            ]);
-
-            DB::commit();
+            $this->specialityService->updateSpeciality($request->validated(), $speciality);
 
             return redirect()->route('specialities.index')->with('success', 'Speciality updated successfully.');
         } catch (Exception $e) {
-            DB::rollBack();
             return redirect()->route('specialities.index')->with('error', $e->getMessage());
         }
     }
@@ -146,15 +90,10 @@ class SpecialityController extends Controller
     public function destroy(Speciality $speciality)
     {
         try {
-            DB::beginTransaction();
-
-            $speciality->delete();
-
-            DB::commit();
+            $this->specialityService->deleteSpeciality($speciality);
 
             return redirect()->route('specialities.index')->with('deleted', 'Speciality deleted successfully.');
         } catch (Exception $e) {
-            DB::rollBack();
             return redirect()->route('specialities.index')->with('error', $e->getMessage());
         }
     }
