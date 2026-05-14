@@ -94,7 +94,7 @@ const HospitalShow = ({ hospital }: { hospital: HospitalProps }) => {
                                 </Label>
                                 <p className="mt-1 text-lg font-semibold">
                                     {hospital.phones.map((phone) => (
-                                        <span key={phone.id}>
+                                        <span key={phone.country_code + phone.number}>
                                             {phone.country_code}
                                             {phone.number}
                                         </span>
