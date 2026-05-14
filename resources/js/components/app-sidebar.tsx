@@ -17,6 +17,7 @@ import doctors from '@/routes/doctors';
 import examinations from '@/routes/examinations';
 import hospitals from '@/routes/hospitals';
 import institutes from '@/routes/institutes';
+import medicineGroups from '@/routes/medicine-groups';
 import patients from '@/routes/patients';
 import permissions from '@/routes/permissions';
 import roles from '@/routes/roles';
@@ -39,6 +40,7 @@ import {
     TestTube2,
     HeartPulse,
     Hospital,
+    Dna,
 } from 'lucide-react';
 
 const mainNavItems: NavItem[] = [
@@ -71,6 +73,11 @@ const mainNavItems: NavItem[] = [
         title: 'Hospitals',
         href: hospitals.index().url,
         icon: Hospital,
+    },
+    {
+        title: 'Medicine Groups',
+        href: medicineGroups.index().url,
+        icon: Dna,
     },
     {
         title: 'Patients',

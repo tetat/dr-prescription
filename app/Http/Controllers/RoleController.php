@@ -99,7 +99,7 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
         if ($role->name === 'super-admin' || $role->name === 'doctor' || $role->name === 'patient') {
-            return redirect()->back()->with('error', $role->name . ' role cannot be deleted.');
+            return redirect()->back()->with('error', $role->label . ' role cannot be deleted.');
         }
         
         try {

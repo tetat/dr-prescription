@@ -101,3 +101,9 @@ export type Hospital = {
     moto: string;
     address: string;
 }
+
+export type MedicineGroup = {
+    id: number;
+    name: string;
+    description?: string;
+}

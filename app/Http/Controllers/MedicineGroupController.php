@@ -5,15 +5,24 @@ namespace App\Http\Controllers;
 use App\Models\MedicineGroup;
 use App\Http\Requests\StoreMedicineGroupRequest;
 use App\Http\Requests\UpdateMedicineGroupRequest;
+use App\Services\MedicineGroupService;
+use Illuminate\Http\Request;
+use Exception;
 
 class MedicineGroupController extends Controller
 {
+    public function __construct(private MedicineGroupService $medicineGroupService) {}
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $medicineGroups = $this->medicineGroupService->getMedicineGroupTableData($request);
+
+        return inertia('medicine-groups/index', [
+            'medicineGroups' => $medicineGroups,
+            'filters' => $request->only('search', 'perPage'),
+        ]);
     }
 
     /**
@@ -21,7 +30,7 @@ class MedicineGroupController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('medicine-groups/create');
     }
 
     /**
@@ -29,7 +38,14 @@ class MedicineGroupController extends Controller
      */
     public function store(StoreMedicineGroupRequest $request)
     {
-        //
+        try {
+            $this->medicineGroupService->createMedicineGroup($request->validated());
+
+            return redirect()->route('medicine-groups.index')
+                ->with('success', 'Medicine Group created successfully');
+        } catch (Exception $e) {
+            return redirect()->route('medicine-groups.index')->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -37,7 +53,9 @@ class MedicineGroupController extends Controller
      */
     public function show(MedicineGroup $medicineGroup)
     {
-        //
+        return inertia('medicine-groups/show', [
+            'medicineGroup' => $medicineGroup,
+        ]);
     }
 
     /**
@@ -45,7 +63,9 @@ class MedicineGroupController extends Controller
      */
     public function edit(MedicineGroup $medicineGroup)
     {
-        //
+        return inertia('medicine-groups/edit', [
+            'medicineGroup' => $medicineGroup,
+        ]);
     }
 
     /**
@@ -53,7 +73,14 @@ class MedicineGroupController extends Controller
      */
     public function update(UpdateMedicineGroupRequest $request, MedicineGroup $medicineGroup)
     {
-        //
+        try {
+            $this->medicineGroupService->updateMedicineGroup($request->validated(), $medicineGroup);
+
+            return redirect()->route('medicine-groups.index')
+                ->with('success', 'Medicine Group updated successfully');
+        } catch (Exception $e) {
+            return redirect()->route('medicine-groups.index')->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -61,6 +88,13 @@ class MedicineGroupController extends Controller
      */
     public function destroy(MedicineGroup $medicineGroup)
     {
-        //
+        try {
+            $this->medicineGroupService->deleteMedicineGroup($medicineGroup);
+
+            return redirect()->route('medicine-groups.index')
+                ->with('deleted', 'Medicine Group deleted successfully');
+        } catch (Exception $e) {
+            return redirect()->route('medicine-groups.index')->with('error', $e->getMessage());
+        }
     }
 }

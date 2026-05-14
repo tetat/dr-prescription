@@ -12,7 +12,7 @@ class StoreMedicineGroupRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,8 @@ class StoreMedicineGroupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:512'],
+            'description' => ['nullable', 'string']
         ];
     }
 }
