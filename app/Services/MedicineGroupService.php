@@ -3,15 +3,34 @@
 namespace App\Services;
 
 use App\Models\MedicineGroup;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class MedicineGroupService
 {
+    public function getMedicineGroupQuery(): Builder
+    {
+        return MedicineGroup::query();
+    }
+
+    public function getAllMedicineGroups(): Collection
+    {
+        return $this->getMedicineGroupQuery()
+            ->get()
+            ->map(fn($medicineGroup) => [
+                    'id' => $medicineGroup->id,
+                    'name' => $medicineGroup->name,
+                    'description' => $medicineGroup->description ?? 'Not Given',
+                ]
+            );
+    }
+
     public function getMedicineGroupTableData(Request $request)
     {
         $perPage = (int) ($request->perPage ?? "10");
-        $medicineGroupQuery = MedicineGroup::query();
+        $medicineGroupQuery = $this->getMedicineGroupQuery();
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -79,6 +98,7 @@ class MedicineGroupService
     public function deleteMedicineGroup(MedicineGroup $medicineGroup): void
     {
         DB::transaction(function() use ($medicineGroup) {
+            $medicineGroup->medicines()->delete();
             $medicineGroup->delete();
         });
     }

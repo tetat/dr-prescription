@@ -107,3 +107,12 @@ export type MedicineGroup = {
     name: string;
     description?: string;
 }
+
+export type Medicine = {
+    id: number;
+    name: string;
+    generic_name: string;
+    form: string;
+    strength: string;
+    medicine_group_id: number;
+}

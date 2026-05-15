@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('generic_name')->nullable();
             $table->string('form');
             $table->string('strength');
-            $table->string('manufacturer')->nullable();
             $table->foreignId('medicine_group_id')
                 ->nullable()
                 ->constrained()

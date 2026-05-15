@@ -18,6 +18,7 @@ import examinations from '@/routes/examinations';
 import hospitals from '@/routes/hospitals';
 import institutes from '@/routes/institutes';
 import medicineGroups from '@/routes/medicine-groups';
+import medicines from '@/routes/medicines';
 import patients from '@/routes/patients';
 import permissions from '@/routes/permissions';
 import roles from '@/routes/roles';
@@ -41,6 +42,7 @@ import {
     HeartPulse,
     Hospital,
     Dna,
+    Pill,
 } from 'lucide-react';
 
 const mainNavItems: NavItem[] = [
@@ -80,6 +82,11 @@ const mainNavItems: NavItem[] = [
         icon: Dna,
     },
     {
+        title: 'Medicines',
+        href: medicines.index().url,
+        icon: Pill,
+    },
+    {
         title: 'Patients',
         href: patients.index().url,
         icon: Users,
@@ -111,18 +118,18 @@ const mainNavItems: NavItem[] = [
     },
 ];
 
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: FolderGit2,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
-    },
-];
+// const footerNavItems: NavItem[] = [
+//     {
+//         title: 'Repository',
+//         href: 'https://github.com/laravel/react-starter-kit',
+//         icon: FolderGit2,
+//     },
+//     {
+//         title: 'Documentation',
+//         href: 'https://laravel.com/docs/starter-kits#react',
+//         icon: BookOpen,
+//     },
+// ];
 
 export function AppSidebar() {
     return (
@@ -144,7 +151,7 @@ export function AppSidebar() {
             </SidebarContent>
 
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
+                {/* <NavFooter items={footerNavItems} className="mt-auto" /> */}
                 <NavUser />
             </SidebarFooter>
         </Sidebar>
