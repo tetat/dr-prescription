@@ -111,7 +111,6 @@ export type MedicineGroup = {
 export type Medicine = {
     id: number;
     name: string;
-    generic_name: string;
     form: string;
     strength: string;
     medicine_group_id: number;

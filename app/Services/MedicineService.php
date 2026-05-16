@@ -41,7 +41,6 @@ class MedicineService
                 ->map(fn($medicine) => [
                         'id' => $medicine->id,
                         'name' => $medicine->name,
-                        'generic_name' => $medicine->generic_name ?? 'Not Given',
                         'form' => $medicine->form,
                         'strength' => $medicine->strength,
                         'group_name' => $medicine->group->name,
@@ -60,7 +59,6 @@ class MedicineService
             $medicines->getCollection()->transform(fn($medicine) => [
                 'id' => $medicine->id,
                 'name' => $medicine->name,
-                'generic_name' => $medicine->generic_name ?? 'Not Given',
                 'form' => $medicine->form,
                 'strength' => $medicine->strength,
                 'group_name' => $medicine->group->name,
@@ -75,7 +73,6 @@ class MedicineService
         return DB::transaction(function() use ($data) {
             $medicine = Medicine::create([
                 'name' => $data['name'],
-                'generic_name' => $data['generic_name'],
                 'form' => $data['form'],
                 'strength' => $data['strength'],
                 'medicine_group_id' => $data['medicine_group_id'],
@@ -90,7 +87,6 @@ class MedicineService
         return DB::transaction(function() use ($data, $medicine) {
             $medicine->update([
                 'name' => $data['name'],
-                'generic_name' => $data['generic_name'],
                 'form' => $data['form'],
                 'strength' => $data['strength'],
                 'medicine_group_id' => $data['medicine_group_id'],

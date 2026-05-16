@@ -48,7 +48,7 @@ const MedicineShow = ({ medicine }: { medicine: MedicineProps }) => {
                                     Generic Name
                                 </Label>
                                 <p className="mt-1 text-lg font-semibold">
-                                    {medicine.generic_name ?? 'Not Given'}
+                                    {medicine.group.name}
                                 </p>
                             </div>
 
@@ -70,14 +70,7 @@ const MedicineShow = ({ medicine }: { medicine: MedicineProps }) => {
                                 </p>
                             </div>
 
-                            <div>
-                                <Label className="text-sm font-semibold text-muted-foreground">
-                                    Group Name
-                                </Label>
-                                <p className="mt-1 text-lg font-semibold">
-                                    {medicine.group.name}
-                                </p>
-                            </div>
+
                         </div>
                     </div>
 

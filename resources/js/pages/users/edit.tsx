@@ -34,7 +34,6 @@ interface Props {
 }
 
 const UserEdit = ({ user, roles }: Props) => {
-    // console.log(user, roles);
     const { data, setData, put, processing, errors } = useForm<UserProps>({
         id: user.id,
         name: user.name,

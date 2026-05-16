@@ -30,7 +30,7 @@ class UpdateUserRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($this->route('user'))],
-            'role_name' => ['required', Rule::exists('roles', 'name'), Rule::notIn(['super-admin', 'doctor', 'patient'])],
+            'role_name' => ['required', Rule::exists('roles', 'name')],
             'gender' => ['required', Rule::in(UserGender::options())],
 
             'blood_group' => [

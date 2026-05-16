@@ -13,7 +13,6 @@ class Medicine extends Model
 
     protected $fillable = [
         'name',
-        'generic_name',
         'form',
         'strength',
         'medicine_group_id'

@@ -27,8 +27,8 @@ class InstituteSeeder extends Seeder
                 'abbreviation' => 'SMC',
             ],
             [
-                'name' => 'Sher-e-Bangla Medical College',
-                'abbreviation' => 'SBMC',
+                'name' => 'University of Dhaka',
+                'abbreviation' => 'DU',
             ],
         ];
 

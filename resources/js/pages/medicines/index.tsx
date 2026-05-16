@@ -116,11 +116,10 @@ const MedicineIndex = ({ medicines, filters }: IndexProps) => {
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="w-[100px]">#</TableHead>
-                                <TableHead>Name</TableHead>
+                                <TableHead>Brand Name</TableHead>
                                 <TableHead>Generic Name</TableHead>
                                 <TableHead>Form</TableHead>
                                 <TableHead>Strength</TableHead>
-                                <TableHead>Group Name</TableHead>
                                 <TableHead className="text-right">
                                     Actions
                                 </TableHead>
@@ -134,10 +133,9 @@ const MedicineIndex = ({ medicines, filters }: IndexProps) => {
                                             {index + medicines.from}
                                         </TableCell>
                                         <TableCell>{medicine.name}</TableCell>
-                                        <TableCell>{medicine.generic_name}</TableCell>
+                                        <TableCell>{medicine.group_name}</TableCell>
                                         <TableCell>{medicine.form}</TableCell>
                                         <TableCell>{medicine.strength}</TableCell>
-                                        <TableCell>{medicine.group_name}</TableCell>
                                         <TableCell className="flex items-center justify-end gap-2">
                                             <Link
                                                 href={show(medicine.id)}

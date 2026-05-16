@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('medicines', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('generic_name')->nullable();
             $table->string('form');
             $table->string('strength');
             $table->foreignId('medicine_group_id')

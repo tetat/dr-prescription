@@ -14,7 +14,6 @@ const MedicineCreate = ({ medicineGroups }: { medicineGroups: MedicineGroup[] })
     const { data, setData, post, processing, errors } = useForm<Medicine>({
         id: 0,
         name: '',
-        generic_name: '',
         form: '',
         strength: '',
         medicine_group_id: 0,
@@ -60,14 +59,24 @@ const MedicineCreate = ({ medicineGroups }: { medicineGroups: MedicineGroup[] })
                     {/* Generic Name */}
                     <div>
                         <Label>
-                            Generic Name
+                            Generic Name <span className="ml-1 text-red-500">*</span>
                         </Label>
-                        <Input
-                            value={data.generic_name}
-                            onChange={(e) => setData('generic_name', e.target.value)}
-                            placeholder="Generic name"
-                        />
-                        <InputError message={errors.generic_name} />
+                        <Select
+                            value={data.medicine_group_id === 0 ? '' : data.medicine_group_id.toString()}
+                            onValueChange={(value) => setData('medicine_group_id', Number(value))}
+                        >
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select Generic Name" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {medicineGroups.map((medicineGroup) => (
+                                    <SelectItem key={medicineGroup.id} value={medicineGroup.id.toString()}>
+                                        {medicineGroup.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <InputError message={errors.medicine_group_id} />
                     </div>
 
                     {/* Form */}
@@ -107,30 +116,6 @@ const MedicineCreate = ({ medicineGroups }: { medicineGroups: MedicineGroup[] })
                             placeholder="e.g. 500mg"
                         />
                         <InputError message={errors.strength} />
-                    </div>
-
-                    {/* Medicine Group */}
-
-                    <div>
-                        <Label>
-                            Medicine Group <span className="ml-1 text-red-500">*</span>
-                        </Label>
-                        <Select
-                            value={data.medicine_group_id === 0 ? '' : data.medicine_group_id.toString()}
-                            onValueChange={(value) => setData('medicine_group_id', Number(value))}
-                        >
-                            <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Select Medicine Group" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {medicineGroups.map((medicineGroup) => (
-                                    <SelectItem key={medicineGroup.id} value={medicineGroup.id.toString()}>
-                                        {medicineGroup.name}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                        <InputError message={errors.medicine_group_id} />
                     </div>
 
                     {/* Submit */}

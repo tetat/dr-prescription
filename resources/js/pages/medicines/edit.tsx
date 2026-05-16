@@ -22,7 +22,6 @@ const MedicineEdit = ({ medicine, medicineGroups }: Props) => {
     const { data, setData, put, processing, errors } = useForm<Medicine>({
         id: medicine.id,
         name: medicine.name,
-        generic_name: medicine.generic_name,
         form: medicine.form,
         strength: medicine.strength,
         medicine_group_id: medicine.group.id,
@@ -67,12 +66,25 @@ const MedicineEdit = ({ medicine, medicineGroups }: Props) => {
 
                     {/* Generic Name */}
                     <div>
-                        <Label>Generic Name</Label>
-                        <Input
-                            value={data.generic_name ?? ''}
-                            onChange={(e) => setData('generic_name', e.target.value)}
-                        />
-                        <InputError message={errors.generic_name} />
+                        <Label>
+                            Generic Name <span className="ml-1 text-red-500">*</span>
+                        </Label>
+                        <Select
+                            value={data.medicine_group_id.toString()}
+                            onValueChange={(value) => setData('medicine_group_id', Number(value))}
+                        >
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select Generic Name" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {medicineGroups.map((group) => (
+                                    <SelectItem key={group.id} value={group.id.toString()}>
+                                        {group.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <InputError message={errors.medicine_group_id} />
                     </div>
 
                     {/* Form */}
@@ -111,29 +123,6 @@ const MedicineEdit = ({ medicine, medicineGroups }: Props) => {
                             placeholder="Medicine strength"
                         />
                         <InputError message={errors.strength} />
-                    </div>
-
-                    {/* Medicine Group */}
-                    <div>
-                        <Label>
-                            Medicine Group <span className="ml-1 text-red-500">*</span>
-                        </Label>
-                        <Select
-                            value={data.medicine_group_id.toString()}
-                            onValueChange={(value) => setData('medicine_group_id', Number(value))}
-                        >
-                            <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Select medicine group" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {medicineGroups.map((group) => (
-                                    <SelectItem key={group.id} value={group.id.toString()}>
-                                        {group.name}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                        <InputError message={errors.medicine_group_id} />
                     </div>
 
                     {/* Submit */}

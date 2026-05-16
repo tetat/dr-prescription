@@ -15,6 +15,8 @@ use Database\Seeders\ExaminationSeeder;
 use Database\Seeders\InstituteSeeder;
 use Database\Seeders\HospitalSeeder;
 use Database\Seeders\TestSeeder;
+use Database\Seeders\MedicineGroupSeeder;
+use Database\Seeders\MedicineSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -33,6 +35,8 @@ class DatabaseSeeder extends Seeder
                InstituteSeeder::class,
                HospitalSeeder::class,
                TestSeeder::class,
+               MedicineGroupSeeder::class,
+               MedicineSeeder::class,
            ]);
 
             $user = User::create([
