@@ -29,12 +29,7 @@ class MedicineSeeder extends Seeder
         ];
 
         foreach ($medicines as $medicine) {
-            Medicine::create([
-                'name' => $medicine->name,
-                'form' => $medicine->form,
-                'strength' => $medicine->strength,
-                'medicine_group_id' => $medicine->medicine_group_id,
-            ]);
+            Medicine::create($medicine);
         }
     }
 }

@@ -35,8 +35,8 @@ class ExaminationService
                 ->map(fn($examination) => [
                         'id' => $examination->id,
                         'name' => $examination->name,
-                        'abbreviation' => $examination->abbreviation ?? 'Not Given',
-                        'unit' => $examination->unit ?? 'Not Given',
+                        'abbreviation' => $examination->abbreviation ?? 'N/A',
+                        'unit' => $examination->unit ?? 'N/A',
                     ]
                 );
             $examinations = [
@@ -52,8 +52,8 @@ class ExaminationService
             $examinations->getCollection()->transform(fn($examination) => [
                 'id' => $examination->id,
                 'name' => $examination->name,
-                'abbreviation' => $examination->abbreviation ?? 'Not Given',
-                'unit' => $examination->unit ?? 'Not Given',
+                'abbreviation' => $examination->abbreviation ?? 'N/A',
+                'unit' => $examination->unit ?? 'N/A',
             ]);
         }
 

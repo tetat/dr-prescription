@@ -44,7 +44,7 @@ const TestShow = ({ test }: { test: Test }) => {
                                     Description
                                 </Label>
                                 <p className="mt-1 text-lg font-semibold">
-                                    {test.description ?? 'Not Given'}
+                                    {test.description ?? 'N/A'}
                                 </p>
                             </div>
                         </div>

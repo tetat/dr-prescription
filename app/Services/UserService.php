@@ -66,8 +66,8 @@ class UserService
                         'email' => $user->email,
                         'roles' => $user->roles->pluck('label')->toArray(),
                         'gender' => ucfirst($user->gender->value),
-                        'blood_group' => $user->blood_group ?? 'Not Given',
-                        'address' => $user->address ?? 'Not Given',
+                        'blood_group' => $user->blood_group ?? 'N/A',
+                        'address' => $user->address ?? 'N/A',
                     ]
                 );
             $users = [
@@ -86,8 +86,8 @@ class UserService
                 'email' => $user->email,
                 'roles' => $user->roles->pluck('label')->toArray(),
                 'gender' => ucfirst($user->gender->value),
-                'blood_group' => $user->blood_group ?? 'Not Given',
-                'address' => $user->address ?? 'Not Given',
+                'blood_group' => $user->blood_group ?? 'N/A',
+                'address' => $user->address ?? 'N/A',
             ]);
         }
 

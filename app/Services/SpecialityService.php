@@ -30,7 +30,7 @@ class SpecialityService
                 ->map(fn($speciality) => [
                         'id' => $speciality->id,
                         'name' => $speciality->name,
-                        'abbreviation' => $speciality->abbreviation ?? 'Not Given',
+                        'abbreviation' => $speciality->abbreviation ?? 'N/A',
                     ]
                 );
             $specialities = [
@@ -46,7 +46,7 @@ class SpecialityService
             $specialities->getCollection()->transform(fn($speciality) => [
                 'id' => $speciality->id,
                 'name' => $speciality->name,
-                'abbreviation' => $speciality->abbreviation ?? 'Not Given',
+                'abbreviation' => $speciality->abbreviation ?? 'N/A',
             ]);
         }
 

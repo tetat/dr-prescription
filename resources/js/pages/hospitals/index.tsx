@@ -20,7 +20,7 @@ import AppLayout from '@/layouts/app-layout';
 import { create, index } from '@/routes/hospitals';
 import { Hospital } from '@/types';
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { Eye, Pencil, Trash2 } from 'lucide-react';
+import { Eye, Hospital as HospitalIcon, Pencil, Trash2 } from 'lucide-react';
 
 interface LinkProps {
     active: boolean;
@@ -135,11 +135,16 @@ const HospitalIndex = ({ hospitals, filters }: IndexProps) => {
                                         </TableCell>
                                         <TableCell>{hospital.name}</TableCell>
                                         <TableCell>{hospital.full_name}</TableCell>
-                                        <TableCell><img
-                                            src={hospital.logo}
-                                            alt="N/A"
-                                            className='size-10 rounded-md border object-cover'
-                                        /></TableCell>
+                                        <TableCell>
+                                            {
+                                                hospital.logo ?
+                                                    <img
+                                                        src={hospital.logo}
+                                                        alt="logo"
+                                                        className='size-10 rounded-md border object-cover'
+                                                    /> : <HospitalIcon className='size-7' />
+                                            }
+                                        </TableCell>
                                         <TableCell>{hospital.moto}</TableCell>
                                         <TableCell>{hospital.address}</TableCell>
                                         <TableCell className="flex items-center justify-end gap-2">

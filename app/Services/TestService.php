@@ -35,7 +35,7 @@ class TestService
                 ->map(fn($test) => [
                         'id' => $test->id,
                         'name' => $test->name,
-                        'description' => $test->description ?? 'Not Given',
+                        'description' => $test->description ?? 'N/A',
                     ]
                 );
             $tests = [
@@ -51,7 +51,7 @@ class TestService
             $tests->getCollection()->transform(fn($test) => [
                 'id' => $test->id,
                 'name' => $test->name,
-                'description' => $test->description ?? 'Not Given',
+                'description' => $test->description ?? 'N/A',
             ]);
         }
 

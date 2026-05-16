@@ -44,7 +44,7 @@ const SpecialityShow = ({ speciality }: { speciality: Speciality }) => {
                                     Abbreviation
                                 </Label>
                                 <p className="mt-1 w-fit rounded bg-muted px-2 py-1 font-mono text-sm text-blue-600">
-                                    {speciality.abbreviation ?? 'Not Given'}
+                                    {speciality.abbreviation ?? 'N/A'}
                                 </p>
                             </div>
                         </div>

@@ -49,7 +49,7 @@ const HospitalShow = ({ hospital }: { hospital: HospitalProps }) => {
                                     Full Name
                                 </Label>
                                 <p className="mt-1 text-lg font-semibold">
-                                    {hospital.full_name ?? 'Not Given'}
+                                    {hospital.full_name ?? 'N/A'}
                                 </p>
                             </div>
 
@@ -75,7 +75,7 @@ const HospitalShow = ({ hospital }: { hospital: HospitalProps }) => {
                                     Moto
                                 </Label>
                                 <p className="mt-1 text-lg font-semibold">
-                                    {hospital.moto ?? 'Not Given'}
+                                    {hospital.moto ?? 'N/A'}
                                 </p>
                             </div>
 
@@ -84,7 +84,7 @@ const HospitalShow = ({ hospital }: { hospital: HospitalProps }) => {
                                     Address
                                 </Label>
                                 <p className="mt-1 text-lg font-semibold">
-                                    {hospital.address ?? 'Not Given'}
+                                    {hospital.address ?? 'N/A'}
                                 </p>
                             </div>
 

@@ -47,7 +47,7 @@ class DoctorProfileService
                 ->map(fn($doctor) => [
                         'id' => $doctor->id,
                         'name' => $doctor->name,
-                        'title' => $doctor->doctorProfile->title ?? 'Not Given',
+                        'title' => $doctor->doctorProfile->title ?? 'N/A',
                         'email' => $doctor->email,
                         'gender' => ucfirst($doctor->gender->value),
                         'licence_no' => $doctor->doctorProfile->licence_no,
@@ -67,7 +67,7 @@ class DoctorProfileService
             $doctors->getCollection()->transform(fn($doctor) => [
                 'id' => $doctor->id,
                 'name' => $doctor->name,
-                'title' => $doctor->doctorProfile->title ?? 'Not Given',
+                'title' => $doctor->doctorProfile->title ?? 'N/A',
                 'email' => $doctor->email,
                 'gender' => ucfirst($doctor->gender->value),
                 'licence_no' => $doctor->doctorProfile->licence_no,

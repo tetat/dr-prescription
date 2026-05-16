@@ -45,6 +45,12 @@ class DatabaseSeeder extends Seeder
                 'gender' => 'male',
                 'password' => 'admin123',
             ]);
+            $user->phones()->createMany([
+                [
+                    'country_code' => '+880',
+                    'number' => '1700000000',
+                ]
+            ]);
 
             $role_sp = Role::where('name', 'super-admin')->first();
             $permissions = Permission::all();

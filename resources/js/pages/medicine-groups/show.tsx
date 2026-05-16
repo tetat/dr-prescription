@@ -44,7 +44,7 @@ const MedicineGroupShow = ({ medicineGroup }: { medicineGroup: MedicineGroup }) 
                                     Description
                                 </Label>
                                 <p className="mt-1 text-lg font-semibold">
-                                    {medicineGroup.description ?? 'Not Given'}
+                                    {medicineGroup.description ?? 'N/A'}
                                 </p>
                             </div>
                         </div>

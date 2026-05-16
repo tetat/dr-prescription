@@ -41,11 +41,11 @@ class PatientService
                 ->map(fn($patient) => [
                         'id' => $patient->id,
                         'name' => $patient->name,
-                        'email' => $patient->email ?? 'Not Given',
+                        'email' => $patient->email ?? 'N/A',
                         'gender' => ucfirst($patient->gender->value),
                         'age' => $patient->age,
-                        'blood_group' => $patient->blood_group ?? 'Not Given',
-                        'address' => $patient->address ?? 'Not Given',
+                        'blood_group' => $patient->blood_group ?? 'N/A',
+                        'address' => $patient->address ?? 'N/A',
                     ]
                 );
             $patients = [
@@ -61,11 +61,11 @@ class PatientService
             $patients->getCollection()->transform(fn($patient) => [
                 'id' => $patient->id,
                 'name' => $patient->name,
-                'email' => $patient->email ?? 'Not Given',
+                'email' => $patient->email ?? 'N/A',
                 'gender' => ucfirst($patient->gender->value),
                 'age' => $patient->age,
-                'blood_group' => $patient->blood_group ?? 'Not Given',
-                'address' => $patient->address ?? 'Not Given',
+                'blood_group' => $patient->blood_group ?? 'N/A',
+                'address' => $patient->address ?? 'N/A',
             ]);
         }
 

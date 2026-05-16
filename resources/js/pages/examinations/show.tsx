@@ -44,7 +44,7 @@ const ExaminationShow = ({ examination }: { examination: Examination }) => {
                                     Abbreviation
                                 </Label>
                                 <p className="mt-1 text-lg font-semibold">
-                                    {examination.abbreviation ?? 'Not Given'}
+                                    {examination.abbreviation ?? 'N/A'}
                                 </p>
                             </div>
 
@@ -53,7 +53,7 @@ const ExaminationShow = ({ examination }: { examination: Examination }) => {
                                     Unit
                                 </Label>
                                 <p className="mt-1 text-lg font-semibold">
-                                    {examination.unit ?? 'Not Given'}
+                                    {examination.unit ?? 'N/A'}
                                 </p>
                             </div>
                         </div>

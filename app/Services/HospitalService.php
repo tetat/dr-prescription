@@ -35,10 +35,10 @@ class HospitalService
                 ->map(fn($hospital) => [
                         'id' => $hospital->id,
                         'name' => $hospital->name,
-                        'full_name' => $hospital->full_name ?? 'Not Given',
+                        'full_name' => $hospital->full_name ?? 'N/A',
                         'logo' => $hospital->logo_url,
-                        'moto' => $hospital->moto ?? 'Not Given',
-                        'address' => $hospital->address ?? 'Not Given',
+                        'moto' => $hospital->moto ?? 'N/A',
+                        'address' => $hospital->address ?? 'N/A',
                     ]
                 );
             $hospitals = [
@@ -54,10 +54,10 @@ class HospitalService
             $hospitals->getCollection()->transform(fn($hospital) => [
                 'id' => $hospital->id,
                 'name' => $hospital->name,
-                'full_name' => $hospital->full_name ?? 'Not Given',
+                'full_name' => $hospital->full_name ?? 'N/A',
                 'logo' => $hospital->logo_url,
-                'moto' => $hospital->moto ?? 'Not Given',
-                'address' => $hospital->address ?? 'Not Given',
+                'moto' => $hospital->moto ?? 'N/A',
+                'address' => $hospital->address ?? 'N/A',
             ]);
         }
 

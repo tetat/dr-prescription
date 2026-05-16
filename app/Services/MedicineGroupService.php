@@ -22,7 +22,7 @@ class MedicineGroupService
             ->map(fn($medicineGroup) => [
                     'id' => $medicineGroup->id,
                     'name' => $medicineGroup->name,
-                    'description' => $medicineGroup->description ?? 'Not Given',
+                    'description' => $medicineGroup->description ?? 'N/A',
                 ]
             );
     }
@@ -48,7 +48,7 @@ class MedicineGroupService
                 ->map(fn($medicineGroup) => [
                         'id' => $medicineGroup->id,
                         'name' => $medicineGroup->name,
-                        'description' => $medicineGroup->description ?? 'Not Given',
+                        'description' => $medicineGroup->description ?? 'N/A',
                     ]
                 );
             $medicineGroups = [
@@ -64,7 +64,7 @@ class MedicineGroupService
             $medicineGroups->getCollection()->transform(fn($medicineGroup) => [
                 'id' => $medicineGroup->id,
                 'name' => $medicineGroup->name,
-                'description' => $medicineGroup->description ?? 'Not Given',
+                'description' => $medicineGroup->description ?? 'N/A',
             ]);
         }
 

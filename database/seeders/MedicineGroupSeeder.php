@@ -16,19 +16,14 @@ class MedicineGroupSeeder extends Seeder
         $medicineGroups = [
             [
                 'name' => 'Paracetamol',
-                'description' => '',
             ],
             [
                 'name' => 'Ceftriaxone',
-                'description' => '',
-                ]
+            ]
         ];
 
         foreach ($medicineGroups as $medicineGroup) {
-            MedicineGroup::create([
-                'name' => $medicineGroup->name,
-                'description' => $medicineGroup->description,
-            ]);
+            MedicineGroup::create($medicineGroup);
         }
     }
 }
