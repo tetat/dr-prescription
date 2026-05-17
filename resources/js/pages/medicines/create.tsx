@@ -51,7 +51,7 @@ const MedicineCreate = ({ medicineGroups }: { medicineGroups: MedicineGroup[] })
                         <Input
                             value={data.name}
                             onChange={(e) => setData('name', e.target.value)}
-                            placeholder="Medicine name"
+                            placeholder="Brand name"
                         />
                         <InputError message={errors.name} />
                     </div>
