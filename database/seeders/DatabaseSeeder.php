@@ -42,7 +42,7 @@ class DatabaseSeeder extends Seeder
             $user = User::create([
                 'name' => 'Admin',
                 'email' => 'admin@example.com',
-                'gender' => 'male',
+                'gender' => 'Male',
                 'password' => 'admin123',
             ]);
             $user->phones()->createMany([

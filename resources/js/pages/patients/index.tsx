@@ -133,7 +133,7 @@ const PatientIndex = ({ patients, filters }: IndexProps) => {
                                         <TableCell>{patient.name}</TableCell>
                                         <TableCell>{patient.email}</TableCell>
                                         <TableCell>{patient.gender}</TableCell>
-                                        <TableCell>{patient.age}</TableCell>
+                                        <TableCell>{patient.age + ' ' + patient.age_type}</TableCell>
                                         <TableCell>
                                             {patient.blood_group}
                                         </TableCell>

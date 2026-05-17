@@ -4,9 +4,9 @@ namespace App\Enums;
 
 enum UserGender: string
 {
-    case MALE = 'male';
-    case FEMALE = 'female';
-    case OTHER = 'other';
+    case MALE = 'Male';
+    case FEMALE = 'Female';
+    case OTHER = 'Other';
 
     public static function  values() : array {
         return array_column(self::cases(), 'value');

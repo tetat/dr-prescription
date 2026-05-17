@@ -7,7 +7,7 @@ import { Head, Link } from '@inertiajs/react';
 
 interface Props {
     patient: User & {
-        phones?: Phone[];
+        phones: Phone[];
     };
 }
 
@@ -70,7 +70,7 @@ const PatientShow = ({ patient }: Props) => {
                                     Date of Birth
                                 </Label>
                                 <p className="mt-1 w-fit rounded bg-muted px-2 py-1 font-mono text-sm text-blue-600">
-                                    {patient.age}
+                                    {patient.age + ' ' + patient.age_type}
                                 </p>
                             </div>
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\UserGender;
+use App\Enums\AgeType;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -28,32 +29,12 @@ class User extends Authenticatable
         'name',
         'email',
         'gender',
-        'dob',
+        'age',
+        'age_type',
         'blood_group',
         'address',
         'password',
     ];
-
-    protected $appends = ['age'];
-
-    public function getAgeAttribute(): ?string
-    {
-        if (!$this->dob) {
-            return null;
-        }
-
-        $diff = $this->dob->diff(now());
-
-        if ($diff->y > 0) {
-            return $diff->y . 'y';
-        }
-
-        if ($diff->m > 0) {
-            return $diff->m . 'm';
-        }
-
-        return $diff->d . 'd';
-    }
     
 
     public function doctorProfile()
@@ -120,7 +101,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
             'gender' => UserGender::class,
-            'dob' => 'date',
+            'age_type' => AgeType::class,
         ];
     }
 }

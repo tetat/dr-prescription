@@ -2,19 +2,22 @@
 
 namespace App\Enums;
 
-enum PrescriptionMedicineDurationType: string
+enum AgeType: string
 {
     case DAY = 'Day';
     case DAYS = 'Days';
-    case WEEK = 'Week';
-    case WEEKS = 'Weeks';
     case MONTH = 'Month';
     case MONTHS = 'Months';
     case YEAR = 'Year';
     case YEARS = 'Years';
-    case CONTINUE = 'continue';
 
-    public static function  values() : array {
+    public function label(): string
+    {
+        return $this->value;
+    }
+
+    public static function values(): array
+    {
         return array_column(self::cases(), 'value');
     }
 

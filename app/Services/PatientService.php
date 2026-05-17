@@ -42,8 +42,9 @@ class PatientService
                         'id' => $patient->id,
                         'name' => $patient->name,
                         'email' => $patient->email ?? 'N/A',
-                        'gender' => ucfirst($patient->gender->value),
+                        'gender' => $patient->gender->value,
                         'age' => $patient->age,
+                        'age_type' => $patient->age_type,
                         'blood_group' => $patient->blood_group ?? 'N/A',
                         'address' => $patient->address ?? 'N/A',
                     ]
@@ -64,6 +65,7 @@ class PatientService
                 'email' => $patient->email ?? 'N/A',
                 'gender' => ucfirst($patient->gender->value),
                 'age' => $patient->age,
+                'age_type' => $patient->age_type,
                 'blood_group' => $patient->blood_group ?? 'N/A',
                 'address' => $patient->address ?? 'N/A',
             ]);
@@ -80,7 +82,8 @@ class PatientService
                 'name' => $data['name'],
                 'email' => $data['email'] ?? null,
                 'gender' => $data['gender'],
-                'dob' => $data['dob'],
+                'age' => $data['age'],
+                'age_type' => $data['age_type'],
                 'blood_group' => $data['blood_group'] ?? null,
                 'address' => $data['address'] ?? null,
                 'password' => '12345687',
@@ -101,7 +104,8 @@ class PatientService
                 'name' => $data['name'],
                 'email' => $data['email'] ?? null,
                 'gender' => $data['gender'],
-                'dob' => $data['dob'],
+                'age' => $data['age'],
+                'age_type' => $data['age_type'],
                 'blood_group' => $data['blood_group'] ?? null,
                 'address' => $data['address'] ?? null,
             ]);

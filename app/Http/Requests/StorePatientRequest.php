@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Enums\BloodGroup;
 use App\Enums\UserGender;
+use App\Enums\AgeType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Models\Phone;
@@ -31,7 +32,8 @@ class StorePatientRequest extends FormRequest
             'email' => ['nullable', 'email', 'max:255', Rule::unique('users', 'email')],
             'gender' => ['required', Rule::in(UserGender::options())],
 
-            'dob' => ['required', 'date', 'before:today'],
+            'age' => ['required', 'numeric', 'min:1', 'max: 150'],
+            'age_type' => ['required', Rule::in(AgeType::options())],
 
             'blood_group' => [
                 'nullable',

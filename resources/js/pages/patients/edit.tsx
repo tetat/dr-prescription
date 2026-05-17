@@ -18,21 +18,25 @@ import { Phone, User } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 
 interface PatientProps {
+    id: number;
     name: string;
-    email: string;
+    email?: string;
     gender: string;
-    dob: string;
+    age: number;
+    age_type: string;
     blood_group: string;
-    address: string;
+    address?: string;
     phones: Phone[];
 }
 
-const PatientEdit = ({ patient }: { patient: User }) => {
+const PatientEdit = ({ patient }: { patient: PatientProps }) => {
     const { data, setData, put, processing, errors } = useForm<PatientProps>({
+        id: patient.id,
         name: patient.name,
         email: patient.email ?? '',
         gender: patient.gender ?? '',
-        dob: patient.dob ? patient.dob.split('T')[0] : '',
+        age: patient.age,
+        age_type: patient.age_type,
         blood_group: patient.blood_group ?? '',
         address: patient.address ?? '',
         phones: patient.phones,
@@ -102,26 +106,45 @@ const PatientEdit = ({ patient }: { patient: User }) => {
                             </SelectTrigger>
 
                             <SelectContent>
-                                <SelectItem value="male">Male</SelectItem>
-                                <SelectItem value="female">Female</SelectItem>
-                                <SelectItem value="other">Other</SelectItem>
+                                <SelectItem value="Male">Male</SelectItem>
+                                <SelectItem value="Female">Female</SelectItem>
+                                <SelectItem value="Other">Other</SelectItem>
                             </SelectContent>
                         </Select>
                         <InputError message={errors.gender} />
                     </div>
 
-                    {/* DOB */}
+                    {/* Age */}
                     <div>
                         <Label>
-                            Date of Birth{' '}
-                            <span className="ml-1 text-red-500">*</span>
+                            Age <span className="ml-1 text-red-500">*</span>
                         </Label>
-                        <Input
-                            type="date"
-                            value={data.dob}
-                            onChange={(e) => setData('dob', e.target.value)}
-                        />
-                        <InputError message={errors.dob} />
+                        <div className="flex gap-2">
+                            <Input
+                                type="number"
+                                value={data.age}
+                                onChange={(e) => setData('age', Number(e.target.value))}
+                            />
+                            <Select
+                                value={data.age_type}
+                                onValueChange={(value) => setData('age_type', value)}
+                            >
+                                <SelectTrigger className="w-2/4">
+                                    <SelectValue placeholder="Select type" />
+                                </SelectTrigger>
+
+                                <SelectContent>
+                                    <SelectItem value="Years">Years</SelectItem>
+                                    <SelectItem value="Months">Months</SelectItem>
+                                    <SelectItem value="Days">Days</SelectItem>
+                                    <SelectItem value="Year">Year</SelectItem>
+                                    <SelectItem value="Month">Month</SelectItem>
+                                    <SelectItem value="Day">Day</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <InputError message={errors.age_type} />
+                        <InputError message={errors.age} />
                     </div>
 
                     {/* Blood Group */}

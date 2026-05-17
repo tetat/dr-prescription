@@ -1,18 +1,17 @@
 export type User = {
     id: number;
     name: string;
-    email?: string;
+    email?: string | null;
     gender: string;
-    dob: string;
-    age?: string;
-    address?: string;
-    blood_group?: string;
-    avatar?: string;
+    age?: number | null;
+    age_type?: string | null;
+    address?: string | null;
+    blood_group?: string | null;
+    avatar?: string | null;
     email_verified_at: string | null;
     two_factor_enabled?: boolean;
     created_at: string;
     updated_at: string;
-    phones: Phone[];
     [key: string]: unknown;
 };
 
@@ -36,7 +35,6 @@ export type Role = {
     guard_name: string;
     created_at: string;
     updated_at: string;
-    permissions?: Permission[];
 };
 
 export type Permission = {
@@ -47,7 +45,6 @@ export type Permission = {
     guard_name: string;
     created_at: string;
     updated_at: string;
-    roles?: Role[];
 };
 
 export type Phone = {
