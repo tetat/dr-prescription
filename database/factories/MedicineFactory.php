@@ -20,7 +20,11 @@ class MedicineFactory extends Factory
     {
         return [
             'name' => fake()->randomElement([
-                'Napa', 'Seclo', 'Ace', 'Amodis', 'Losectil'
+                'Napa',
+                'Seclo',
+                'Ace',
+                'Amodis',
+                'Losectil'
             ]),
 
             'generic_name' => fake()->randomElement([
@@ -29,20 +33,11 @@ class MedicineFactory extends Factory
                 'Amoxicillin'
             ]),
 
-            'form' => fake()->randomElement([
-                'tablet',
-                'capsule',
-                'syrup',
-                'injection'
-            ]),
-
             'strength' => fake()->randomElement([
                 '500mg',
                 '20mg',
                 '250mg/5ml'
             ]),
-
-            'manufacturer' => fake()->company(),
 
             'medicine_group_id' => MedicineGroup::factory(),
         ];

@@ -3,7 +3,13 @@ import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
 import { edit, index } from '@/routes/medicines';
 import { Medicine, MedicineGroup } from '@/types';
@@ -14,8 +20,8 @@ interface MedicineProps extends Medicine {
 }
 
 interface Props {
-    medicine: MedicineProps,
-    medicineGroups: MedicineGroup[]
+    medicine: MedicineProps;
+    medicineGroups: MedicineGroup[];
 }
 
 const MedicineEdit = ({ medicine, medicineGroups }: Props) => {
@@ -30,7 +36,7 @@ const MedicineEdit = ({ medicine, medicineGroups }: Props) => {
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         put(MedicineController.update.url(medicine.id));
-    }
+    };
 
     const breadcrumbsData = [
         { title: 'Manage Medicines', href: index().url },
@@ -67,18 +73,24 @@ const MedicineEdit = ({ medicine, medicineGroups }: Props) => {
                     {/* Generic Name */}
                     <div>
                         <Label>
-                            Generic Name <span className="ml-1 text-red-500">*</span>
+                            Generic Name{' '}
+                            <span className="ml-1 text-red-500">*</span>
                         </Label>
                         <Select
                             value={data.medicine_group_id.toString()}
-                            onValueChange={(value) => setData('medicine_group_id', Number(value))}
+                            onValueChange={(value) =>
+                                setData('medicine_group_id', Number(value))
+                            }
                         >
                             <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Select Generic Name" />
                             </SelectTrigger>
                             <SelectContent>
                                 {medicineGroups.map((group) => (
-                                    <SelectItem key={group.id} value={group.id.toString()}>
+                                    <SelectItem
+                                        key={group.id}
+                                        value={group.id.toString()}
+                                    >
                                         {group.name}
                                     </SelectItem>
                                 ))}
@@ -106,7 +118,9 @@ const MedicineEdit = ({ medicine, medicineGroups }: Props) => {
                                 <SelectItem value="syrup">Syp</SelectItem>
                                 <SelectItem value="infusion">Inf</SelectItem>
                                 <SelectItem value="ors">ORS</SelectItem>
-                                <SelectItem value="suppository">Supp</SelectItem>
+                                <SelectItem value="suppository">
+                                    Supp
+                                </SelectItem>
                             </SelectContent>
                         </Select>
                         <InputError message={errors.form} />
@@ -115,11 +129,14 @@ const MedicineEdit = ({ medicine, medicineGroups }: Props) => {
                     {/* Strength */}
                     <div>
                         <Label>
-                            Strength <span className="ml-1 text-red-500">*</span>
+                            Strength{' '}
+                            <span className="ml-1 text-red-500">*</span>
                         </Label>
                         <Input
                             value={data.strength}
-                            onChange={(e) => setData('strength', e.target.value)}
+                            onChange={(e) =>
+                                setData('strength', e.target.value)
+                            }
                             placeholder="Medicine strength"
                         />
                         <InputError message={errors.strength} />

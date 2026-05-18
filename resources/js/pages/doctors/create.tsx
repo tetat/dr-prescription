@@ -16,7 +16,14 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { create, index } from '@/routes/doctors';
-import { Degree, DoctorProfile, Institute, Phone, Role, Speciality } from '@/types';
+import {
+    Degree,
+    DoctorProfile,
+    Institute,
+    Phone,
+    Role,
+    Speciality,
+} from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 
 interface DoctorProps extends DoctorProfile {
@@ -59,12 +66,14 @@ const DoctorCreate = ({ degrees, institutes, specialities, roles }: Props) => {
                 number: '',
             },
         ],
-        degrees: [{
-            degree_id: '',
-            institute_id: '',
-            passing_year: '',
-        }],
-        speciality_ids: [''],
+        degrees: [
+            {
+                degree_id: '',
+                institute_id: '',
+                passing_year: '',
+            },
+        ],
+        speciality_ids: [],
         role_ids: ['doctor'],
     });
 
@@ -111,7 +120,10 @@ const DoctorCreate = ({ degrees, institutes, specialities, roles }: Props) => {
 
                     {/* Title */}
                     <div>
-                        <Label>Doctor's Title <span className="ml-1 text-red-500">*</span></Label>
+                        <Label>
+                            Doctor's Title{' '}
+                            <span className="ml-1 text-red-500">*</span>
+                        </Label>
                         <Input
                             value={data.title}
                             onChange={(e) => setData('title', e.target.value)}
@@ -122,7 +134,9 @@ const DoctorCreate = ({ degrees, institutes, specialities, roles }: Props) => {
 
                     {/* Email */}
                     <div>
-                        <Label>Email <span className="ml-1 text-red-500">*</span></Label>
+                        <Label>
+                            Email <span className="ml-1 text-red-500">*</span>
+                        </Label>
                         <Input
                             type="email"
                             value={data.email}
@@ -145,9 +159,9 @@ const DoctorCreate = ({ degrees, institutes, specialities, roles }: Props) => {
                                 <SelectValue placeholder="Select Gender" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="male">Male</SelectItem>
-                                <SelectItem value="female">Female</SelectItem>
-                                <SelectItem value="other">Other</SelectItem>
+                                <SelectItem value="Male">Male</SelectItem>
+                                <SelectItem value="Female">Female</SelectItem>
+                                <SelectItem value="Other">Other</SelectItem>
                             </SelectContent>
                         </Select>
                         <InputError message={errors.gender} />
@@ -158,34 +172,44 @@ const DoctorCreate = ({ degrees, institutes, specialities, roles }: Props) => {
                         <Label>Blood Group</Label>
                         <Select
                             value={data.blood_group}
-                            onValueChange={(value) => setData('blood_group', value)}
+                            onValueChange={(value) =>
+                                setData('blood_group', value)
+                            }
                         >
                             <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Select Blood Group" />
                             </SelectTrigger>
                             <SelectContent>
-                                {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map(
-                                    (group) => (
-                                        <SelectItem key={group} value={group}>
-                                            {group}
-                                        </SelectItem>
-                                    )
-                                )}
+                                {[
+                                    'A+',
+                                    'A-',
+                                    'B+',
+                                    'B-',
+                                    'AB+',
+                                    'AB-',
+                                    'O+',
+                                    'O-',
+                                ].map((group) => (
+                                    <SelectItem key={group} value={group}>
+                                        {group}
+                                    </SelectItem>
+                                ))}
                             </SelectContent>
                         </Select>
                         <InputError message={errors.blood_group} />
                     </div>
 
-
-
                     {/* Licence */}
                     <div>
                         <Label>
-                            Licence Number <span className="ml-1 text-red-500">*</span>
+                            Licence Number{' '}
+                            <span className="ml-1 text-red-500">*</span>
                         </Label>
                         <Input
                             value={data.licence_no}
-                            onChange={(e) => setData('licence_no', e.target.value)}
+                            onChange={(e) =>
+                                setData('licence_no', e.target.value)
+                            }
                             placeholder="e.g. A-123456"
                         />
                         <InputError message={errors.licence_no} />
@@ -204,7 +228,7 @@ const DoctorCreate = ({ degrees, institutes, specialities, roles }: Props) => {
                     </div>
 
                     {/* Bio*/}
-                    <div >
+                    <div>
                         <Label>Doctor's Bio</Label>
                         <Textarea
                             value={data.bio}
@@ -217,13 +241,17 @@ const DoctorCreate = ({ degrees, institutes, specialities, roles }: Props) => {
 
                     {/* Roles */}
                     <div className="md:col-span-2">
-                        <Label>Roles <span className="ml-1 text-red-500">*</span></Label>
+                        <Label>
+                            Roles <span className="ml-1 text-red-500">*</span>
+                        </Label>
                         <MultiSelect
                             options={roles}
                             value={data.role_ids}
-                            onChange={(val) => setData('role_ids', val)}
+                            onChange={(value) => setData('role_ids', value)}
                             label="Select Roles"
-                            is_role={true}
+                            getOptionValue={(role) => role.name}
+                            getOptionLabel={(role) => role.label}
+                            protectedValues={['doctor']}
                         />
                         {Object.entries(errors)
                             .filter(([key]) => key.startsWith('role_ids'))
@@ -238,8 +266,12 @@ const DoctorCreate = ({ degrees, institutes, specialities, roles }: Props) => {
                         <MultiSelect
                             options={specialities}
                             value={data.speciality_ids}
-                            onChange={(val) => setData('speciality_ids', val)}
+                            onChange={(value) =>
+                                setData('speciality_ids', value)
+                            }
                             label="Select Specialities"
+                            getOptionValue={(s) => s.id.toString()}
+                            getOptionLabel={(s) => s.name}
                         />
                         {Object.entries(errors)
                             .filter(([key]) => key.startsWith('speciality_ids'))
@@ -269,7 +301,8 @@ const DoctorCreate = ({ degrees, institutes, specialities, roles }: Props) => {
                     {/* Phones */}
                     <div className="space-y-2 md:col-span-2">
                         <Label>
-                            Contact Numbers <span className="ml-1 text-red-500">*</span>
+                            Contact Numbers{' '}
+                            <span className="ml-1 text-red-500">*</span>
                         </Label>
                         <PhoneField
                             phones={data.phones}
@@ -283,12 +316,11 @@ const DoctorCreate = ({ degrees, institutes, specialities, roles }: Props) => {
                             ))}
                     </div>
 
-
                     {/* Submit */}
                     <Button
                         type="submit"
                         disabled={processing}
-                        className="md:col-span-2 cursor-pointer bg-indigo-600 text-white hover:bg-indigo-700"
+                        className="cursor-pointer bg-indigo-600 text-white hover:bg-indigo-700 md:col-span-2"
                     >
                         {processing ? 'Creating...' : 'Create Doctor'}
                     </Button>

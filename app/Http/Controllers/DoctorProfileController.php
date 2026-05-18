@@ -60,6 +60,7 @@ class DoctorProfileController extends Controller
 
             return redirect()->route('doctors.index')->with('success', 'Doctor created successfully.');
         } catch (Exception $e) {
+            dd($e->getMessage());
             return redirect()->route('doctors.index')->with('error', $e->getMessage());
         }
     }
@@ -112,17 +113,17 @@ class DoctorProfileController extends Controller
             'licence_no' => $doctor->doctorProfile?->licence_no,
             'bio' => $doctor->doctorProfile?->bio,
 
-            'phones' => $doctor->phones->map(fn ($phone) => [
+            'phones' => $doctor->phones->map(fn($phone) => [
                 'country_code' => $phone->country_code,
                 'number' => $phone->number,
             ]),
 
             'speciality_ids' => $doctor->specialities
                 ->pluck('id')
-                ->map(fn ($id) => (string) $id)
+                ->map(fn($id) => (string) $id)
                 ->values(),
 
-            'degrees' => $doctor->degrees->map(fn ($degree) => [
+            'degrees' => $doctor->degrees->map(fn($degree) => [
                 'degree_id' => (string) $degree->id,
                 'institute_id' => (string) $degree->pivot->institute_id,
                 'passing_year' => $degree->pivot->passing_year,
@@ -130,7 +131,7 @@ class DoctorProfileController extends Controller
 
             'role_ids' => $doctor->roles
                 ->pluck('name')
-                ->map(fn ($name) => $name)
+                ->map(fn($name) => $name)
                 ->values(),
         ];
 
@@ -164,7 +165,7 @@ class DoctorProfileController extends Controller
     {
         try {
             $this->doctorProfileService->deleteDoctor($doctor);
-                
+
             return redirect()->route('doctors.index')->with('deleted', 'Doctor deleted successfully.');
         } catch (Exception $e) {
             return redirect()->route('doctors.index')->with('error', $e->getMessage());

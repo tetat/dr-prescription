@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use App\Enums\MedicineForm;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\MedForm;
 
 class Medicine extends Model
 {
@@ -13,7 +13,6 @@ class Medicine extends Model
 
     protected $fillable = [
         'name',
-        'form',
         'strength',
         'medicine_group_id'
     ];
@@ -23,14 +22,13 @@ class Medicine extends Model
         return $this->belongsTo(MedicineGroup::class, 'medicine_group_id');
     }
 
+    public function forms()
+    {
+        return $this->belongsToMany(MedForm::class);
+    }
+
     public function prescriptionMedicines()
     {
         return $this->hasMany(PrescriptionMedicine::class);
-    }
-
-    protected function casts(): array {
-        return [
-            'form' => MedicineForm::class,
-        ];
     }
 }

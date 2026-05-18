@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\UserGender;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Models\Phone;
@@ -27,7 +28,7 @@ class UpdateDoctorProfileRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
-            'gender' => ['required', Rule::in(['male', 'female', 'other'])],
+            'gender' => ['required', Rule::in(UserGender::options())],
             'blood_group' => ['nullable', 'string', 'max:5'],
             'address' => ['nullable', 'string'],
 
@@ -37,10 +38,10 @@ class UpdateDoctorProfileRequest extends FormRequest
 
             'role_ids' => ['required', 'array'],
             'role_ids.*' => [
-                                'required', 
-                                Rule::in(['super-admin', 'doctor']),
-                                Rule::exists('roles', 'name')->where('guard_name', 'web'),
-                            ],
+                'required',
+                Rule::in(['super-admin', 'doctor']),
+                Rule::exists('roles', 'name')->where('guard_name', 'web'),
+            ],
 
             'speciality_ids' => ['nullable', 'array'],
             'speciality_ids.*' => ['integer', 'exists:specialities,id'],
@@ -77,7 +78,7 @@ class UpdateDoctorProfileRequest extends FormRequest
 
             foreach ($phones as $phone) {
 
-                $key = $phone['country_code'].'-'.$phone['number'];
+                $key = $phone['country_code'] . '-' . $phone['number'];
 
                 // duplicate in request
                 if (in_array($key, $seen)) {

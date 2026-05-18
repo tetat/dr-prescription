@@ -16,20 +16,26 @@ class MedicineSeeder extends Seeder
         $medicines = [
             [
                 'name' => 'Napa',
-                'form' => 'tablet',
                 'strength' => '500mg',
+                'form_id' => 1,
                 'medicine_group_id' => 1,
             ],
             [
                 'name' => 'Ceftron',
-                'form' => 'tablet',
+                'form_id' => 2,
                 'strength' => '200mg',
                 'medicine_group_id' => 2,
             ]
         ];
 
         foreach ($medicines as $medicine) {
-            Medicine::create($medicine);
+            $formId = $medicine['form_id'];
+
+            unset($medicine['form_id']);
+
+            $medicine = Medicine::create($medicine);
+
+            $medicine->forms()->attach($formId);
         }
     }
 }

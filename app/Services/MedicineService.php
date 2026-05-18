@@ -20,28 +20,30 @@ class MedicineService
     public function getMedicineTableData(Request $request)
     {
         $perPage = (int) ($request->perPage ?? "10");
-        $medicineQuery = Medicine::with('group');
+        $medicineQuery = Medicine::with(['group', 'forms']);
 
         if ($request->filled('search')) {
             $search = $request->search;
 
-            $medicineQuery->where(fn($query) => 
+            $medicineQuery->where(
+                fn($query) =>
                 $query->where('name', 'like', "%{$search}%")
                     ->orWhereHas('group', function ($groupQuery) use ($search) {
                         $groupQuery->where('name', 'like', "%{$search}%");
                     })
             );
         }
-        
+
         $totalCount = $medicineQuery->count();
 
         if ($perPage === -1) {
             $allMedicines = $medicineQuery->latest()
                 ->get()
-                ->map(fn($medicine) => [
+                ->map(
+                    fn($medicine) => [
                         'id' => $medicine->id,
                         'name' => $medicine->name,
-                        'form' => $medicine->form,
+                        'forms' => $medicine->forms,
                         'strength' => $medicine->strength,
                         'group_name' => $medicine->group->name,
                     ]
@@ -59,7 +61,7 @@ class MedicineService
             $medicines->getCollection()->transform(fn($medicine) => [
                 'id' => $medicine->id,
                 'name' => $medicine->name,
-                'form' => $medicine->form,
+                'forms' => $medicine->forms,
                 'strength' => $medicine->strength,
                 'group_name' => $medicine->group->name,
             ]);
@@ -70,13 +72,14 @@ class MedicineService
 
     public function createMedicine(array $data): Medicine
     {
-        return DB::transaction(function() use ($data) {
+        return DB::transaction(function () use ($data) {
             $medicine = Medicine::create([
                 'name' => $data['name'],
-                'form' => $data['form'],
                 'strength' => $data['strength'],
                 'medicine_group_id' => $data['medicine_group_id'],
             ]);
+
+            $medicine->forms()->attach($data['form_ids']);
 
             return $medicine;
         });
@@ -84,13 +87,14 @@ class MedicineService
 
     public function updateMedicine(array $data, Medicine $medicine): Medicine
     {
-        return DB::transaction(function() use ($data, $medicine) {
+        return DB::transaction(function () use ($data, $medicine) {
             $medicine->update([
                 'name' => $data['name'],
-                'form' => $data['form'],
                 'strength' => $data['strength'],
                 'medicine_group_id' => $data['medicine_group_id'],
             ]);
+
+            $medicine->forms()->sync($data['form_ids']);
 
             return $medicine;
         });
@@ -98,7 +102,7 @@ class MedicineService
 
     public function deleteMedicine(Medicine $medicine): void
     {
-        DB::transaction(function() use ($medicine) {
+        DB::transaction(function () use ($medicine) {
             $medicine->delete();
         });
     }

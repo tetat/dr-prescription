@@ -63,18 +63,14 @@ const DoctorEdit = ({
     specialities,
     roles,
 }: Props) => {
-
-    const { data, setData, put, processing, errors } =
-        useForm<DoctorProps>({
-            ...doctor,
-        });
+    const { data, setData, put, processing, errors } = useForm<DoctorProps>({
+        ...doctor,
+    });
 
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        put(
-            DoctorProfileController.update.url(doctor.id)
-        );
+        put(DoctorProfileController.update.url(doctor.id));
     };
 
     const breadcrumbsData = [
@@ -93,7 +89,6 @@ const DoctorEdit = ({
             <Head title={`Edit ${doctor.name}`} />
 
             <div className="mx-auto mt-6 w-3xl p-4">
-
                 <h2 className="py-3 text-center text-2xl font-bold">
                     Edit Doctor
                 </h2>
@@ -102,16 +97,15 @@ const DoctorEdit = ({
                     onSubmit={onSubmit}
                     className="grid grid-cols-1 gap-5 md:grid-cols-2"
                 >
-
                     {/* Name */}
                     <div>
-                        <Label>Name <span className="text-red-500">*</span></Label>
+                        <Label>
+                            Name <span className="text-red-500">*</span>
+                        </Label>
 
                         <Input
                             value={data.name}
-                            onChange={(e) =>
-                                setData('name', e.target.value)
-                            }
+                            onChange={(e) => setData('name', e.target.value)}
                         />
 
                         <InputError message={errors.name} />
@@ -123,9 +117,7 @@ const DoctorEdit = ({
 
                         <Input
                             value={data.title}
-                            onChange={(e) =>
-                                setData('title', e.target.value)
-                            }
+                            onChange={(e) => setData('title', e.target.value)}
                         />
 
                         <InputError message={errors.title} />
@@ -133,14 +125,14 @@ const DoctorEdit = ({
 
                     {/* Email */}
                     <div>
-                        <Label>Email <span className="text-red-500">*</span></Label>
+                        <Label>
+                            Email <span className="text-red-500">*</span>
+                        </Label>
 
                         <Input
                             type="email"
                             value={data.email}
-                            onChange={(e) =>
-                                setData('email', e.target.value)
-                            }
+                            onChange={(e) => setData('email', e.target.value)}
                         />
 
                         <InputError message={errors.email} />
@@ -148,30 +140,22 @@ const DoctorEdit = ({
 
                     {/* Gender */}
                     <div>
-                        <Label>Gender <span className="text-red-500">*</span></Label>
+                        <Label>
+                            Gender <span className="text-red-500">*</span>
+                        </Label>
 
                         <Select
                             value={data.gender}
-                            onValueChange={(value) =>
-                                setData('gender', value)
-                            }
+                            onValueChange={(value) => setData('gender', value)}
                         >
                             <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Select Gender" />
                             </SelectTrigger>
 
                             <SelectContent>
-                                <SelectItem value="male">
-                                    Male
-                                </SelectItem>
-
-                                <SelectItem value="female">
-                                    Female
-                                </SelectItem>
-
-                                <SelectItem value="other">
-                                    Other
-                                </SelectItem>
+                                <SelectItem value="Male">Male</SelectItem>
+                                <SelectItem value="Female">Female</SelectItem>
+                                <SelectItem value="Other">Other</SelectItem>
                             </SelectContent>
                         </Select>
 
@@ -184,19 +168,28 @@ const DoctorEdit = ({
 
                         <Select
                             value={data.blood_group}
-                            onValueChange={(value) => setData('blood_group', value)}
+                            onValueChange={(value) =>
+                                setData('blood_group', value)
+                            }
                         >
                             <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Select Blood Group" />
                             </SelectTrigger>
                             <SelectContent>
-                                {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map(
-                                    (group) => (
-                                        <SelectItem key={group} value={group}>
-                                            {group}
-                                        </SelectItem>
-                                    )
-                                )}
+                                {[
+                                    'A+',
+                                    'A-',
+                                    'B+',
+                                    'B-',
+                                    'AB+',
+                                    'AB-',
+                                    'O+',
+                                    'O-',
+                                ].map((group) => (
+                                    <SelectItem key={group} value={group}>
+                                        {group}
+                                    </SelectItem>
+                                ))}
                             </SelectContent>
                         </Select>
 
@@ -205,15 +198,15 @@ const DoctorEdit = ({
 
                     {/* Licence */}
                     <div>
-                        <Label>Licence Number <span className="text-red-500">*</span></Label>
+                        <Label>
+                            Licence Number{' '}
+                            <span className="text-red-500">*</span>
+                        </Label>
 
                         <Input
                             value={data.licence_no}
                             onChange={(e) =>
-                                setData(
-                                    'licence_no',
-                                    e.target.value
-                                )
+                                setData('licence_no', e.target.value)
                             }
                         />
 
@@ -226,9 +219,7 @@ const DoctorEdit = ({
 
                         <Textarea
                             value={data.address}
-                            onChange={(e) =>
-                                setData('address', e.target.value)
-                            }
+                            onChange={(e) => setData('address', e.target.value)}
                         />
 
                         <InputError message={errors.address} />
@@ -240,9 +231,7 @@ const DoctorEdit = ({
 
                         <Textarea
                             value={data.bio}
-                            onChange={(e) =>
-                                setData('bio', e.target.value)
-                            }
+                            onChange={(e) => setData('bio', e.target.value)}
                         />
 
                         <InputError message={errors.bio} />
@@ -255,8 +244,11 @@ const DoctorEdit = ({
                         <MultiSelect
                             options={roles}
                             value={data.role_ids}
-                            onChange={(val) => setData('role_ids', val)}
-                            is_role={true}
+                            onChange={(value) => setData('role_ids', value)}
+                            label="Select Roles"
+                            getOptionValue={(role) => role.name}
+                            getOptionLabel={(role) => role.label}
+                            protectedValues={['doctor']}
                         />
 
                         {Object.entries(errors)
@@ -273,10 +265,12 @@ const DoctorEdit = ({
                         <MultiSelect
                             options={specialities}
                             value={data.speciality_ids}
-                            onChange={(val) =>
-                                setData('speciality_ids', val)
+                            onChange={(value) =>
+                                setData('speciality_ids', value)
                             }
                             label="Select Specialities"
+                            getOptionValue={(s) => s.id.toString()}
+                            getOptionLabel={(s) => s.name}
                         />
 
                         {Object.entries(errors)
@@ -288,13 +282,13 @@ const DoctorEdit = ({
 
                     {/* Degrees */}
                     <div className="md:col-span-2">
-                        <Label>Degrees <span className="text-red-500">*</span></Label>
+                        <Label>
+                            Degrees <span className="text-red-500">*</span>
+                        </Label>
 
                         <DegreeField
                             degrees={data.degrees}
-                            setDegrees={(val) =>
-                                setData('degrees', val)
-                            }
+                            setDegrees={(val) => setData('degrees', val)}
                             degreeOptions={degrees}
                             instituteOptions={institutes}
                         />
@@ -308,12 +302,12 @@ const DoctorEdit = ({
 
                     {/* Phones */}
                     <div className="md:col-span-2">
-                        <Label>Phones <span className="text-red-500">*</span></Label>
+                        <Label>
+                            Phones <span className="text-red-500">*</span>
+                        </Label>
                         <PhoneField
                             phones={data.phones}
-                            setPhones={(phones) =>
-                                setData('phones', phones)
-                            }
+                            setPhones={(phones) => setData('phones', phones)}
                         />
 
                         {Object.entries(errors)
@@ -327,11 +321,10 @@ const DoctorEdit = ({
                     <Button
                         type="submit"
                         disabled={processing}
-                        className="md:col-span-2 cursor-pointer bg-indigo-600 text-white hover:bg-indigo-700"
+                        className="cursor-pointer bg-indigo-600 text-white hover:bg-indigo-700 md:col-span-2"
                     >
                         {processing ? 'Updating...' : 'Update Doctor'}
                     </Button>
-
                 </form>
             </div>
         </AppLayout>

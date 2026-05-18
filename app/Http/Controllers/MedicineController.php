@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Medicine;
 use App\Http\Requests\StoreMedicineRequest;
 use App\Http\Requests\UpdateMedicineRequest;
+use App\Models\MedForm;
 use App\Services\MedicineService;
 use App\Services\MedicineGroupService;
 use Illuminate\Http\Request;
@@ -35,9 +36,11 @@ class MedicineController extends Controller
     public function create()
     {
         $medicineGroups = $this->medicineGroupService->getAllMedicineGroups();
+        $medForms = MedForm::all();
 
         return inertia('medicines/create', [
             'medicineGroups' => $medicineGroups,
+            'medForms' => $medForms,
         ]);
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\BloodGroup;
+use App\Enums\UserGender;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Models\Phone;
@@ -29,7 +30,7 @@ class StoreDoctorProfileRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'title' => ['required', 'string'],
             'email' => ['required', 'string', 'email', 'unique:users,email'],
-            'gender' => ['required', 'string'],
+            'gender' => ['required', Rule::in(UserGender::options())],
             'blood_group' => ['nullable', 'string', Rule::in(BloodGroup::options())],
             'licence_no' => ['required', 'string', 'unique:doctor_profiles,licence_no', 'regex:/^[A-Z]-[0-9]{6}$/',],
             'address' => ['nullable', 'string'],
@@ -37,11 +38,11 @@ class StoreDoctorProfileRequest extends FormRequest
 
             'role_ids' => ['required', 'array'],
             'role_ids.*' => [
-                                'required', 
-                                Rule::in(['super-admin', 'doctor']),
-                                Rule::exists('roles', 'name')->where('guard_name', 'web'),
-                            ],
-                            
+                'required',
+                Rule::in(['super-admin', 'doctor']),
+                Rule::exists('roles', 'name')->where('guard_name', 'web'),
+            ],
+
             // phones array
             'phones' => ['required', 'array'],
             'phones.*.country_code' => [
@@ -74,7 +75,7 @@ class StoreDoctorProfileRequest extends FormRequest
 
             foreach ($phones as $phone) {
 
-                $key = $phone['country_code'].'-'.$phone['number'];
+                $key = $phone['country_code'] . '-' . $phone['number'];
 
                 // duplicate in request
                 if (in_array($key, $seen)) {

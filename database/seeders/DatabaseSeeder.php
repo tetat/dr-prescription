@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
@@ -26,18 +27,19 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         if (!User::first()) {
-           $this->call([
-               RoleSeeder::class,
-               PermissionSeeder::class,
-               DegreeSeeder::class,
-               SpecialitySeeder::class,
-               ExaminationSeeder::class,
-               InstituteSeeder::class,
-               HospitalSeeder::class,
-               TestSeeder::class,
-               MedicineGroupSeeder::class,
-               MedicineSeeder::class,
-           ]);
+            $this->call([
+                RoleSeeder::class,
+                PermissionSeeder::class,
+                DegreeSeeder::class,
+                SpecialitySeeder::class,
+                ExaminationSeeder::class,
+                InstituteSeeder::class,
+                HospitalSeeder::class,
+                TestSeeder::class,
+                MedicineGroupSeeder::class,
+                MedFormSeeder::class,
+                MedicineSeeder::class,
+            ]);
 
             $user = User::create([
                 'name' => 'Admin',

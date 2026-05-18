@@ -1,37 +1,42 @@
-import { useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Role, Speciality } from '@/types';
 import { ChevronDown } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Button } from './ui/button';
+import { Checkbox } from './ui/checkbox';
 
-type Props = {
-    options: Speciality[] | Role[];
+type BaseOption = {
+    id: number;
+};
+
+type Props<T extends BaseOption> = {
+    options: T[];
     value: string[];
     onChange: (value: string[]) => void;
     label?: string;
-    is_role?: boolean;
+
+    getOptionValue: (option: T) => string;
+    getOptionLabel: (option: T) => string;
+
+    protectedValues?: string[];
 };
 
-const MultiSelect = ({ options, value, onChange, label, is_role = false }: Props) => {
+const MultiSelect = <T extends BaseOption>({
+    options,
+    value,
+    onChange,
+    label,
+    getOptionValue,
+    getOptionLabel,
+    protectedValues = [],
+}: Props<T>) => {
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
 
-    // Get dynamic value
-    const getOptionValue = (opt: Speciality | Role) => {
-        if (is_role) {
-            return opt.name;
-        }
-
-        return opt.id.toString();
-    };
-
-    const doctorRoleAlert = () => {
-        alert('Doctor Role must be need for Doctor!');
-    }
-
     const toggleValue = (val: string) => {
-        if (is_role && val === 'doctor') {
-            doctorRoleAlert();
+        const isSelected = value.includes(val);
+
+        // prevent unselect
+        if (isSelected && protectedValues.includes(val)) {
+            alert('Doctor role must be needed for Doctor!');
             return;
         }
 
@@ -52,27 +57,16 @@ const MultiSelect = ({ options, value, onChange, label, is_role = false }: Props
         document.addEventListener('mousedown', handleClickOutside);
 
         return () => {
-            document.removeEventListener(
-                'mousedown',
-                handleClickOutside
-            );
+            document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
 
-    // Selected names for button text
     const selectedNames = options
-        .filter((opt) =>
-            value.includes(getOptionValue(opt))
-        )
-        .map((opt) => {
-            return is_role
-                ? (opt as Role).label
-                : (opt as Speciality).name
-        });
+        .filter((opt) => value.includes(getOptionValue(opt)))
+        .map((opt) => getOptionLabel(opt));
 
     return (
         <div ref={ref} className="relative w-full">
-            {/* Button */}
             <Button
                 type="button"
                 variant="outline"
@@ -88,12 +82,10 @@ const MultiSelect = ({ options, value, onChange, label, is_role = false }: Props
                 <ChevronDown className="h-4 w-4" />
             </Button>
 
-            {/* Dropdown */}
             {open && (
                 <div className="absolute z-50 mt-2 max-h-60 w-full overflow-auto rounded-md border bg-white p-2 shadow-lg">
                     {options.map((opt) => {
-                        const optionValue =
-                            getOptionValue(opt);
+                        const optionValue = getOptionValue(opt);
 
                         return (
                             <label
@@ -101,15 +93,14 @@ const MultiSelect = ({ options, value, onChange, label, is_role = false }: Props
                                 className="flex cursor-pointer items-center gap-2 rounded p-2 hover:bg-gray-100"
                             >
                                 <Checkbox
-                                    checked={value.includes(
-                                        optionValue
-                                    )}
-                                    onCheckedChange={() => toggleValue(optionValue)}
+                                    checked={value.includes(optionValue)}
+                                    
+                                    onCheckedChange={() =>
+                                        toggleValue(optionValue)
+                                    }
                                 />
 
-                                <span>{is_role
-                                    ? (opt as Role).label
-                                    : (opt as Speciality).name}</span>
+                                <span>{getOptionLabel(opt)}</span>
                             </label>
                         );
                     })}

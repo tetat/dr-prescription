@@ -63,7 +63,6 @@ export type Degree = {
     id: number;
     name: string;
     abbreviation: string;
-
 };
 
 export type Speciality = {
@@ -82,14 +81,14 @@ export type Test = {
     id: number;
     name: string;
     description: string;
-}
+};
 
 export type Examination = {
     id: number;
     name: string;
     abbreviation: string;
     unit: string;
-}
+};
 
 export type Hospital = {
     id: number;
@@ -97,18 +96,23 @@ export type Hospital = {
     full_name: string;
     moto: string;
     address: string;
-}
+};
 
 export type MedicineGroup = {
     id: number;
     name: string;
     description?: string;
-}
+};
 
 export type Medicine = {
     id: number;
     name: string;
-    form: string;
     strength: string;
     medicine_group_id: number;
-}
+};
+
+export type MedForm = {
+    id: number;
+    short_name: string;
+    long_name: string;
+};
