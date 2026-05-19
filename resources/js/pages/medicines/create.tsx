@@ -17,7 +17,7 @@ import { MedForm, Medicine, MedicineGroup } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 
 interface MedicineProps extends Medicine {
-    form_ids: string[];
+    form_ids: number[];
 }
 
 interface Props {
@@ -112,8 +112,8 @@ const MedicineCreate = ({ medicineGroups, medForms }: Props) => {
 
                         <MultiSelect
                             options={medForms}
-                            value={data.form_ids}
-                            onChange={(value) => setData('form_ids', value)}
+                            value={data.form_ids.map(String)}
+                            onChange={(value) => setData('form_ids', value.map(Number))}
                             label="Select Forms"
                             getOptionValue={(f) => f.id.toString()}
                             getOptionLabel={(f) => f.long_name}

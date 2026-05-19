@@ -16,14 +16,14 @@ class MedicineController extends Controller
     public function __construct(
         private MedicineService $medicineService,
         private MedicineGroupService $medicineGroupService,
-    ){}
+    ) {}
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
         $medicines = $this->medicineService->getMedicineTableData($request);
-        
+
         return inertia('medicines/index', [
             'medicines' => $medicines,
             'filters' => $request->only('perPage', 'search')
@@ -64,7 +64,7 @@ class MedicineController extends Controller
      */
     public function show(Medicine $medicine)
     {
-        $medicine->load('group');
+        $medicine->load('group', 'forms');
 
         return inertia('medicines/show', [
             'medicine' => $medicine,
@@ -76,12 +76,14 @@ class MedicineController extends Controller
      */
     public function edit(Medicine $medicine)
     {
-        $medicine->load('group');
+        $medicine->load('group', 'forms');
         $medicineGroups = $this->medicineGroupService->getAllMedicineGroups();
+        $medForms = MedForm::all();
 
         return inertia('medicines/edit', [
             'medicine' => $medicine,
             'medicineGroups' => $medicineGroups,
+            'medForms' => $medForms,
         ]);
     }
 

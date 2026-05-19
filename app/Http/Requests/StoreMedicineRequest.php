@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\MedForm;
 use App\Models\MedicineGroup;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -26,10 +27,10 @@ class StoreMedicineRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:512'],
-            'generic_name' => ['nullable', 'string', 'max:512'],
-            'form' => ['required', 'string', 'max:255'],
+            'form_ids' => ['required', 'array', 'min:1'],
+            'form_ids.*' => ['integer', Rule::exists('med_forms', 'id')],
             'strength' => ['required', 'string', 'max:255'],
-            'medicine_group_id' => ['required', Rule::in(MedicineGroup::all()->pluck('id'))],
+            'medicine_group_id' => ['required', Rule::exists('medicine_groups', 'id')],
         ];
     }
 
@@ -37,10 +38,11 @@ class StoreMedicineRequest extends FormRequest
     {
         return [
             'name.required' => 'Medicine name is required.',
-            'form.required' => 'Medicine form is required.',
+            'form_ids' => 'Form is required.',
+            'form_ids.*' => 'Form is not valid.',
             'strength.required' => 'Medicine strength is required.',
             'medicine_group_id.required' => 'Medicine group is required.',
-            'medicine_group_id.in' => 'Medicine group is invalid.',
+            'medicine_group_id.exists' => 'Medicine group is invalid.',
         ];
     }
 }

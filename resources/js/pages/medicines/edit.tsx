@@ -1,5 +1,6 @@
 import MedicineController from '@/actions/App/Http/Controllers/MedicineController';
 import InputError from '@/components/input-error';
+import MultiSelect from '@/components/multi-select';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,26 +13,33 @@ import {
 } from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
 import { edit, index } from '@/routes/medicines';
-import { Medicine, MedicineGroup } from '@/types';
+import { MedForm, Medicine, MedicineGroup } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 
 interface MedicineProps extends Medicine {
     group: MedicineGroup;
+    forms: MedForm[];
+}
+
+interface MedicineFormData extends Medicine {
+    form_ids: number[];
 }
 
 interface Props {
     medicine: MedicineProps;
     medicineGroups: MedicineGroup[];
+    medForms: MedForm[];
 }
 
-const MedicineEdit = ({ medicine, medicineGroups }: Props) => {
-    const { data, setData, put, processing, errors } = useForm<Medicine>({
-        id: medicine.id,
-        name: medicine.name,
-        form: medicine.form,
-        strength: medicine.strength,
-        medicine_group_id: medicine.group.id,
-    });
+const MedicineEdit = ({ medicine, medicineGroups, medForms }: Props) => {
+    const { data, setData, put, processing, errors } =
+        useForm<MedicineFormData>({
+            id: medicine.id,
+            name: medicine.name,
+            form_ids: medicine.forms.map((f) => f.id),
+            strength: medicine.strength,
+            medicine_group_id: medicine.group.id,
+        });
 
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -104,26 +112,22 @@ const MedicineEdit = ({ medicine, medicineGroups }: Props) => {
                         <Label>
                             Form <span className="ml-1 text-red-500">*</span>
                         </Label>
-                        <Select
-                            value={data.form}
-                            onValueChange={(value) => setData('form', value)}
-                        >
-                            <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Select medicine form" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="tablet">Tab</SelectItem>
-                                <SelectItem value="capsule">Caps</SelectItem>
-                                <SelectItem value="injection">Inj</SelectItem>
-                                <SelectItem value="syrup">Syp</SelectItem>
-                                <SelectItem value="infusion">Inf</SelectItem>
-                                <SelectItem value="ors">ORS</SelectItem>
-                                <SelectItem value="suppository">
-                                    Supp
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
-                        <InputError message={errors.form} />
+
+                        <MultiSelect
+                            options={medForms}
+                            value={data.form_ids.map(String)}
+                            onChange={(value) =>
+                                setData('form_ids', value.map(Number))
+                            }
+                            label="Select Forms"
+                            getOptionValue={(f) => f.id.toString()}
+                            getOptionLabel={(f) => f.long_name}
+                        />
+                        {Object.entries(errors)
+                            .filter(([key]) => key.startsWith('form_ids'))
+                            .map(([key, message]) => (
+                                <InputError key={key} message={message} />
+                            ))}
                     </div>
 
                     {/* Strength */}

@@ -2,11 +2,12 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import { edit, index, show } from '@/routes/medicines';
-import { Medicine, MedicineGroup } from '@/types';
+import { MedForm, Medicine, MedicineGroup } from '@/types';
 import { Head, Link } from '@inertiajs/react';
 
 interface MedicineProps extends Medicine {
     group: MedicineGroup;
+    forms: MedForm[];
 }
 
 const MedicineShow = ({ medicine }: { medicine: MedicineProps }) => {
@@ -56,9 +57,14 @@ const MedicineShow = ({ medicine }: { medicine: MedicineProps }) => {
                                 <Label className="text-sm font-semibold text-muted-foreground">
                                     Form
                                 </Label>
-                                <p className="mt-1 text-lg font-semibold">
-                                    {medicine.form}
-                                </p>
+                                {medicine.forms.map((form) => (
+                                    <p
+                                        key={form.id}
+                                        className="mt-1 text-lg font-semibold"
+                                    >
+                                        {form.long_name}
+                                    </p>
+                                ))}
                             </div>
 
                             <div>
@@ -69,8 +75,6 @@ const MedicineShow = ({ medicine }: { medicine: MedicineProps }) => {
                                     {medicine.strength}
                                 </p>
                             </div>
-
-
                         </div>
                     </div>
 
