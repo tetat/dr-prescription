@@ -17,6 +17,7 @@ import doctors from '@/routes/doctors';
 import examinations from '@/routes/examinations';
 import hospitals from '@/routes/hospitals';
 import institutes from '@/routes/institutes';
+import medForms from '@/routes/med-forms';
 import medicineGroups from '@/routes/medicine-groups';
 import medicines from '@/routes/medicines';
 import patients from '@/routes/patients';
@@ -41,6 +42,7 @@ import {
     Hospital,
     Dna,
     Pill,
+    Droplets,
 } from 'lucide-react';
 
 const mainNavItems: NavItem[] = [
@@ -78,6 +80,11 @@ const mainNavItems: NavItem[] = [
         title: 'Medicine Groups',
         href: medicineGroups.index().url,
         icon: Dna,
+    },
+    {
+        title: 'Medicine Forms',
+        href: medForms.index().url,
+        icon: Droplets,
     },
     {
         title: 'Medicines',

@@ -7,6 +7,7 @@ use App\Http\Controllers\DoctorProfileController;
 use App\Http\Controllers\SpecialityController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\HospitalController;
+use App\Http\Controllers\MedFormController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TestController;
@@ -36,7 +37,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('tests', TestController::class);
     Route::resource('examinations', ExaminationController::class);
     Route::resource('medicine-groups', MedicineGroupController::class);
+    Route::resource('med-forms', MedFormController::class);
     Route::resource('medicines', MedicineController::class);
 });
 
-require __DIR__.'/settings.php';
+require __DIR__ . '/settings.php';

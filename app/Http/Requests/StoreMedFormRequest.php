@@ -12,7 +12,7 @@ class StoreMedFormRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,8 @@ class StoreMedFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'short_name' => ['required', 'string', 'min:2'],
+            'long_name' => ['nullable', 'string'],
         ];
     }
 }
