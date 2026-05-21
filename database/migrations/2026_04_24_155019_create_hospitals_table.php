@@ -14,10 +14,14 @@ return new class extends Migration
         Schema::create('hospitals', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('locale_name')->nullable();
             $table->string('full_name')->nullable();
+            $table->string('locale_full_name')->nullable();
             $table->string('logo')->nullable();
             $table->string('moto')->nullable();
+            $table->string('locale_moto')->nullable();
             $table->text('address')->nullable();
+            $table->text('locale_address')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -17,6 +17,7 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnDelete();
             $table->string('title')->nullable();
+            $table->string('locale_title')->nullable();
             $table->string('licence_no');
             $table->text('bio')->nullable();
             $table->softDeletes();

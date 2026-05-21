@@ -2,12 +2,12 @@
 
 namespace App\Services;
 
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class UserService
 {
@@ -18,7 +18,7 @@ class UserService
     public function getUserQuery(): Builder
     {
         $userQuery = User::with('roles');
-        $authUser = auth()->user();
+        $authUser = Auth::user();
 
         if ($authUser->hasRole('super-admin')) {
             $userQuery->whereDoesntHave('roles', function ($query) {
@@ -127,13 +127,13 @@ class UserService
     {
         return DB::transaction(function () use ($user, $data) {
 
-            $user->update([
-                'name' => $data['name'],
-                'email' => $data['email'] ?? null,
-                'gender' => $data['gender'],
-                'blood_group' => $data['blood_group'] ?? null,
-                'address' => $data['address'] ?? null,
-            ]);
+            $user->name = $data['name'];
+            $user->email = $data['email'];
+            $user->gender = $data['gender'];
+            $user->blood_group = $data['blood_group'];
+            $user->address = $data['address'];
+
+            $user->update();
 
             $currentRole = $user->roles()
                 ->whereNotIn('name', ['doctor'])

@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('specialities', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('locale_name')->nullable();
             $table->string('abbreviation')->nullable();
+            $table->string('locale_abbreviation')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

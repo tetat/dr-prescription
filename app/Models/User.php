@@ -5,15 +5,17 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\UserGender;
 use App\Enums\AgeType;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\Degree;
-use App\Models\Institute;
 use App\Models\Speciality;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class User extends Authenticatable
 {
@@ -27,6 +29,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'locale_name',
         'email',
         'gender',
         'age',
@@ -37,42 +40,42 @@ class User extends Authenticatable
     ];
     
 
-    public function doctorProfile()
+    public function doctorProfile(): HasOne
     {
         return $this->hasOne(DoctorProfile::class);
     }
 
-    public function degrees()
+    public function degrees(): BelongsToMany
     {
         return $this->belongsToMany(Degree::class, 'degree_doctor', 'doctor_id', 'degree_id')
             ->withPivot('institute_id', 'passing_year')
             ->withTimestamps();
     }
 
-    public function specialities()
+    public function specialities(): BelongsToMany
     {
         return $this->belongsToMany(Speciality::class, 'doctor_speciality', 'doctor_id', 'speciality_id');
     }
 
-    public function doctorSetting()
+    public function doctorSetting(): HasOne
     {
         return $this->hasOne(DoctorSetting::class, 'doctor_id');
     }
 
     // as doctor
-    public function prescriptionsGiven()
+    public function prescriptionsGiven(): HasMany
     {
         return $this->hasMany(Prescription::class, 'doctor_id');
     }
 
     // as patient
-    public function prescriptionsTaken()
+    public function prescriptionsTaken(): HasMany
     {
         return $this->hasMany(Prescription::class, 'patient_id');
     }
 
     // polymorphic phones
-    public function phones()
+    public function phones(): MorphMany
     {
         return $this->morphMany(Phone::class, 'phoneable');
     }
