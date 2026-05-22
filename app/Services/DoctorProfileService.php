@@ -114,6 +114,7 @@ class DoctorProfileService
 
             $doctorProfile = $doctor->doctorProfile()->create([
                 'title' => $data['title'],
+                'locale_title' => $data['locale_title'],
                 'licence_no' => $data['licence_no'],
                 'bio' => $data['bio'],
             ]);
@@ -146,7 +147,7 @@ class DoctorProfileService
             $doctor->gender = $data['gender'];
             $doctor->blood_group = $data['blood_group'];
             $doctor->address = $data['address'];
-            
+
             $doctor->update();
 
             $doctor->syncRoles($data['role_ids']);
@@ -165,6 +166,7 @@ class DoctorProfileService
 
             $doctorProfile = $doctor->doctorProfile()->update([
                 'title' => $data['title'],
+                'locale_title' => $data['locale_title'],
                 'licence_no' => $data['licence_no'],
                 'bio' => $data['bio'],
             ]);

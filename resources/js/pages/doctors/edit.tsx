@@ -138,6 +138,19 @@ const DoctorEdit = ({
                         <InputError message={errors.locale_name} />
                     </div>
 
+                    {/* Locale Title */}
+                    <div>
+                        <Label>Title in your local language</Label>
+                        <Input
+                            value={data.locale_title}
+                            onChange={(e) =>
+                                setData('locale_title', e.target.value)
+                            }
+                            placeholder="Title"
+                        />
+                        <InputError message={errors.locale_title} />
+                    </div>
+
                     {/* Email */}
                     <div>
                         <Label>
@@ -249,6 +262,28 @@ const DoctorEdit = ({
                             ))}
                     </div>
 
+                    {/* Specialities */}
+                    <div className="md:col-span-2">
+                        <Label>Specialities</Label>
+
+                        <MultiSelect
+                            options={specialities}
+                            value={data.speciality_ids}
+                            onChange={(value) =>
+                                setData('speciality_ids', value)
+                            }
+                            label="Select Specialities"
+                            getOptionValue={(s) => s.id.toString()}
+                            getOptionLabel={(s) => s.name}
+                        />
+
+                        {Object.entries(errors)
+                            .filter(([key]) => key.startsWith('speciality_ids'))
+                            .map(([key, message]) => (
+                                <InputError key={key} message={message} />
+                            ))}
+                    </div>
+
                     {/* Address */}
                     <div>
                         <Label>Address</Label>
@@ -271,28 +306,6 @@ const DoctorEdit = ({
                         />
 
                         <InputError message={errors.bio} />
-                    </div>
-
-                    {/* Specialities */}
-                    <div className="md:col-span-2">
-                        <Label>Specialities</Label>
-
-                        <MultiSelect
-                            options={specialities}
-                            value={data.speciality_ids}
-                            onChange={(value) =>
-                                setData('speciality_ids', value)
-                            }
-                            label="Select Specialities"
-                            getOptionValue={(s) => s.id.toString()}
-                            getOptionLabel={(s) => s.name}
-                        />
-
-                        {Object.entries(errors)
-                            .filter(([key]) => key.startsWith('speciality_ids'))
-                            .map(([key, message]) => (
-                                <InputError key={key} message={message} />
-                            ))}
                     </div>
 
                     {/* Degrees */}

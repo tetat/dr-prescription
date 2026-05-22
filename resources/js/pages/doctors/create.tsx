@@ -60,6 +60,7 @@ const DoctorCreate = ({ degrees, institutes, specialities, roles }: Props) => {
         address: '',
         user_id: 0,
         title: 'Dr.',
+        locale_title: '',
         licence_no: '',
         bio: '',
         phones: [
@@ -146,6 +147,19 @@ const DoctorCreate = ({ degrees, institutes, specialities, roles }: Props) => {
                             placeholder="Local name"
                         />
                         <InputError message={errors.locale_name} />
+                    </div>
+
+                    {/* Locale Title */}
+                    <div>
+                        <Label>Title in your local language</Label>
+                        <Input
+                            value={data.locale_title}
+                            onChange={(e) =>
+                                setData('locale_title', e.target.value)
+                            }
+                            placeholder="Title"
+                        />
+                        <InputError message={errors.locale_title} />
                     </div>
 
                     {/* Email */}
@@ -252,6 +266,26 @@ const DoctorCreate = ({ degrees, institutes, specialities, roles }: Props) => {
                             ))}
                     </div>
 
+                    {/* Speciality */}
+                    <div>
+                        <Label>Specialties</Label>
+                        <MultiSelect
+                            options={specialities}
+                            value={data.speciality_ids}
+                            onChange={(value) =>
+                                setData('speciality_ids', value)
+                            }
+                            label="Select Specialities"
+                            getOptionValue={(s) => s.id.toString()}
+                            getOptionLabel={(s) => s.name}
+                        />
+                        {Object.entries(errors)
+                            .filter(([key]) => key.startsWith('speciality_ids'))
+                            .map(([key, message]) => (
+                                <InputError key={key} message={message} />
+                            ))}
+                    </div>
+
                     {/* Address - full width */}
                     <div>
                         <Label>Address</Label>
@@ -274,26 +308,6 @@ const DoctorCreate = ({ degrees, institutes, specialities, roles }: Props) => {
                             rows={3}
                         />
                         <InputError message={errors.bio} />
-                    </div>
-
-                    {/* Speciality */}
-                    <div className="md:col-span-2">
-                        <Label>Specialties</Label>
-                        <MultiSelect
-                            options={specialities}
-                            value={data.speciality_ids}
-                            onChange={(value) =>
-                                setData('speciality_ids', value)
-                            }
-                            label="Select Specialities"
-                            getOptionValue={(s) => s.id.toString()}
-                            getOptionLabel={(s) => s.name}
-                        />
-                        {Object.entries(errors)
-                            .filter(([key]) => key.startsWith('speciality_ids'))
-                            .map(([key, message]) => (
-                                <InputError key={key} message={message} />
-                            ))}
                     </div>
 
                     {/* Degree */}

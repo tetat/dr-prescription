@@ -34,6 +34,7 @@ class UpdateDoctorProfileRequest extends FormRequest
             'address' => ['nullable', 'string'],
 
             'title' => ['required', 'string', 'max:50'],
+            'locale_title' => ['nullable', 'string'],
             'licence_no' => ['required', 'string', 'max:100'],
             'bio' => ['nullable', 'string'],
 
