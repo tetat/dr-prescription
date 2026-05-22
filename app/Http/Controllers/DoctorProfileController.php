@@ -104,14 +104,15 @@ class DoctorProfileController extends Controller
         $doctor_data = [
             'id' => $doctor->id,
             'name' => $doctor->name,
+            'locale_name' => $doctor->locale_name,
             'email' => $doctor->email,
             'gender' => $doctor->gender,
             'blood_group' => $doctor->blood_group,
-            'address' => $doctor->address,
+            'address' => $doctor->address ?? '',
 
             'title' => $doctor->doctorProfile?->title,
             'licence_no' => $doctor->doctorProfile?->licence_no,
-            'bio' => $doctor->doctorProfile?->bio,
+            'bio' => $doctor->doctorProfile?->bio ?? '',
 
             'phones' => $doctor->phones->map(fn($phone) => [
                 'country_code' => $phone->country_code,

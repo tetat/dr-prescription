@@ -28,6 +28,7 @@ import { Head, useForm } from '@inertiajs/react';
 
 interface DoctorProps extends DoctorProfile {
     name: string;
+    locale_name: string;
     email: string;
     gender: string;
     blood_group?: string;
@@ -52,6 +53,7 @@ interface Props {
 const DoctorCreate = ({ degrees, institutes, specialities, roles }: Props) => {
     const { data, setData, post, processing, errors } = useForm<DoctorProps>({
         name: '',
+        locale_name: '',
         email: '',
         gender: '',
         blood_group: '',
@@ -130,6 +132,20 @@ const DoctorCreate = ({ degrees, institutes, specialities, roles }: Props) => {
                             placeholder="e.g. Dr."
                         />
                         <InputError message={errors.title} />
+                    </div>
+
+                    {/* Locale Name */}
+                    <div>
+                        <Label>Name in your local language</Label>
+                        <Input
+                            autoFocus
+                            value={data.locale_name}
+                            onChange={(e) =>
+                                setData('locale_name', e.target.value)
+                            }
+                            placeholder="Local name"
+                        />
+                        <InputError message={errors.locale_name} />
                     </div>
 
                     {/* Email */}
@@ -215,6 +231,27 @@ const DoctorCreate = ({ degrees, institutes, specialities, roles }: Props) => {
                         <InputError message={errors.licence_no} />
                     </div>
 
+                    {/* Roles */}
+                    <div>
+                        <Label>
+                            Roles <span className="ml-1 text-red-500">*</span>
+                        </Label>
+                        <MultiSelect
+                            options={roles}
+                            value={data.role_ids}
+                            onChange={(value) => setData('role_ids', value)}
+                            label="Select Roles"
+                            getOptionValue={(role) => role.name}
+                            getOptionLabel={(role) => role.label}
+                            protectedValues={['doctor']}
+                        />
+                        {Object.entries(errors)
+                            .filter(([key]) => key.startsWith('role_ids'))
+                            .map(([key, message]) => (
+                                <InputError key={key} message={message} />
+                            ))}
+                    </div>
+
                     {/* Address - full width */}
                     <div>
                         <Label>Address</Label>
@@ -237,27 +274,6 @@ const DoctorCreate = ({ degrees, institutes, specialities, roles }: Props) => {
                             rows={3}
                         />
                         <InputError message={errors.bio} />
-                    </div>
-
-                    {/* Roles */}
-                    <div className="md:col-span-2">
-                        <Label>
-                            Roles <span className="ml-1 text-red-500">*</span>
-                        </Label>
-                        <MultiSelect
-                            options={roles}
-                            value={data.role_ids}
-                            onChange={(value) => setData('role_ids', value)}
-                            label="Select Roles"
-                            getOptionValue={(role) => role.name}
-                            getOptionLabel={(role) => role.label}
-                            protectedValues={['doctor']}
-                        />
-                        {Object.entries(errors)
-                            .filter(([key]) => key.startsWith('role_ids'))
-                            .map(([key, message]) => (
-                                <InputError key={key} message={message} />
-                            ))}
                     </div>
 
                     {/* Speciality */}

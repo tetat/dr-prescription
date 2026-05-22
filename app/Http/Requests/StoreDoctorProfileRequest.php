@@ -28,6 +28,7 @@ class StoreDoctorProfileRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
+            'locale_name' => ['nullable', 'string'],
             'title' => ['required', 'string'],
             'email' => ['required', 'string', 'email', 'unique:users,email'],
             'gender' => ['required', Rule::in(UserGender::options())],

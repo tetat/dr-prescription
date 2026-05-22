@@ -91,6 +91,7 @@ class DoctorProfileService
         return DB::transaction(function () use ($data) {
             $doctor = User::create([
                 'name' => $data['name'],
+                'locale_name' => $data['locale_name'],
                 'email' => $data['email'],
                 'gender' => $data['gender'],
                 'blood_group' => $data['blood_group'],
@@ -139,13 +140,14 @@ class DoctorProfileService
     public function updateDoctor(User $doctor, array $data): User
     {
         return DB::transaction(function () use ($doctor, $data) {
-            $doctor->update([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'gender' => $data['gender'],
-                'blood_group' => $data['blood_group'],
-                'address' => $data['address'],
-            ]);
+            $doctor->name = $data['name'];
+            $doctor->locale_name = $data['locale_name'];
+            $doctor->email = $data['email'];
+            $doctor->gender = $data['gender'];
+            $doctor->blood_group = $data['blood_group'];
+            $doctor->address = $data['address'];
+            
+            $doctor->update();
 
             $doctor->syncRoles($data['role_ids']);
 

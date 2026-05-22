@@ -27,6 +27,7 @@ class UpdateDoctorProfileRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
+            'locale_name' => ['nullable', 'string'],
             'email' => ['required', 'email', 'max:255'],
             'gender' => ['required', Rule::in(UserGender::options())],
             'blood_group' => ['nullable', 'string', 'max:5'],

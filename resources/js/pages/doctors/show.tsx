@@ -16,11 +16,12 @@ interface DegreeProps extends Degree {
             id: number;
             name: string;
         };
-    }
+    };
 }
 
 interface Props {
     doctor: User & {
+        locale_name: string;
         phones: Phone[];
         specialities: Speciality[];
         degrees: DegreeProps[];
@@ -61,6 +62,17 @@ const DotorShow = ({ doctor }: Props) => {
                                     {doctor.name}
                                 </p>
                             </div>
+
+                            {doctor.locale_name && (
+                                <div>
+                                    <Label className="text-sm font-semibold text-muted-foreground">
+                                        Name in your local language
+                                    </Label>
+                                    <p className="mt-1 text-lg font-semibold">
+                                        {doctor.locale_name}
+                                    </p>
+                                </div>
+                            )}
 
                             <div>
                                 <Label className="text-sm font-semibold text-muted-foreground">
@@ -121,17 +133,23 @@ const DotorShow = ({ doctor }: Props) => {
                             </p>
 
                             <p className="text-sm">
-                                <span className="font-semibold">Abbreviation:</span>{' '}
+                                <span className="font-semibold">
+                                    Abbreviation:
+                                </span>{' '}
                                 {degree.abbreviation}
                             </p>
 
                             <p className="text-sm">
-                                <span className="font-semibold">Institute:</span>{' '}
+                                <span className="font-semibold">
+                                    Institute:
+                                </span>{' '}
                                 {degree.pivot?.institute?.name ?? 'N/A'}
                             </p>
 
                             <p className="text-sm">
-                                <span className="font-semibold">Passing Year:</span>{' '}
+                                <span className="font-semibold">
+                                    Passing Year:
+                                </span>{' '}
                                 {degree.pivot?.passing_year}
                             </p>
                         </div>
@@ -147,8 +165,9 @@ const DotorShow = ({ doctor }: Props) => {
                             <div className="mt-4 space-y-3">
                                 {doctor.specialities.map((speciality) => (
                                     <div key={speciality.id}>
-                                        <p className="text-sm font-bold uppercase text-muted-foreground">
-                                            {speciality.name} ({speciality.abbreviation})
+                                        <p className="text-sm font-bold text-muted-foreground uppercase">
+                                            {speciality.name} (
+                                            {speciality.abbreviation})
                                         </p>
                                     </div>
                                 ))}
@@ -169,8 +188,7 @@ const DotorShow = ({ doctor }: Props) => {
                                         {phone.country_code} {phone.number}
                                     </p>
                                 </div>
-                            ),
-                            )}
+                            ))}
                         </div>
                     </div>
 

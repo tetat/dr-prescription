@@ -30,6 +30,7 @@ import { Head, useForm } from '@inertiajs/react';
 interface DoctorProps extends DoctorProfile {
     id: number;
     name: string;
+    locale_name: string;
     email: string;
     gender: string;
     blood_group?: string;
@@ -123,6 +124,20 @@ const DoctorEdit = ({
                         <InputError message={errors.title} />
                     </div>
 
+                    {/* Locale Name */}
+                    <div>
+                        <Label>Name in your local language</Label>
+
+                        <Input
+                            value={data.locale_name}
+                            onChange={(e) =>
+                                setData('locale_name', e.target.value)
+                            }
+                        />
+
+                        <InputError message={errors.locale_name} />
+                    </div>
+
                     {/* Email */}
                     <div>
                         <Label>
@@ -213,6 +228,27 @@ const DoctorEdit = ({
                         <InputError message={errors.licence_no} />
                     </div>
 
+                    {/* Roles */}
+                    <div>
+                        <Label>Roles</Label>
+
+                        <MultiSelect
+                            options={roles}
+                            value={data.role_ids}
+                            onChange={(value) => setData('role_ids', value)}
+                            label="Select Roles"
+                            getOptionValue={(role) => role.name}
+                            getOptionLabel={(role) => role.label}
+                            protectedValues={['doctor']}
+                        />
+
+                        {Object.entries(errors)
+                            .filter(([key]) => key.startsWith('role_ids'))
+                            .map(([key, message]) => (
+                                <InputError key={key} message={message} />
+                            ))}
+                    </div>
+
                     {/* Address */}
                     <div>
                         <Label>Address</Label>
@@ -235,27 +271,6 @@ const DoctorEdit = ({
                         />
 
                         <InputError message={errors.bio} />
-                    </div>
-
-                    {/* Roles */}
-                    <div className="md:col-span-2">
-                        <Label>Roles</Label>
-
-                        <MultiSelect
-                            options={roles}
-                            value={data.role_ids}
-                            onChange={(value) => setData('role_ids', value)}
-                            label="Select Roles"
-                            getOptionValue={(role) => role.name}
-                            getOptionLabel={(role) => role.label}
-                            protectedValues={['doctor']}
-                        />
-
-                        {Object.entries(errors)
-                            .filter(([key]) => key.startsWith('role_ids'))
-                            .map(([key, message]) => (
-                                <InputError key={key} message={message} />
-                            ))}
                     </div>
 
                     {/* Specialities */}
