@@ -63,7 +63,9 @@ export type DoctorProfile = {
 export type Degree = {
     id: number;
     name: string;
+    locale_name: string;
     abbreviation: string;
+    locale_abbreviation: string;
 };
 
 export type Speciality = {

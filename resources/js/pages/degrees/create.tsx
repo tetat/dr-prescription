@@ -8,12 +8,13 @@ import { create, index } from '@/routes/degrees';
 import { Degree } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 
-
 const DegreeCreate = () => {
     const { data, setData, post, processing, errors } = useForm<Degree>({
         id: 0,
         name: '',
+        locale_name: '',
         abbreviation: '',
+        locale_abbreviation: '',
     });
 
     const onSubmit = (e: React.FormEvent) => {
@@ -53,15 +54,46 @@ const DegreeCreate = () => {
                         <InputError message={errors.name} />
                     </div>
 
+                    {/* Locale Name */}
+                    <div>
+                        <Label>Name in your local language</Label>
+                        <Input
+                            value={data.locale_name}
+                            onChange={(e) =>
+                                setData('locale_name', e.target.value)
+                            }
+                            placeholder="Degree name in local"
+                        />
+                        <InputError message={errors.locale_name} />
+                    </div>
+
                     {/* Abbreviation */}
                     <div>
-                        <Label>Abbreviation <span className="ml-1 text-red-500">*</span></Label>
+                        <Label>
+                            Abbreviation{' '}
+                            <span className="ml-1 text-red-500">*</span>
+                        </Label>
                         <Input
                             value={data.abbreviation}
-                            onChange={(e) => setData('abbreviation', e.target.value)}
+                            onChange={(e) =>
+                                setData('abbreviation', e.target.value)
+                            }
                             placeholder="Abbreviation"
                         />
                         <InputError message={errors.abbreviation} />
+                    </div>
+
+                    {/* Local Abbreviation */}
+                    <div>
+                        <Label>Abbreviation in your locale language</Label>
+                        <Input
+                            value={data.locale_abbreviation}
+                            onChange={(e) =>
+                                setData('locale_abbreviation', e.target.value)
+                            }
+                            placeholder="Abbreviation in local"
+                        />
+                        <InputError message={errors.locale_abbreviation} />
                     </div>
 
                     {/* Submit */}

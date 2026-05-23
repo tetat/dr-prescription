@@ -41,10 +41,28 @@ const DegreeShow = ({ degree }: { degree: Degree }) => {
 
                             <div>
                                 <Label className="text-sm font-semibold text-muted-foreground">
+                                    Name in your local language
+                                </Label>
+                                <p className="mt-1 text-lg font-semibold">
+                                    {degree.locale_name ?? 'N/A'}
+                                </p>
+                            </div>
+
+                            <div>
+                                <Label className="text-sm font-semibold text-muted-foreground">
                                     Abbreviation
                                 </Label>
                                 <p className="mt-1 w-fit rounded bg-muted px-2 py-1 font-mono text-sm text-blue-600">
                                     {degree.abbreviation}
+                                </p>
+                            </div>
+
+                            <div>
+                                <Label className="text-sm font-semibold text-muted-foreground">
+                                    Abbreviation in our local language
+                                </Label>
+                                <p className="mt-1 w-fit rounded bg-muted px-2 py-1 font-mono text-sm text-blue-600">
+                                    {degree.locale_abbreviation ?? 'N/A'}
                                 </p>
                             </div>
                         </div>

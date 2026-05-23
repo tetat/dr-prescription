@@ -37,6 +37,7 @@ class DegreeService
                         'id' => $degree->id,
                         'name' => $degree->name,
                         'abbreviation' => $degree->abbreviation,
+                        'locale_abbreviation' => $degree->locale_abbreviation ?? '',
                     ]
                 );
             $degrees = [
@@ -53,6 +54,7 @@ class DegreeService
                 'id' => $degree->id,
                 'name' => $degree->name,
                 'abbreviation' => $degree->abbreviation,
+                'locale_abbreviation' => $degree->locale_abbreviation ?? '',
             ]);
         }
 
@@ -64,7 +66,9 @@ class DegreeService
         return DB::transaction(function() use ($data) {
             $degree = Degree::create([
                 'name' => $data['name'],
+                'locale_name' => $data['locale_name'],
                 'abbreviation' => $data['abbreviation'],
+                'locale_abbreviation' => $data['locale_abbreviation'],
             ]);
 
             return $degree;
@@ -74,10 +78,12 @@ class DegreeService
     public function updateDegree(Degree $degree, array $data): Degree
     {
         return DB::transaction(function() use ($degree, $data) {
-            $degree->update([
-                'name' => $data['name'],
-                'abbreviation' => $data['abbreviation'],
-            ]);
+            $degree->name = $data['name'];
+            $degree->locale_name = $data['locale_name'];
+            $degree->abbreviation = $data['abbreviation'];
+            $degree->locale_abbreviation = $data['locale_abbreviation'];
+            
+            $degree->update();
 
             return $degree;
         });
