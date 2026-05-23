@@ -71,13 +71,17 @@ export type Degree = {
 export type Speciality = {
     id: number;
     name: string;
+    locale_name: string;
     abbreviation: string;
+    locale_abbreviation: string;
 };
 
 export type Institute = {
     id: number;
     name: string;
+    locale_name: string;
     abbreviation: string;
+    locale_abbreviation: string;
 };
 
 export type Test = {

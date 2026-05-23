@@ -113,7 +113,9 @@ const SpecialityIndex = ({ specialities, filters }: IndexProps) => {
                             <TableRow>
                                 <TableHead className="w-[100px]">#</TableHead>
                                 <TableHead>Name</TableHead>
+                                <TableHead>Local Name</TableHead>
                                 <TableHead>Abbreviation</TableHead>
+                                <TableHead>Local Abbreviation</TableHead>
                                 <TableHead className="text-right">
                                     Actions
                                 </TableHead>
@@ -127,7 +129,9 @@ const SpecialityIndex = ({ specialities, filters }: IndexProps) => {
                                             {index + specialities.from}
                                         </TableCell>
                                         <TableCell>{speciality.name}</TableCell>
+                                        <TableCell>{speciality.locale_name}</TableCell>
                                         <TableCell>{speciality.abbreviation}</TableCell>
+                                        <TableCell>{speciality.locale_abbreviation}</TableCell>
                                         <TableCell className="flex items-center justify-end gap-2">
                                             <Link
                                                 href={show(speciality.id)}

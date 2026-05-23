@@ -30,7 +30,9 @@ class SpecialityService
                 ->map(fn($speciality) => [
                         'id' => $speciality->id,
                         'name' => $speciality->name,
+                        'locale_name' => $speciality->locale_name ?? 'N/A',
                         'abbreviation' => $speciality->abbreviation ?? 'N/A',
+                        'locale_abbreviation' => $speciality->locale_abbreviation ?? 'N/A',
                     ]
                 );
             $specialities = [
@@ -46,7 +48,9 @@ class SpecialityService
             $specialities->getCollection()->transform(fn($speciality) => [
                 'id' => $speciality->id,
                 'name' => $speciality->name,
+                'locale_name' => $speciality->locale_name ?? 'N/A',
                 'abbreviation' => $speciality->abbreviation ?? 'N/A',
+                'locale_abbreviation' => $speciality->locale_abbreviation ?? 'N/A',
             ]);
         }
 
@@ -58,7 +62,9 @@ class SpecialityService
         return DB::transaction(function() use ($data) {
             $speciality = Speciality::create([
                 'name' => $data['name'],
+                'locale_name' => $data['locale_name'],
                 'abbreviation' => $data['abbreviation'],
+                'locale_abbreviation' => $data['locale_abbreviation'],
             ]);
 
             return $speciality;
@@ -68,10 +74,12 @@ class SpecialityService
     public function updateSpeciality(array $data, Speciality $speciality): Speciality
     {
         return DB::transaction(function() use ($data, $speciality) {
-            $speciality->update([
-                'name' => $data['name'],
-                'abbreviation' => $data['abbreviation'],
-            ]);
+            $speciality->name = $data['name'];
+            $speciality->locale_name = $data['locale_name'];
+            $speciality->abbreviation = $data['abbreviation'];
+            $speciality->locale_abbreviation = $data['locale_abbreviation'];
+
+            $speciality->update();
 
             return $speciality;
         });

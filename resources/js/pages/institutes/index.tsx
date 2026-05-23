@@ -127,7 +127,11 @@ const InstitueIndex = ({ institutes, filters }: IndexProps) => {
                                             {index + institutes.from}
                                         </TableCell>
                                         <TableCell>{institute.name}</TableCell>
-                                        <TableCell>{institute.abbreviation}</TableCell>
+                                        <TableCell>{`${institute.abbreviation}${
+                                                institute.locale_abbreviation
+                                                    ? ` (${institute.locale_abbreviation})`
+                                                    : ''
+                                            }`}</TableCell>
                                         <TableCell className="flex items-center justify-end gap-2">
                                             <Link
                                                 href={show(institute.id)}

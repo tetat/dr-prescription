@@ -12,13 +12,15 @@ const SpecialityEdit = ({ speciality }: { speciality: Speciality }) => {
     const { data, setData, put, processing, errors } = useForm<Speciality>({
         id: speciality.id,
         name: speciality.name,
+        locale_name: speciality.locale_name,
         abbreviation: speciality.abbreviation,
+        locale_abbreviation: speciality.locale_abbreviation,
     });
 
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         put(SpecialityController.update.url(speciality.id));
-    }
+    };
 
     const breadcrumbsData = [
         { title: 'Manage Specialities', href: index().url },
@@ -47,9 +49,22 @@ const SpecialityEdit = ({ speciality }: { speciality: Speciality }) => {
                         <Input
                             value={data.name}
                             onChange={(e) => setData('name', e.target.value)}
-                            placeholder="Full name"
+                            placeholder="Speciality name"
                         />
                         <InputError message={errors.name} />
+                    </div>
+
+                    {/* Locale Name */}
+                    <div>
+                        <Label>Name in your local language</Label>
+                        <Input
+                            value={data.locale_name}
+                            onChange={(e) =>
+                                setData('locale_name', e.target.value)
+                            }
+                            placeholder="Speciality local name"
+                        />
+                        <InputError message={errors.locale_name} />
                     </div>
 
                     {/* Abbreviation */}
@@ -57,10 +72,25 @@ const SpecialityEdit = ({ speciality }: { speciality: Speciality }) => {
                         <Label>Abbreviation</Label>
                         <Input
                             value={data.abbreviation}
-                            onChange={(e) => setData('abbreviation', e.target.value)}
+                            onChange={(e) =>
+                                setData('abbreviation', e.target.value)
+                            }
                             placeholder="Abbreviation"
                         />
                         <InputError message={errors.abbreviation} />
+                    </div>
+
+                    {/* Locale Abbreviation */}
+                    <div>
+                        <Label>Abbreviation in your local language</Label>
+                        <Input
+                            value={data.locale_abbreviation}
+                            onChange={(e) =>
+                                setData('locale_abbreviation', e.target.value)
+                            }
+                            placeholder="Abbreviation in local"
+                        />
+                        <InputError message={errors.locale_abbreviation} />
                     </div>
 
                     {/* Submit */}

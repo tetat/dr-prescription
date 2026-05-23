@@ -41,10 +41,28 @@ const SpecialityShow = ({ speciality }: { speciality: Speciality }) => {
 
                             <div>
                                 <Label className="text-sm font-semibold text-muted-foreground">
+                                    Name in your local language
+                                </Label>
+                                <p className="mt-1 text-lg font-semibold">
+                                    {speciality.locale_name}
+                                </p>
+                            </div>
+
+                            <div>
+                                <Label className="text-sm font-semibold text-muted-foreground">
                                     Abbreviation
                                 </Label>
                                 <p className="mt-1 w-fit rounded bg-muted px-2 py-1 font-mono text-sm text-blue-600">
                                     {speciality.abbreviation ?? 'N/A'}
+                                </p>
+                            </div>
+
+                            <div>
+                                <Label className="text-sm font-semibold text-muted-foreground">
+                                    Abbreviation in your local language
+                                </Label>
+                                <p className="mt-1 w-fit rounded bg-muted px-2 py-1 font-mono text-sm text-blue-600">
+                                    {speciality.locale_abbreviation ?? 'N/A'}
                                 </p>
                             </div>
                         </div>

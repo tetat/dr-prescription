@@ -30,7 +30,9 @@ class InstituteService
                 ->map(fn($institute) => [
                         'id' => $institute->id,
                         'name' => $institute->name,
+                        'locale_name' => $institute->locale_name ?? 'N/A',
                         'abbreviation' => $institute->abbreviation,
+                        'locale_abbreviation' => $institute->locale_abbreviation,
                     ]
                 );
             $institutes = [
@@ -46,7 +48,9 @@ class InstituteService
             $institutes->getCollection()->transform(fn($institute) => [
                 'id' => $institute->id,
                 'name' => $institute->name,
+                'locale_name' => $institute->locale_name ?? 'N/A',
                 'abbreviation' => $institute->abbreviation,
+                'locale_abbreviation' => $institute->locale_abbreviation,
             ]);
         }
 
@@ -58,7 +62,9 @@ class InstituteService
         return DB::transaction(function() use ($data) {
             $institute = Institute::create([
                 'name' => $data['name'],
+                'locale_name' => $data['locale_name'],
                 'abbreviation' => $data['abbreviation'],
+                'locale_abbreviation' => $data['locale_abbreviation'],
             ]);
 
             return $institute;
@@ -68,10 +74,12 @@ class InstituteService
     public function updateInstitute(array $data, Institute $institute): Institute
     {
         return DB::transaction(function() use ($data, $institute) {
-            $institute->update([
-                'name' => $data['name'],
-                'abbreviation' => $data['abbreviation'],
-            ]);
+            $institute->name = $data['name'];
+            $institute->locale_name = $data['locale_name'];
+            $institute->abbreviation = $data['abbreviation'];
+            $institute->locale_abbreviation = $data['locale_abbreviation'];
+            
+            $institute->update();
 
             return $institute;
         });

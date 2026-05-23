@@ -8,7 +8,6 @@ import { create, index } from '@/routes/institutes';
 import { Institute } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 
-
 const InstituteCreate = () => {
     const { data, setData, post, processing, errors } = useForm<Institute>({
         id: 0,
@@ -53,15 +52,46 @@ const InstituteCreate = () => {
                         <InputError message={errors.name} />
                     </div>
 
+                    {/* Locale Name */}
+                    <div>
+                        <Label>Name in your local language</Label>
+                        <Input
+                            value={data.locale_name}
+                            onChange={(e) =>
+                                setData('locale_name', e.target.value)
+                            }
+                            placeholder="Institute local name"
+                        />
+                        <InputError message={errors.locale_name} />
+                    </div>
+
                     {/* Abbreviation */}
                     <div>
-                        <Label>Abbreviation <span className="ml-1 text-red-500">*</span></Label>
+                        <Label>
+                            Abbreviation{' '}
+                            <span className="ml-1 text-red-500">*</span>
+                        </Label>
                         <Input
                             value={data.abbreviation}
-                            onChange={(e) => setData('abbreviation', e.target.value)}
+                            onChange={(e) =>
+                                setData('abbreviation', e.target.value)
+                            }
                             placeholder="Abbreviation"
                         />
                         <InputError message={errors.abbreviation} />
+                    </div>
+
+                    {/* Locale Abbreviation */}
+                    <div>
+                        <Label>Abbreviation in your local language</Label>
+                        <Input
+                            value={data.locale_abbreviation}
+                            onChange={(e) =>
+                                setData('locale_abbreviation', e.target.value)
+                            }
+                            placeholder="Abbreviation in local"
+                        />
+                        <InputError message={errors.locale_abbreviation} />
                     </div>
 
                     {/* Submit */}

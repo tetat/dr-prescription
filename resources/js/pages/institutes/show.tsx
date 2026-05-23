@@ -41,10 +41,28 @@ const InstituteShow = ({ institute }: { institute: Institute }) => {
 
                             <div>
                                 <Label className="text-sm font-semibold text-muted-foreground">
+                                    Name in local
+                                </Label>
+                                <p className="mt-1 text-lg font-semibold">
+                                    {institute.locale_name}
+                                </p>
+                            </div>
+
+                            <div>
+                                <Label className="text-sm font-semibold text-muted-foreground">
                                     Abbreviation
                                 </Label>
                                 <p className="mt-1 w-fit rounded bg-muted px-2 py-1 font-mono text-sm text-blue-600">
                                     {institute.abbreviation}
+                                </p>
+                            </div>
+
+                            <div>
+                                <Label className="text-sm font-semibold text-muted-foreground">
+                                    Abbreviation in local
+                                </Label>
+                                <p className="mt-1 w-fit rounded bg-muted px-2 py-1 font-mono text-sm text-blue-600">
+                                    {institute.locale_abbreviation}
                                 </p>
                             </div>
                         </div>
