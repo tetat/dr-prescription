@@ -35,10 +35,14 @@ class HospitalService
                 ->map(fn($hospital) => [
                         'id' => $hospital->id,
                         'name' => $hospital->name,
+                        'locale_name' => $hospital->locale_name ?? 'N/A',
                         'full_name' => $hospital->full_name ?? 'N/A',
+                        'locale_full_name' => $hospital->locale_full_name,
                         'logo' => $hospital->logo_url,
                         'moto' => $hospital->moto ?? 'N/A',
+                        'locale_moto' => $hospital->locale_moto ?? 'N/A',
                         'address' => $hospital->address ?? 'N/A',
+                        'locale_address' => $hospital->locale_address ?? 'N/A',
                     ]
                 );
             $hospitals = [
@@ -54,10 +58,14 @@ class HospitalService
             $hospitals->getCollection()->transform(fn($hospital) => [
                 'id' => $hospital->id,
                 'name' => $hospital->name,
+                'locale_name' => $hospital->locale_name ?? 'N/A',
                 'full_name' => $hospital->full_name ?? 'N/A',
+                'locale_full_name' => $hospital->locale_full_name,
                 'logo' => $hospital->logo_url,
                 'moto' => $hospital->moto ?? 'N/A',
+                'locale_moto' => $hospital->locale_moto ?? 'N/A',
                 'address' => $hospital->address ?? 'N/A',
+                'locale_address' => $hospital->locale_address ?? 'N/A',
             ]);
         }
 
@@ -76,10 +84,14 @@ class HospitalService
 
             $hospital = Hospital::create([
                 'name' => $data['name'],
+                'locale_name' => $data['locale_name'],
                 'full_name' => $data['full_name'],
+                'locale_full_name' => $data['locale_full_name'],
                 'logo' => $logoPath,
                 'moto' => $data['moto'],
+                'locale_moto' => $data['locale_moto'],
                 'address' => $data['address'],
+                'locale_address' => $data['locale_address'],
             ]);
 
             // phones
@@ -97,13 +109,19 @@ class HospitalService
                 $logoPath = $request->file('logo')->store('hospitals', 'public');
             }
 
-            $hospital->update([
-                'name' => $request->validated('name'),
-                'full_name' => $request->validated('full_name'),
-                'logo' => $logoPath,
-                'moto' => $request->validated('moto'),
-                'address' => $request->validated('address'),
-            ]);
+            $data = $request->validated();
+
+            $hospital->name = $data['name'];
+            $hospital->locale_name = $data['locale_name'];
+            $hospital->full_name = $data['full_name'];
+            $hospital->locale_full_name = $data['locale_full_name'];
+            $hospital->logo = $logoPath;
+            $hospital->moto = $data['moto'];
+            $hospital->locale_moto = $data['locale_moto'];
+            $hospital->address = $data['address'];
+            $hospital->locale_address = $data['locale_address'];
+
+            $hospital->update();
 
             // phones
             $hospital->phones()->delete();

@@ -18,21 +18,44 @@ class HospitalSeeder extends Seeder
                 'name' => 'Dhaka Medical College Hospital',
                 'full_name' => 'Dhaka Medical College Hospital',
                 'address' => 'Dhaka, Bangladesh',
+                'phones' => [
+                    [
+                        'country_code' => '+880',
+                        'number' => '25516513042'
+                    ]
+                ]
             ],
             [
                 'name' => 'Chattogram Medical College Hospital',
                 'full_name' => 'Chattogram Medical College Hospital',
                 'address' => 'Chattogram, Bangladesh',
+                'phones' => [
+                    [
+                        'country_code' => '+880',
+                        'number' => '2333350180'
+                    ]
+                ]
             ],
             [
-                'name' => 'Sylhet Medical College Hospital',
-                'full_name' => 'Sylhet Medical College Hospital',
+                'name' => 'Sylhet M.A.G. Osmani Medical College',
+                'full_name' => 'Sylhet M.A.G. Osmani Medical College',
                 'address' => 'Sylhet, Bangladesh',
+                'phones' => [
+                    [
+                        'country_code' => '+880',
+                        'number' => '2996631213'
+                    ]
+                ]
             ],
         ];
 
         foreach ($hospitals as $hospital) {
-            Hospital::create($hospital);
+            $phones = $hospital['phones'];
+            unset($hospital['phones']);
+
+            $createdHospital = Hospital::create($hospital);
+
+            $createdHospital->phones()->createMany($phones);
         }
     }
 }

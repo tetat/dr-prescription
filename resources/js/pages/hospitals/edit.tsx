@@ -21,18 +21,22 @@ const HospitalEdit = ({ hospital }: { hospital: HospitalProps }) => {
     const { data, setData, put, processing, errors } = useForm<HospitalProps>({
         id: hospital.id,
         name: hospital.name,
+        locale_name: hospital.locale_name ?? '',
         full_name: hospital.full_name ?? '',
+        locale_full_name: hospital.locale_full_name ?? '',
         logo: null,
         logo_url: hospital.logo_url ?? '',
         moto: hospital.moto ?? '',
+        locale_moto: hospital.locale_moto ?? '',
         address: hospital.address ?? '',
-        phones: [...hospital.phones]
+        locale_address: hospital.locale_address ?? '',
+        phones: [...hospital.phones],
     });
 
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         put(HospitalController.update.url(hospital.id));
-    }
+    };
 
     const breadcrumbsData = [
         { title: 'Manage Hospitals', href: index().url },
@@ -52,7 +56,10 @@ const HospitalEdit = ({ hospital }: { hospital: HospitalProps }) => {
                     Edit Hospital
                 </h2>
 
-                <form onSubmit={onSubmit} className="flex flex-col gap-5">
+                <form
+                    onSubmit={onSubmit}
+                    className="grid grid-cols-1 gap-5 md:grid-cols-2"
+                >
                     {/* Name */}
                     <div>
                         <Label>
@@ -66,22 +73,100 @@ const HospitalEdit = ({ hospital }: { hospital: HospitalProps }) => {
                         <InputError message={errors.name} />
                     </div>
 
+                    {/* Locale Name */}
+                    <div>
+                        <Label>Name in you local language</Label>
+                        <Input
+                            value={data.locale_name}
+                            onChange={(e) =>
+                                setData('locale_name', e.target.value)
+                            }
+                            placeholder="Hospital local name"
+                        />
+                        <InputError message={errors.locale_name} />
+                    </div>
+
                     {/* Full Name */}
                     <div>
                         <Label>Full Name</Label>
                         <Input
                             value={data.full_name}
-                            onChange={(e) => setData('full_name', e.target.value)}
+                            onChange={(e) =>
+                                setData('full_name', e.target.value)
+                            }
                             placeholder="Full name"
                         />
                         <InputError message={errors.full_name} />
                     </div>
 
-                    {/* Logo */}
+                    {/* Locale Full Name */}
                     <div>
-                        <Label>
-                            Logo
-                        </Label>
+                        <Label>Full Name in your local language</Label>
+                        <Input
+                            value={data.locale_full_name}
+                            onChange={(e) =>
+                                setData('locale_full_name', e.target.value)
+                            }
+                            placeholder="Local full name"
+                        />
+                        <InputError message={errors.locale_full_name} />
+                    </div>
+
+                    {/* Moto */}
+                    <div>
+                        <Label>Moto</Label>
+                        <Textarea
+                            value={data.moto}
+                            onChange={(e) => setData('moto', e.target.value)}
+                            placeholder="Hospital moto"
+                            rows={2}
+                        />
+                        <InputError message={errors.moto} />
+                    </div>
+
+                    {/* Locale Moto */}
+                    <div>
+                        <Label>Moto in your local language</Label>
+                        <Textarea
+                            value={data.locale_moto}
+                            onChange={(e) =>
+                                setData('locale_moto', e.target.value)
+                            }
+                            placeholder="Hospital local moto"
+                            rows={2}
+                        />
+                        <InputError message={errors.locale_moto} />
+                    </div>
+
+                    {/* Address */}
+                    <div>
+                        <Label>Address</Label>
+                        <Textarea
+                            value={data.address}
+                            onChange={(e) => setData('address', e.target.value)}
+                            placeholder="Hospital address"
+                            rows={3}
+                        />
+                        <InputError message={errors.address} />
+                    </div>
+
+                    {/* Locale Address */}
+                    <div>
+                        <Label>Address in your local language</Label>
+                        <Textarea
+                            value={data.locale_address}
+                            onChange={(e) =>
+                                setData('locale_address', e.target.value)
+                            }
+                            placeholder="Hospital local address"
+                            rows={3}
+                        />
+                        <InputError message={errors.locale_address} />
+                    </div>
+
+                    {/* Logo */}
+                    <div className="md:col-span-2">
+                        <Label>Logo</Label>
                         <Input
                             type="file"
                             onChange={(e) => {
@@ -93,46 +178,18 @@ const HospitalEdit = ({ hospital }: { hospital: HospitalProps }) => {
                         <InputError message={errors.logo} />
 
                         <div className="mt-3">
-                            <ImagePreview file={data.logo} fallback={data.logo_url} />
+                            <ImagePreview file={data.logo} />
                         </div>
-                    </div>
-
-                    {/* Moto */}
-                    <div>
-                        <Label>
-                            Moto
-                        </Label>
-                        <Textarea
-                            value={data.moto}
-                            onChange={(e) => setData('moto', e.target.value)}
-                            placeholder="Hospital moto"
-                            rows={2}
-                        />
-                        <InputError message={errors.moto} />
-                    </div>
-
-                    {/* Address */}
-                    <div>
-                        <Label>
-                            Address
-                        </Label>
-                        <Textarea
-                            value={data.address}
-                            onChange={(e) => setData('address', e.target.value)}
-                            placeholder="Hospital address"
-                            rows={3}
-                        />
-                        <InputError message={errors.address} />
                     </div>
 
                     {/* Phones */}
                     <div className="md:col-span-2">
-                        <Label>Phones <span className="text-red-500">*</span></Label>
+                        <Label>
+                            Phones <span className="text-red-500">*</span>
+                        </Label>
                         <PhoneField
                             phones={data.phones}
-                            setPhones={(phones) =>
-                                setData('phones', phones)
-                            }
+                            setPhones={(phones) => setData('phones', phones)}
                         />
 
                         {Object.entries(errors)
@@ -146,7 +203,7 @@ const HospitalEdit = ({ hospital }: { hospital: HospitalProps }) => {
                     <Button
                         type="submit"
                         disabled={processing}
-                        className="cursor-pointer bg-indigo-600 text-white hover:bg-indigo-700"
+                        className="cursor-pointer md:col-span-2 bg-indigo-600 text-white hover:bg-indigo-700"
                     >
                         Update Hospital
                     </Button>

@@ -117,6 +117,7 @@ const HospitalIndex = ({ hospitals, filters }: IndexProps) => {
                             <TableRow>
                                 <TableHead className="w-[100px]">#</TableHead>
                                 <TableHead>Name</TableHead>
+                                <TableHead>Local Name</TableHead>
                                 <TableHead>Full Name</TableHead>
                                 <TableHead>Logo</TableHead>
                                 <TableHead>Moto</TableHead>
@@ -134,19 +135,27 @@ const HospitalIndex = ({ hospitals, filters }: IndexProps) => {
                                             {index + hospitals.from}
                                         </TableCell>
                                         <TableCell>{hospital.name}</TableCell>
-                                        <TableCell>{hospital.full_name}</TableCell>
                                         <TableCell>
-                                            {
-                                                hospital.logo ?
-                                                    <img
-                                                        src={hospital.logo}
-                                                        alt="logo"
-                                                        className='size-10 rounded-md border object-cover'
-                                                    /> : <HospitalIcon className='size-7' />
-                                            }
+                                            {hospital.locale_name}
+                                        </TableCell>
+                                        <TableCell>
+                                            {hospital.full_name}
+                                        </TableCell>
+                                        <TableCell>
+                                            {hospital.logo ? (
+                                                <img
+                                                    src={hospital.logo}
+                                                    alt="logo"
+                                                    className="size-10 rounded-md border object-cover"
+                                                />
+                                            ) : (
+                                                <HospitalIcon className="size-7" />
+                                            )}
                                         </TableCell>
                                         <TableCell>{hospital.moto}</TableCell>
-                                        <TableCell>{hospital.address}</TableCell>
+                                        <TableCell>
+                                            {hospital.address}
+                                        </TableCell>
                                         <TableCell className="flex items-center justify-end gap-2">
                                             <Link
                                                 href={show(hospital.id)}

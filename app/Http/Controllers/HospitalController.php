@@ -6,7 +6,6 @@ use App\Models\Hospital;
 use App\Http\Requests\StoreHospitalRequest;
 use App\Http\Requests\UpdateHospitalRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Exception;
 use App\Services\HospitalService;
 
