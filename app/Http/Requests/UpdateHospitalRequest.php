@@ -26,10 +26,14 @@ class UpdateHospitalRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
+            'locale_name' => ['nullable', 'string'],
             'full_name' => ['nullable', 'string', 'max:512'],
+            'locale_full_name' => ['nullable', 'string'],
             'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
             'moto' => ['nullable', 'string', 'max:512'],
+            'locale_moto' => ['nullable', 'string'],
             'address' => ['nullable', 'string', 'max:512'],
+            'locale_address' => ['nullable', 'string'],
             // phones array
             'phones' => ['required', 'array'],
             'phones.*.country_code' => [

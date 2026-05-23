@@ -12,7 +12,9 @@ class Speciality extends Model
 
     protected $fillable = [
         'name',
+        'locale_name',
         'abbreviation',
+        'locale_abbreviation',
     ];
 
     public function doctors()

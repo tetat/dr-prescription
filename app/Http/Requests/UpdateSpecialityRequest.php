@@ -24,7 +24,9 @@ class UpdateSpecialityRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
+            'locale_name' => ['nullable', 'string'],
             'abbreviation' => ['nullable', 'string', 'max:255'],
+            'locale_abbreviation' => ['nullable', 'string'],
         ];
     }
 }

@@ -13,10 +13,14 @@ class Hospital extends Model
 
     protected $fillable = [
         'name',
+        'locale_name',
         'full_name',
+        'locale_full_name',
         'logo',
         'moto',
-        'address'
+        'locale_moto',
+        'address',
+        'locale_address',
     ];
 
     public function prescriptions()
