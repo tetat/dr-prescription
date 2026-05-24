@@ -4,8 +4,8 @@ import {
     show,
 } from '@/actions/App/Http/Controllers/MedicineController';
 import { Paginate } from '@/components/paginate';
+import TableActions from '@/components/table-actions';
 import TableSearch from '@/components/table-search';
-import { Button } from '@/components/ui/button';
 import {
     Table,
     TableBody,
@@ -18,9 +18,8 @@ import {
 import { useFlashToast } from '@/hooks/use-flash-toast';
 import AppLayout from '@/layouts/app-layout';
 import { create, index } from '@/routes/medicines';
-import { Medicine } from '@/types';
+import { MedForm, Medicine } from '@/types';
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { Eye, Pencil, Trash2 } from 'lucide-react';
 
 interface LinkProps {
     active: boolean;
@@ -35,6 +34,7 @@ interface FilterProps {
 
 interface MedicineProps extends Medicine {
     group_name: string;
+    medForms: MedForm[];
 }
 
 interface MedicinePagination {
@@ -69,13 +69,6 @@ const MedicineIndex = ({ medicines, filters }: IndexProps) => {
         router.get(index(), queryString, {
             preserveState: true,
             preserveScroll: true,
-        });
-    };
-
-    const handleDelete = (medicine: MedicineProps) => {
-        router.delete(destroy(medicine.id).url, {
-            onBefore: () =>
-                confirm('Are you sure you want to delete this medicine?'),
         });
     };
 
@@ -133,30 +126,34 @@ const MedicineIndex = ({ medicines, filters }: IndexProps) => {
                                             {index + medicines.from}
                                         </TableCell>
                                         <TableCell>{medicine.name}</TableCell>
-                                        <TableCell>{medicine.group_name}</TableCell>
-                                        <TableCell>{medicine.form}</TableCell>
-                                        <TableCell>{medicine.strength}</TableCell>
+                                        <TableCell>
+                                            {medicine.group_name}
+                                        </TableCell>
+                                        <TableCell className="align-middle">
+                                            <div className="flex flex-wrap gap-1">
+                                                {medicine.medForms.map(
+                                                    (medForm) => (
+                                                        <span
+                                                            key={medForm.id}
+                                                            className="rounded bg-gray-200 px-2 py-1 text-xs leading-none"
+                                                        >
+                                                            {medForm.short_name}
+                                                        </span>
+                                                    ),
+                                                )}
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            {medicine.strength}
+                                        </TableCell>
                                         <TableCell className="flex items-center justify-end gap-2">
-                                            <Link
-                                                href={show(medicine.id)}
-                                                className="flex items-center justify-center rounded bg-slate-400 px-3 py-2 text-white hover:bg-slate-600"
-                                            >
-                                                <Eye size={18} />
-                                            </Link>
-                                            <Link
-                                                href={edit(medicine.id)}
-                                                className="flex items-center justify-center rounded bg-green-500 px-3 py-2 text-white hover:bg-green-700"
-                                            >
-                                                <Pencil size={18} />
-                                            </Link>
-                                            <Button
-                                                onClick={() =>
-                                                    handleDelete(medicine)
+                                            <TableActions
+                                                show={show(medicine.id).url}
+                                                edit={edit(medicine.id).url}
+                                                destroy={
+                                                    destroy(medicine.id).url
                                                 }
-                                                className="flex items-center justify-center rounded bg-red-500 px-3 py-2 text-white hover:bg-red-700"
-                                            >
-                                                <Trash2 size={16} />
-                                            </Button>
+                                            />
                                         </TableCell>
                                     </TableRow>
                                 ))

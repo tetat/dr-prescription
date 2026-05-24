@@ -4,8 +4,8 @@ import {
     show,
 } from '@/actions/App/Http/Controllers/ExaminationController';
 import { Paginate } from '@/components/paginate';
+import TableActions from '@/components/table-actions';
 import TableSearch from '@/components/table-search';
-import { Button } from '@/components/ui/button';
 import {
     Table,
     TableBody,
@@ -20,7 +20,6 @@ import AppLayout from '@/layouts/app-layout';
 import { create, index } from '@/routes/examinations';
 import { Examination } from '@/types';
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { Eye, Pencil, Trash2 } from 'lucide-react';
 
 interface LinkProps {
     active: boolean;
@@ -65,13 +64,6 @@ const ExaminationIndex = ({ examinations, filters }: IndexProps) => {
         router.get(index(), queryString, {
             preserveState: true,
             preserveScroll: true,
-        });
-    };
-
-    const handleDelete = (examination: Examination) => {
-        router.delete(destroy(examination.id).url, {
-            onBefore: () =>
-                confirm('Are you sure you want to delete this examination?'),
         });
     };
 
@@ -127,30 +119,23 @@ const ExaminationIndex = ({ examinations, filters }: IndexProps) => {
                                         <TableCell className="font-medium">
                                             {index + examinations.from}
                                         </TableCell>
-                                        <TableCell>{examination.name}</TableCell>
-                                        <TableCell>{examination.abbreviation}</TableCell>
-                                        <TableCell>{examination.unit}</TableCell>
+                                        <TableCell>
+                                            {examination.name}
+                                        </TableCell>
+                                        <TableCell>
+                                            {examination.abbreviation}
+                                        </TableCell>
+                                        <TableCell>
+                                            {examination.unit}
+                                        </TableCell>
                                         <TableCell className="flex items-center justify-end gap-2">
-                                            <Link
-                                                href={show(examination.id)}
-                                                className="flex items-center justify-center rounded bg-slate-400 px-3 py-2 text-white hover:bg-slate-600"
-                                            >
-                                                <Eye size={18} />
-                                            </Link>
-                                            <Link
-                                                href={edit(examination.id)}
-                                                className="flex items-center justify-center rounded bg-green-500 px-3 py-2 text-white hover:bg-green-700"
-                                            >
-                                                <Pencil size={18} />
-                                            </Link>
-                                            <Button
-                                                onClick={() =>
-                                                    handleDelete(examination)
+                                            <TableActions
+                                                show={show(examination.id).url}
+                                                edit={edit(examination.id).url}
+                                                destroy={
+                                                    destroy(examination.id).url
                                                 }
-                                                className="flex items-center justify-center rounded bg-red-500 px-3 py-2 text-white hover:bg-red-700"
-                                            >
-                                                <Trash2 size={16} />
-                                            </Button>
+                                            />
                                         </TableCell>
                                     </TableRow>
                                 ))

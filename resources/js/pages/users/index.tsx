@@ -4,6 +4,7 @@ import {
     show,
 } from '@/actions/App/Http/Controllers/UserController';
 import { Paginate } from '@/components/paginate';
+import TableActions from '@/components/table-actions';
 import TableSearch from '@/components/table-search';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -138,37 +139,28 @@ const UserIndex = ({ users, filters }: IndexProps) => {
                                         <TableCell>{user.name}</TableCell>
                                         <TableCell>{user.email}</TableCell>
                                         <TableCell>{user.gender}</TableCell>
-                                        <TableCell>{user.blood_group}
+                                        <TableCell>
+                                            {user.blood_group}
                                         </TableCell>
                                         <TableCell>{user.address}</TableCell>
                                         <TableCell>
                                             <div className="flex gap-1.5">
                                                 {user.roles?.map((role) => (
-                                                    <Badge className='bg-blue-100 text-blue-900' key={role}>{role}</Badge>
+                                                    <Badge
+                                                        className="bg-blue-100 text-blue-900"
+                                                        key={role}
+                                                    >
+                                                        {role}
+                                                    </Badge>
                                                 ))}
                                             </div>
                                         </TableCell>
                                         <TableCell className="flex items-center justify-end gap-2">
-                                            <Link
-                                                href={show(user.id)}
-                                                className="flex items-center justify-center rounded bg-slate-400 px-3 py-2 text-white hover:bg-slate-600"
-                                            >
-                                                <Eye size={18} />
-                                            </Link>
-                                            <Link
-                                                href={edit(user.id)}
-                                                className="flex items-center justify-center rounded bg-green-500 px-3 py-2 text-white hover:bg-green-700"
-                                            >
-                                                <Pencil size={18} />
-                                            </Link>
-                                            <Button
-                                                onClick={() =>
-                                                    handleDelete(user)
-                                                }
-                                                className="flex items-center justify-center rounded bg-red-500 px-3 py-2 text-white hover:bg-red-700"
-                                            >
-                                                <Trash2 size={16} />
-                                            </Button>
+                                            <TableActions
+                                                show={show(user.id).url}
+                                                edit={edit(user.id).url}
+                                                destroy={destroy(user.id).url}
+                                            />
                                         </TableCell>
                                     </TableRow>
                                 ))

@@ -43,7 +43,7 @@ class MedicineService
                     fn($medicine) => [
                         'id' => $medicine->id,
                         'name' => $medicine->name,
-                        'forms' => $medicine->forms,
+                        'medForms' => $medicine->forms,
                         'strength' => $medicine->strength,
                         'group_name' => $medicine->group->name,
                     ]
@@ -61,7 +61,7 @@ class MedicineService
             $medicines->getCollection()->transform(fn($medicine) => [
                 'id' => $medicine->id,
                 'name' => $medicine->name,
-                'forms' => $medicine->forms,
+                'medForms' => $medicine->forms,
                 'strength' => $medicine->strength,
                 'group_name' => $medicine->group->name,
             ]);

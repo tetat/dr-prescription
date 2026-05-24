@@ -4,9 +4,9 @@ import {
     show,
 } from '@/actions/App/Http/Controllers/DoctorProfileController';
 import { Paginate } from '@/components/paginate';
+import TableActions from '@/components/table-actions';
 import TableSearch from '@/components/table-search';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
     Table,
     TableBody,
@@ -21,7 +21,6 @@ import AppLayout from '@/layouts/app-layout';
 import { create, index } from '@/routes/doctors';
 import { User } from '@/types';
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { Eye, Pencil, Trash2 } from 'lucide-react';
 
 interface LinkProps {
     active: boolean;
@@ -72,13 +71,6 @@ const DoctorIndex = ({ doctors, filters }: IndexProps) => {
         router.get(index(), queryString, {
             preserveState: true,
             preserveScroll: true,
-        });
-    };
-
-    const handleDelete = (doctor: User) => {
-        router.delete(destroy(doctor.id).url, {
-            onBefore: () =>
-                confirm('Are you sure you want to delete this doctor?'),
         });
     };
 
@@ -141,35 +133,27 @@ const DoctorIndex = ({ doctors, filters }: IndexProps) => {
                                         <TableCell>{doctor.title}</TableCell>
                                         <TableCell>{doctor.email}</TableCell>
                                         <TableCell>{doctor.gender}</TableCell>
-                                        <TableCell>{doctor.licence_no}</TableCell>
+                                        <TableCell>
+                                            {doctor.licence_no}
+                                        </TableCell>
                                         <TableCell>
                                             <div className="flex flex-col gap-1.5">
                                                 {doctor.roles?.map((role) => (
-                                                    <Badge className='bg-blue-100 text-blue-900' key={role}>{role}</Badge>
+                                                    <Badge
+                                                        className="bg-blue-100 text-blue-900"
+                                                        key={role}
+                                                    >
+                                                        {role}
+                                                    </Badge>
                                                 ))}
                                             </div>
                                         </TableCell>
                                         <TableCell className="flex items-center justify-end gap-2">
-                                            <Link
-                                                href={show(doctor.id)}
-                                                className="flex items-center justify-center rounded bg-slate-400 px-3 py-2 text-white hover:bg-slate-600"
-                                            >
-                                                <Eye size={18} />
-                                            </Link>
-                                            <Link
-                                                href={edit(doctor.id)}
-                                                className="flex items-center justify-center rounded bg-green-500 px-3 py-2 text-white hover:bg-green-700"
-                                            >
-                                                <Pencil size={18} />
-                                            </Link>
-                                            <Button
-                                                onClick={() =>
-                                                    handleDelete(doctor)
-                                                }
-                                                className="flex items-center justify-center rounded bg-red-500 px-3 py-2 text-white hover:bg-red-700"
-                                            >
-                                                <Trash2 size={16} />
-                                            </Button>
+                                            <TableActions
+                                                show={show(doctor.id).url}
+                                                edit={edit(doctor.id).url}
+                                                destroy={destroy(doctor.id).url}
+                                            />
                                         </TableCell>
                                     </TableRow>
                                 ))

@@ -27,7 +27,6 @@ interface UserProps {
     phones: Phone[];
 }
 
-
 const UserCreate = ({ roles }: { roles: Role[] }) => {
     const { data, setData, post, processing, errors } = useForm<UserProps>({
         name: '',
@@ -85,7 +84,9 @@ const UserCreate = ({ roles }: { roles: Role[] }) => {
 
                     {/* Email */}
                     <div>
-                        <Label>Email <span className="ml-1 text-red-500">*</span></Label>
+                        <Label>
+                            Email <span className="ml-1 text-red-500">*</span>
+                        </Label>
                         <Input
                             value={data.email}
                             onChange={(e) => setData('email', e.target.value)}
@@ -101,7 +102,9 @@ const UserCreate = ({ roles }: { roles: Role[] }) => {
                         </Label>
                         <Select
                             value={data.role_name}
-                            onValueChange={(value) => setData('role_name', value)}
+                            onValueChange={(value) =>
+                                setData('role_name', value)
+                            }
                         >
                             <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Select Role" />
@@ -132,9 +135,9 @@ const UserCreate = ({ roles }: { roles: Role[] }) => {
                             </SelectTrigger>
 
                             <SelectContent>
-                                <SelectItem value="male">Male</SelectItem>
-                                <SelectItem value="female">Female</SelectItem>
-                                <SelectItem value="other">Other</SelectItem>
+                                <SelectItem value="Male">Male</SelectItem>
+                                <SelectItem value="Female">Female</SelectItem>
+                                <SelectItem value="Other">Other</SelectItem>
                             </SelectContent>
                         </Select>
                         <InputError message={errors.gender} />

@@ -263,7 +263,7 @@ const DoctorEdit = ({
                     </div>
 
                     {/* Specialities */}
-                    <div className="md:col-span-2">
+                    <div>
                         <Label>Specialities</Label>
 
                         <MultiSelect

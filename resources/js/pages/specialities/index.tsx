@@ -4,8 +4,8 @@ import {
     show,
 } from '@/actions/App/Http/Controllers/SpecialityController';
 import { Paginate } from '@/components/paginate';
+import TableActions from '@/components/table-actions';
 import TableSearch from '@/components/table-search';
-import { Button } from '@/components/ui/button';
 import {
     Table,
     TableBody,
@@ -20,7 +20,6 @@ import AppLayout from '@/layouts/app-layout';
 import { create, index } from '@/routes/specialities';
 import { Speciality } from '@/types';
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { Eye, Pencil, Trash2 } from 'lucide-react';
 
 interface LinkProps {
     active: boolean;
@@ -65,13 +64,6 @@ const SpecialityIndex = ({ specialities, filters }: IndexProps) => {
         router.get(index(), queryString, {
             preserveState: true,
             preserveScroll: true,
-        });
-    };
-
-    const handleDelete = (speciality: Speciality) => {
-        router.delete(destroy(speciality.id).url, {
-            onBefore: () =>
-                confirm('Are you sure you want to delete this speciality?'),
         });
     };
 
@@ -129,30 +121,23 @@ const SpecialityIndex = ({ specialities, filters }: IndexProps) => {
                                             {index + specialities.from}
                                         </TableCell>
                                         <TableCell>{speciality.name}</TableCell>
-                                        <TableCell>{speciality.locale_name}</TableCell>
-                                        <TableCell>{speciality.abbreviation}</TableCell>
-                                        <TableCell>{speciality.locale_abbreviation}</TableCell>
+                                        <TableCell>
+                                            {speciality.locale_name}
+                                        </TableCell>
+                                        <TableCell>
+                                            {speciality.abbreviation}
+                                        </TableCell>
+                                        <TableCell>
+                                            {speciality.locale_abbreviation}
+                                        </TableCell>
                                         <TableCell className="flex items-center justify-end gap-2">
-                                            <Link
-                                                href={show(speciality.id)}
-                                                className="flex items-center justify-center rounded bg-slate-400 px-3 py-2 text-white hover:bg-slate-600"
-                                            >
-                                                <Eye size={18} />
-                                            </Link>
-                                            <Link
-                                                href={edit(speciality.id)}
-                                                className="flex items-center justify-center rounded bg-green-500 px-3 py-2 text-white hover:bg-green-700"
-                                            >
-                                                <Pencil size={18} />
-                                            </Link>
-                                            <Button
-                                                onClick={() =>
-                                                    handleDelete(speciality)
+                                            <TableActions
+                                                show={show(speciality.id).url}
+                                                edit={edit(speciality.id).url}
+                                                destroy={
+                                                    destroy(speciality.id).url
                                                 }
-                                                className="flex items-center justify-center rounded bg-red-500 px-3 py-2 text-white hover:bg-red-700"
-                                            >
-                                                <Trash2 size={16} />
-                                            </Button>
+                                            />
                                         </TableCell>
                                     </TableRow>
                                 ))

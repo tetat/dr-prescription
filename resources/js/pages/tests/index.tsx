@@ -4,8 +4,8 @@ import {
     show,
 } from '@/actions/App/Http/Controllers/TestController';
 import { Paginate } from '@/components/paginate';
+import TableActions from '@/components/table-actions';
 import TableSearch from '@/components/table-search';
-import { Button } from '@/components/ui/button';
 import {
     Table,
     TableBody,
@@ -20,7 +20,6 @@ import AppLayout from '@/layouts/app-layout';
 import { create, index } from '@/routes/tests';
 import { Test } from '@/types';
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { Eye, Pencil, Trash2 } from 'lucide-react';
 
 interface LinkProps {
     active: boolean;
@@ -65,13 +64,6 @@ const TestIndex = ({ tests, filters }: IndexProps) => {
         router.get(index(), queryString, {
             preserveState: true,
             preserveScroll: true,
-        });
-    };
-
-    const handleDelete = (test: Test) => {
-        router.delete(destroy(test.id).url, {
-            onBefore: () =>
-                confirm('Are you sure you want to delete this test?'),
         });
     };
 
@@ -127,28 +119,15 @@ const TestIndex = ({ tests, filters }: IndexProps) => {
                                             {index + tests.from}
                                         </TableCell>
                                         <TableCell>{test.name}</TableCell>
-                                        <TableCell>{test.description}</TableCell>
+                                        <TableCell>
+                                            {test.description}
+                                        </TableCell>
                                         <TableCell className="flex items-center justify-end gap-2">
-                                            <Link
-                                                href={show(test.id)}
-                                                className="flex items-center justify-center rounded bg-slate-400 px-3 py-2 text-white hover:bg-slate-600"
-                                            >
-                                                <Eye size={18} />
-                                            </Link>
-                                            <Link
-                                                href={edit(test.id)}
-                                                className="flex items-center justify-center rounded bg-green-500 px-3 py-2 text-white hover:bg-green-700"
-                                            >
-                                                <Pencil size={18} />
-                                            </Link>
-                                            <Button
-                                                onClick={() =>
-                                                    handleDelete(test)
-                                                }
-                                                className="flex items-center justify-center rounded bg-red-500 px-3 py-2 text-white hover:bg-red-700"
-                                            >
-                                                <Trash2 size={16} />
-                                            </Button>
+                                            <TableActions
+                                                show={show(test.id).url}
+                                                edit={edit(test.id).url}
+                                                destroy={destroy(test.id).url}
+                                            />
                                         </TableCell>
                                     </TableRow>
                                 ))
