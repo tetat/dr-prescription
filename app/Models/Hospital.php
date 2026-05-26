@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Storage;
 
 class Hospital extends Model
@@ -23,12 +25,12 @@ class Hospital extends Model
         'locale_address',
     ];
 
-    public function prescriptions()
+    public function prescriptions(): HasMany
     {
         return $this->hasMany(Prescription::class);
     }
 
-    public function phones()
+    public function phones(): MorphMany
     {
         return $this->morphMany(Phone::class, 'phoneable');
     }

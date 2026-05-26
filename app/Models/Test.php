@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Test extends Model
 {
@@ -15,7 +16,7 @@ class Test extends Model
         'description',
     ];
 
-    public function prescriptions()
+    public function prescriptions(): BelongsToMany
     {
         return $this->belongsToMany(Prescription::class, 'prescription_tests')
             ->withPivot(['result', 'status']);

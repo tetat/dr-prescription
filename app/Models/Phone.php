@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Phone extends Model
 {
@@ -22,7 +23,7 @@ class Phone extends Model
         return $this->country_code . $this->number;
     }
 
-    public function phoneable()
+    public function phoneable(): MorphTo
     {
         return $this->morphTo();
     }

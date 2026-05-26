@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use App\Models\Degree;
-use App\Models\Institution;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Institute;
 
 class DegreeDoctor extends Pivot
 {
@@ -18,17 +19,17 @@ class DegreeDoctor extends Pivot
         'passing_year',
     ];
 
-    public function degree()
+    public function degree(): BelongsTo
     {
         return $this->belongsTo(Degree::class);
     }
 
-    public function institute()
+    public function institute(): BelongsTo
     {
-        return $this->belongsTo(Institution::class);
+        return $this->belongsTo(Institute::class);
     }
 
-    public function doctor()
+    public function doctor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'doctor_id');
     }

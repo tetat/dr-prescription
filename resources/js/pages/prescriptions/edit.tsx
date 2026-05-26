@@ -15,7 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 
 import AppLayout from '@/layouts/app-layout';
 
-import { create, edit, index } from '@/routes/prescriptions';
+import { edit, index } from '@/routes/prescriptions';
 
 import { Head, useForm } from '@inertiajs/react';
 

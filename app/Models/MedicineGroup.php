@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class MedicineGroup extends Model
 {
@@ -15,7 +16,7 @@ class MedicineGroup extends Model
         'description'
     ];
 
-    public function medicines()
+    public function medicines(): HasMany
     {
         return $this->hasMany(Medicine::class);
     }

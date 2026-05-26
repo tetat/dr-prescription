@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\MedForm;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Medicine extends Model
 {
@@ -17,17 +20,17 @@ class Medicine extends Model
         'medicine_group_id'
     ];
 
-    public function group()
+    public function group(): BelongsTo
     {
         return $this->belongsTo(MedicineGroup::class, 'medicine_group_id');
     }
 
-    public function forms()
+    public function forms(): BelongsToMany
     {
         return $this->belongsToMany(MedForm::class);
     }
 
-    public function prescriptionMedicines()
+    public function prescriptionMedicines(): HasMany
     {
         return $this->hasMany(PrescriptionMedicine::class);
     }

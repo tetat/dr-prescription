@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\PrescriptionMedicineDurationType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PrescriptionMedicine extends Model
 {
@@ -25,12 +26,12 @@ class PrescriptionMedicine extends Model
         'instructions'
     ];
 
-    public function prescription()
+    public function prescription(): BelongsTo
     {
         return $this->belongsTo(Prescription::class);
     }
 
-    public function medicine()
+    public function medicine(): BelongsTo
     {
         return $this->belongsTo(Medicine::class);
     }

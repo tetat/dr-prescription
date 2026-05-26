@@ -72,13 +72,6 @@ const UserIndex = ({ users, filters }: IndexProps) => {
         });
     };
 
-    const handleDelete = (user: User) => {
-        router.delete(destroy(user.id).url, {
-            onBefore: () =>
-                confirm('Are you sure you want to delete this user?'),
-        });
-    };
-
     const breadcrumbsData = [
         {
             title: 'Manage Users',

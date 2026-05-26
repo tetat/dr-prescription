@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Degree extends Model
 {
@@ -18,7 +19,7 @@ class Degree extends Model
         'locale_abbreviation',
     ];
 
-    public function doctors()
+    public function doctors(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'degree_doctor', 'degree_id', 'doctor_id')
             ->withPivot('institute_id', 'passing_year')

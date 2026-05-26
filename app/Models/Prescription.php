@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Prescription extends Model
 {
@@ -21,23 +24,23 @@ class Prescription extends Model
         'consultation_fee'
     ];
 
-    public function doctor()
+    public function doctor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'doctor_id');
     }
 
-    public function patient()
+    public function patient(): BelongsTo
     {
         return $this->belongsTo(User::class, 'patient_id');
     }
 
-    public function hospital()
+    public function hospital(): BelongsTo
     {
         return $this->belongsTo(Hospital::class);
     }
 
     // 💊 medicines
-    public function medicines()
+    public function medicines(): BelongsToMany
     {
         return $this->belongsToMany(Medicine::class, 'prescription_medicines')
             ->withPivot([
@@ -55,7 +58,7 @@ class Prescription extends Model
     }
 
     // 🧪 tests
-    public function tests()
+    public function tests(): BelongsToMany
     {
         return $this->belongsToMany(Test::class, 'prescription_tests')
             ->withPivot(['result'])
@@ -63,7 +66,7 @@ class Prescription extends Model
     }
 
     // 🩺 examinations (vitals)
-    public function examinations()
+    public function examinations(): BelongsToMany
     {
         return $this->belongsToMany(Examination::class, 'prescription_examinations')
             ->withPivot(['result', 'interpretation'])
@@ -71,12 +74,12 @@ class Prescription extends Model
     }
 
     // 💰 payments
-    public function payments()
+    public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
     }
 
-    public function prescriptionMedicines()
+    public function prescriptionMedicines(): HasMany
     {
         return $this->hasMany(PrescriptionMedicine::class);
     }
