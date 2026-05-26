@@ -1,12 +1,7 @@
-import {
-    destroy,
-    edit,
-    show,
-} from '@/actions/App/Http/Controllers/DoctorProfileController';
-import { Paginate } from '@/components/paginate';
-import TableActions from '@/components/table-actions';
-import TableSearch from '@/components/table-search';
-import { Badge } from '@/components/ui/badge';
+import { Head, Link, router, useForm } from '@inertiajs/react';
+import AppLayout from '@/layouts/app-layout';
+import { index, create, show, edit, destroy } from '@/routes/prescriptions';
+import type { BreadcrumbItem } from '@/types';
 import {
     Table,
     TableBody,
@@ -16,11 +11,18 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import TableSearch from '@/components/table-search';
+import { Paginate } from '@/components/paginate';
 import { useFlashToast } from '@/hooks/use-flash-toast';
-import AppLayout from '@/layouts/app-layout';
-import { create, index } from '@/routes/doctors';
-import { User } from '@/types';
-import { Head, Link, router, useForm } from '@inertiajs/react';
+import TableActions from '@/components/table-actions';
+
+interface Prescription {
+    id: number;
+    doctor: string;
+    patient: string;
+    hospital: string;
+    next_visit: string;
+}
 
 interface LinkProps {
     active: boolean;
@@ -33,26 +35,18 @@ interface FilterProps {
     perPage: string;
 }
 
-interface DoctorData extends User {
-    licence_no: string;
-    title: string;
-    roles: string[];
-}
-
-interface UserPagination {
-    data: DoctorData[];
-    links: LinkProps[];
-    from: number;
-    to: number;
-    total: number;
-}
-
-interface IndexProps {
-    doctors: UserPagination;
+interface Props {
+    prescriptions: {
+        data: Prescription[];
+        links: LinkProps[];
+        from: number;
+        to: number;
+        total: number;
+    };
     filters: FilterProps;
 }
 
-const DoctorIndex = ({ doctors, filters }: IndexProps) => {
+const PrescriptionIndex = ({ prescriptions, filters }: Props) => {
     useFlashToast();
 
     const { data, setData } = useForm({
@@ -74,25 +68,25 @@ const DoctorIndex = ({ doctors, filters }: IndexProps) => {
         });
     };
 
-    const breadcrumbsData = [
+    const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: 'Manage Doctors',
+            title: 'Prescriptions',
             href: index().url,
         },
     ];
 
     return (
-        <AppLayout breadcrumbs={breadcrumbsData}>
-            <Head title="Doctor Management" />
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Prescriptions" />
 
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
                 <div className="relative min-h-[100vh] flex-1 rounded-xl border border-sidebar-border/70 p-4 md:min-h-min dark:border-sidebar-border">
-                    <div className="flex justify-end">
+                    <div className="flex justify-between">
                         <div className="mb-4 flex w-full items-center justify-between gap-4">
                             <TableSearch
                                 data={data}
                                 setData={setData}
-                                placeHolderMsg="Doctors"
+                                placeHolderMsg="Prescriptions"
                                 route={index().url}
                             />
 
@@ -101,58 +95,57 @@ const DoctorIndex = ({ doctors, filters }: IndexProps) => {
                                     href={create().url}
                                     className="mx-4 inline-block rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                                 >
-                                    Create Doctor
+                                    Create Prescription
                                 </Link>
                             </div>
                         </div>
                     </div>
                     <Table>
-                        <TableCaption>A list of doctors.</TableCaption>
+                        <TableCaption>A list of prescriptions.</TableCaption>
                         <TableHeader>
                             <TableRow>
-                                <TableHead className="w-[100px]">#</TableHead>
-                                <TableHead>Name</TableHead>
-                                <TableHead>Title</TableHead>
-                                <TableHead>Email</TableHead>
-                                <TableHead>Gender</TableHead>
-                                <TableHead>licence No</TableHead>
-                                <TableHead>Roles</TableHead>
+                                <TableHead>#</TableHead>
+                                <TableHead>Patient</TableHead>
+                                <TableHead>Doctor</TableHead>
+                                <TableHead>Hospital</TableHead>
+                                <TableHead>Next Visit</TableHead>
                                 <TableHead className="text-right">
                                     Actions
                                 </TableHead>
                             </TableRow>
                         </TableHeader>
+
                         <TableBody>
-                            {doctors.data.length > 0 ? (
-                                doctors.data?.map((doctor, i) => (
-                                    <TableRow key={doctor.id}>
+                            {prescriptions.data.length > 0 ? (
+                                prescriptions.data.map((prescription, i) => (
+                                    <TableRow key={prescription.id}>
                                         <TableCell className="font-medium">
-                                            {i + doctors.from}
+                                            {prescriptions.from + i}
                                         </TableCell>
-                                        <TableCell>{doctor.name}</TableCell>
-                                        <TableCell>{doctor.title}</TableCell>
-                                        <TableCell>{doctor.email}</TableCell>
-                                        <TableCell>{doctor.gender}</TableCell>
+
                                         <TableCell>
-                                            {doctor.licence_no}
+                                            {prescription.patient}
                                         </TableCell>
+
                                         <TableCell>
-                                            <div className="flex flex-col gap-1.5">
-                                                {doctor.roles?.map((role) => (
-                                                    <Badge
-                                                        className="bg-blue-100 text-blue-900"
-                                                        key={role}
-                                                    >
-                                                        {role}
-                                                    </Badge>
-                                                ))}
-                                            </div>
+                                            {prescription.doctor}
                                         </TableCell>
+
+                                        <TableCell>
+                                            {prescription.hospital}
+                                        </TableCell>
+
+                                        <TableCell>
+                                            {prescription.next_visit}
+                                        </TableCell>
+
                                         <TableCell className="flex items-center justify-end gap-2">
                                             <TableActions
-                                                show={show(doctor.id).url}
-                                                edit={edit(doctor.id).url}
-                                                destroy={destroy(doctor.id).url}
+                                                show={show(prescription.id).url}
+                                                edit={edit(prescription.id).url}
+                                                destroy={
+                                                    destroy(prescription.id).url
+                                                }
                                             />
                                         </TableCell>
                                     </TableRow>
@@ -160,17 +153,19 @@ const DoctorIndex = ({ doctors, filters }: IndexProps) => {
                             ) : (
                                 <TableRow>
                                     <TableCell
-                                        colSpan={8}
+                                        colSpan={7}
                                         className="h-24 text-center"
                                     >
-                                        No doctors found!
+                                        No prescriptions found
                                     </TableCell>
                                 </TableRow>
                             )}
                         </TableBody>
                     </Table>
+
+                    {/* Pagination */}
                     <Paginate
-                        links={doctors.links}
+                        links={prescriptions.links}
                         handlePerPageChange={handlePerPageChange}
                         perPage={data.perPage}
                     />
@@ -180,4 +175,4 @@ const DoctorIndex = ({ doctors, filters }: IndexProps) => {
     );
 };
 
-export default DoctorIndex;
+export default PrescriptionIndex;

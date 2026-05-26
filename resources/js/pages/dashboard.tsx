@@ -3,7 +3,7 @@ import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import type { BreadcrumbItem } from '@/types';
 
-import { Users, CalendarDays, FileText, UserRound } from 'lucide-react';
+import { Users, CalendarDays, FileText, UsersRound } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -75,7 +75,7 @@ export default function Dashboard() {
                 {/* Patients List */}
                 <div className="rounded-xl border bg-white p-5 shadow-sm dark:bg-sidebar">
                     <div className="mb-4 flex items-center gap-2">
-                        <UserRound className="size-5 text-primary" />
+                        <UsersRound className="size-5 text-primary" />
 
                         <h2 className="text-lg font-semibold">
                             Recent Patients
@@ -99,10 +99,10 @@ export default function Dashboard() {
 
                         <div className="flex items-center justify-between rounded-lg border p-3">
                             <div>
-                                <p className="font-medium">Nusrat Jahan</p>
+                                <p className="font-medium">Anatlus Amir</p>
 
                                 <p className="text-sm text-muted-foreground">
-                                    Blood Pressure Checkup
+                                    Asthma
                                 </p>
                             </div>
 

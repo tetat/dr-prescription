@@ -100,15 +100,15 @@ class PatientService
     public function updatePatient(User $patient, array $data)
     {
         DB::transaction(function () use ($patient, $data) {
-            $patient->update([
-                'name' => $data['name'],
-                'email' => $data['email'] ?? null,
-                'gender' => $data['gender'],
-                'age' => $data['age'],
-                'age_type' => $data['age_type'],
-                'blood_group' => $data['blood_group'] ?? null,
-                'address' => $data['address'] ?? null,
-            ]);
+            $patient->name = $data['name'];
+            $patient->email = $data['email'];
+            $patient->gender = $data['gender'];
+            $patient->age = $data['age'];
+            $patient->age_type = $data['aga_type'];
+            $patient->blood_group = $data['blood_group'];
+            $patient->address = $data['address'];
+            
+            $patient->update();
 
             $patient->phones()->delete();
             $patient->phones()->createMany($data['phones']);

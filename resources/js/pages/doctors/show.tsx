@@ -29,7 +29,7 @@ interface Props {
     };
 }
 
-const DotorShow = ({ doctor }: Props) => {
+const DoctorShow = ({ doctor }: Props) => {
     const breadcrumbsData = [
         {
             title: 'Manage Doctors',
@@ -215,4 +215,4 @@ const DotorShow = ({ doctor }: Props) => {
     );
 };
 
-export default DotorShow;
+export default DoctorShow;

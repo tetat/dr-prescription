@@ -5,15 +5,30 @@ namespace App\Http\Controllers;
 use App\Models\Prescription;
 use App\Http\Requests\StorePrescriptionRequest;
 use App\Http\Requests\UpdatePrescriptionRequest;
+use App\Models\Examination;
+use App\Models\Hospital;
+use App\Models\Medicine;
+use App\Models\Test;
+use App\Models\User;
+use App\Services\PrescriptionService;
+use Exception;
+use Illuminate\Http\Request;
 
 class PrescriptionController extends Controller
 {
+    public function __construct(private PrescriptionService $prescriptionService){}
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $prescriptions = $this->prescriptionService->getPrescriptionTableData($request);
+
+        return inertia('prescriptions/index', [
+            'prescriptions' => $prescriptions,
+            'filters' => $request->only('search', 'perPage'),
+        ]);
     }
 
     /**
@@ -21,7 +36,21 @@ class PrescriptionController extends Controller
      */
     public function create()
     {
-        //
+        $doctors = User::role('doctor')->select(['id', 'name'])->get();
+        $patients = User::role('patient')->select(['id', 'name'])->get();
+        $hospitals = Hospital::select(['id', 'name'])->get();
+        $medicines = Medicine::select(['id', 'name'])->get();
+        $tests = Test::select(['id', 'name'])->get();
+        $examinations = Examination::select(['id', 'name'])->get();
+
+        return inertia('prescriptions/create', [
+            'doctors' => $doctors,
+            'patients' => $patients,
+            'hospitals' => $hospitals,
+            'medicines' => $medicines,
+            'tests' => $tests,
+            'examinations' => $examinations,
+        ]);
     }
 
     /**
@@ -29,7 +58,13 @@ class PrescriptionController extends Controller
      */
     public function store(StorePrescriptionRequest $request)
     {
-        //
+        try {
+            $this->prescriptionService->createPrescription($request->validated());
+
+            return redirect()->route('prescriptions.index')->with('success', 'Prescription created successfully.');
+        } catch (Exception $e) {
+            return redirect()->route('prescriptions.index')->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -37,7 +72,11 @@ class PrescriptionController extends Controller
      */
     public function show(Prescription $prescription)
     {
-        //
+        $prescription->load(['doctor', 'patient', 'hospital', 'medicines', 'tests', 'examinations']);
+
+        return inertia('prescriptions/show', [
+            'prescription' => $prescription,
+        ]);
     }
 
     /**
@@ -45,7 +84,23 @@ class PrescriptionController extends Controller
      */
     public function edit(Prescription $prescription)
     {
-        //
+        $doctors = User::role('doctor')->select(['id', 'name'])->get();
+        $patients = User::role('patient')->select(['id', 'name'])->get();
+        $hospitals = Hospital::select(['id', 'name'])->get();
+        $medicines = Medicine::select(['id', 'name'])->get();
+        $tests = Test::select(['id', 'name'])->get();
+        $examinations = Examination::select(['id', 'name'])->get();
+        $prescription->load(['doctor', 'patient', 'hospital', 'medicines', 'tests', 'examinations']);
+
+        return inertia('prescriptions/edit', [
+            'prescription' => $prescription,
+            'doctors' => $doctors,
+            'patients' => $patients,
+            'hospitals' => $hospitals,
+            'medicines' => $medicines,
+            'tests' => $tests,
+            'examinations' => $examinations,
+        ]);
     }
 
     /**
@@ -53,7 +108,13 @@ class PrescriptionController extends Controller
      */
     public function update(UpdatePrescriptionRequest $request, Prescription $prescription)
     {
-        //
+        try {
+            $this->prescriptionService->updatePrescription($prescription, $request->validated());
+
+            return redirect()->route('prescriptions.index')->with('success', 'Prescription updated successfully.');
+        } catch (Exception $e) {
+            return redirect()->route('prescriptions.index')->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -61,6 +122,12 @@ class PrescriptionController extends Controller
      */
     public function destroy(Prescription $prescription)
     {
-        //
+        try {
+            $this->prescriptionService->deletePrescription($prescription);
+
+            return redirect()->route('prescriptions.index')->with('deleted', 'Prescription deleted successfully.');
+        } catch (Exception $e) {
+            return redirect()->route('prescriptions.index')->with('error', $e->getMessage());
+        }
     }
 }

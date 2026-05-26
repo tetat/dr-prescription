@@ -7,7 +7,6 @@ import { Paginate } from '@/components/paginate';
 import TableActions from '@/components/table-actions';
 import TableSearch from '@/components/table-search';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
     Table,
     TableBody,
@@ -22,7 +21,6 @@ import AppLayout from '@/layouts/app-layout';
 import { create, index } from '@/routes/users';
 import { User } from '@/types';
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { Eye, Pencil, Trash2 } from 'lucide-react';
 
 interface LinkProps {
     active: boolean;

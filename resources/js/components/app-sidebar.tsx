@@ -22,6 +22,7 @@ import medicineGroups from '@/routes/medicine-groups';
 import medicines from '@/routes/medicines';
 import patients from '@/routes/patients';
 import permissions from '@/routes/permissions';
+import prescriptions from '@/routes/prescriptions';
 import roles from '@/routes/roles';
 import specialities from '@/routes/specialities';
 import tests from '@/routes/tests';
@@ -43,6 +44,7 @@ import {
     Dna,
     Pill,
     Droplets,
+    FileText,
 } from 'lucide-react';
 
 const mainNavItems: NavItem[] = [
@@ -50,6 +52,11 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+    },
+    {
+        title: 'Prescriptions',
+        href: prescriptions.index().url,
+        icon: FileText,
     },
     {
         title: 'Doctors',

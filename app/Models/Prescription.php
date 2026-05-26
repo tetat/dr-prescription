@@ -58,7 +58,7 @@ class Prescription extends Model
     public function tests()
     {
         return $this->belongsToMany(Test::class, 'prescription_tests')
-            ->withPivot(['result', 'status'])
+            ->withPivot(['result'])
             ->withTimestamps();
     }
 
