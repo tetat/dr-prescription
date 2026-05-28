@@ -4,6 +4,9 @@ namespace App\Services;
 
 use App\Models\Examination;
 use App\Models\Hospital;
+use App\Models\Institute;
+use App\Models\Medicine;
+use App\Models\Speciality;
 use App\Models\Test;
 use App\Models\User;
 use Illuminate\Support\Collection;
@@ -43,6 +46,27 @@ class SelectService
     public function getHospitals(): Collection
     {
         return Hospital::select('id', 'name')
+            ->orderBy('name')
+            ->get();
+    }
+
+    public function getInstitutes(): Collection
+    {
+        return Institute::select('id', 'name')
+            ->orderBy('name')
+            ->get();
+    }
+
+    public function getSpecialities(): Collection
+    {
+        return Speciality::select('id', 'name')
+            ->orderBy('name')
+            ->get();
+    }
+
+    public function getMedicines(): Collection
+    {
+        return Medicine::select('id', 'name')
             ->orderBy('name')
             ->get();
     }
