@@ -113,7 +113,9 @@ const MedicineCreate = ({ medicineGroups, medForms }: Props) => {
                         <MultiSelect
                             options={medForms}
                             value={data.form_ids.map(String)}
-                            onChange={(value) => setData('form_ids', value.map(Number))}
+                            onChange={(value) =>
+                                setData('form_ids', value.map(Number))
+                            }
                             label="Select Forms"
                             getOptionValue={(f) => f.id.toString()}
                             getOptionLabel={(f) => f.long_name}

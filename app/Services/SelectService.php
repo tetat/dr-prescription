@@ -2,72 +2,92 @@
 
 namespace App\Services;
 
+use App\Models\Degree;
 use App\Models\Examination;
 use App\Models\Hospital;
 use App\Models\Institute;
+use App\Models\MedForm;
 use App\Models\Medicine;
+use App\Models\MedicineGroup;
 use App\Models\Speciality;
 use App\Models\Test;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 class SelectService
 {
-    public function getDoctors(): Collection
+    /**
+     * @param class-string<Model> $model
+     */
+    private function getOptions(string $model, string $label = 'name'): Collection
     {
-        return User::role('doctor')
+        return $model::query()
+            ->select('id', $label)
+            ->orderBy($label)
+            ->get();
+    }
+
+    private function getUsersByRole(string $role): Collection
+    {
+        return User::role($role)
             ->select('id', 'name')
             ->orderBy('name')
             ->get();
+    }
+
+    public function getDoctors(): Collection
+    {
+        return $this->getUsersByRole('doctor');
     }
 
     public function getPatients(): Collection
     {
-        return User::role('patient')
-            ->select('id', 'name')
-            ->orderBy('name')
-            ->get();
+        return $this->getUsersByRole('patient');
     }
 
     public function getExaminations(): Collection
     {
-        return Examination::select('id', 'name')
-            ->orderBy('name')
-            ->get();
+        return $this->getOptions(Examination::class);
     }
 
     public function getTests(): Collection
     {
-        return Test::select('id', 'name')
-            ->orderBy('name')
-            ->get();
+        return $this->getOptions(Test::class);
     }
 
     public function getHospitals(): Collection
     {
-        return Hospital::select('id', 'name')
-            ->orderBy('name')
-            ->get();
+        return $this->getOptions(Hospital::class);
     }
 
     public function getInstitutes(): Collection
     {
-        return Institute::select('id', 'name')
-            ->orderBy('name')
-            ->get();
+        return $this->getOptions(Institute::class);
+    }
+
+    public function getDegrees(): Collection
+    {
+        return $this->getOptions(Degree::class);
     }
 
     public function getSpecialities(): Collection
     {
-        return Speciality::select('id', 'name')
-            ->orderBy('name')
-            ->get();
+        return $this->getOptions(Speciality::class);
     }
 
     public function getMedicines(): Collection
     {
-        return Medicine::select('id', 'name')
-            ->orderBy('name')
-            ->get();
+        return $this->getOptions(Medicine::class);
+    }
+
+    public function getMedForms(): Collection
+    {
+        return $this->getOptions(MedForm::class, 'long_name');
+    }
+
+    public function getMedGroups(): Collection
+    {
+        return $this->getOptions(MedicineGroup::class);
     }
 }

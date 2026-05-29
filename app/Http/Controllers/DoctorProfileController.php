@@ -3,22 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Services\DoctorProfileService;
-use App\Models\DoctorProfile;
 use App\Http\Requests\StoreDoctorProfileRequest;
 use App\Http\Requests\UpdateDoctorProfileRequest;
 use Illuminate\Http\Request;
-use App\Models\Role;
 use App\Models\User;
-use App\Models\Speciality;
-use App\Models\Degree;
 use App\Models\Institute;
-use Illuminate\Support\Facades\DB;
+use App\Services\SelectService;
 use Exception;
 
 class DoctorProfileController extends Controller
 {
     public function __construct(
         private DoctorProfileService $doctorProfileService,
+        private SelectService $selectService,
     ) {}
     /**
      * Display a listing of the resource.
@@ -38,9 +35,9 @@ class DoctorProfileController extends Controller
      */
     public function create()
     {
-        $degrees = Degree::all();
-        $institutes = Institute::all();
-        $specialities = Speciality::all();
+        $degrees = $this->selectService->getDegrees();
+        $institutes = $this->selectService->getInstitutes();
+        $specialities = $this->selectService->getSpecialities();
         $roles = $this->doctorProfileService->getFilteredRoles();
         return inertia('doctors/create', [
             'degrees' => $degrees,
@@ -140,9 +137,9 @@ class DoctorProfileController extends Controller
 
         return inertia('doctors/edit', [
             'doctor' => $doctor_data,
-            'degrees' => Degree::select('id', 'name')->get(),
-            'institutes' => Institute::select('id', 'name')->get(),
-            'specialities' => Speciality::select('id', 'name')->get(),
+            'degrees' => $this->selectService->getDegrees(),
+            'institutes' => $this->selectService->getInstitutes(),
+            'specialities' => $this->selectService->getSpecialities(),
             'roles' => $this->doctorProfileService->getFilteredRoles(),
         ]);
     }

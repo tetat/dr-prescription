@@ -5,9 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Medicine;
 use App\Http\Requests\StoreMedicineRequest;
 use App\Http\Requests\UpdateMedicineRequest;
-use App\Models\MedForm;
 use App\Services\MedicineService;
-use App\Services\MedicineGroupService;
+use App\Services\SelectService;
 use Illuminate\Http\Request;
 use Exception;
 
@@ -15,7 +14,7 @@ class MedicineController extends Controller
 {
     public function __construct(
         private MedicineService $medicineService,
-        private MedicineGroupService $medicineGroupService,
+        private SelectService $selectService,
     ) {}
     /**
      * Display a listing of the resource.
@@ -35,8 +34,8 @@ class MedicineController extends Controller
      */
     public function create()
     {
-        $medicineGroups = $this->medicineGroupService->getAllMedicineGroups();
-        $medForms = MedForm::all();
+        $medicineGroups = $this->selectService->getMedGroups();
+        $medForms = $this->selectService->getMedForms();
 
         return inertia('medicines/create', [
             'medicineGroups' => $medicineGroups,
@@ -77,8 +76,8 @@ class MedicineController extends Controller
     public function edit(Medicine $medicine)
     {
         $medicine->load('group', 'forms');
-        $medicineGroups = $this->medicineGroupService->getAllMedicineGroups();
-        $medForms = MedForm::all();
+        $medicineGroups = $this->selectService->getMedGroups();
+        $medForms = $this->selectService->getMedForms();
 
         return inertia('medicines/edit', [
             'medicine' => $medicine,

@@ -5,18 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Prescription;
 use App\Http\Requests\StorePrescriptionRequest;
 use App\Http\Requests\UpdatePrescriptionRequest;
-use App\Models\Examination;
-use App\Models\Hospital;
-use App\Models\Medicine;
-use App\Models\Test;
-use App\Models\User;
 use App\Services\PrescriptionService;
+use App\Services\SelectService;
 use Exception;
 use Illuminate\Http\Request;
 
 class PrescriptionController extends Controller
 {
-    public function __construct(private PrescriptionService $prescriptionService){}
+    public function __construct(
+        private PrescriptionService $prescriptionService, 
+        private SelectService $selectService,
+    ){}
 
     /**
      * Display a listing of the resource.
@@ -36,12 +35,12 @@ class PrescriptionController extends Controller
      */
     public function create()
     {
-        $doctors = User::role('doctor')->select(['id', 'name'])->get();
-        $patients = User::role('patient')->select(['id', 'name'])->get();
-        $hospitals = Hospital::select(['id', 'name'])->get();
-        $medicines = Medicine::select(['id', 'name'])->get();
-        $tests = Test::select(['id', 'name'])->get();
-        $examinations = Examination::select(['id', 'name'])->get();
+        $doctors = $this->selectService->getDoctors();
+        $patients = $this->selectService->getPatients();
+        $hospitals = $this->selectService->getHospitals();
+        $medicines = $this->selectService->getMedicines();
+        $tests = $this->selectService->getTests();
+        $examinations = $this->selectService->getExaminations();
 
         return inertia('prescriptions/create', [
             'doctors' => $doctors,
@@ -84,12 +83,12 @@ class PrescriptionController extends Controller
      */
     public function edit(Prescription $prescription)
     {
-        $doctors = User::role('doctor')->select(['id', 'name'])->get();
-        $patients = User::role('patient')->select(['id', 'name'])->get();
-        $hospitals = Hospital::select(['id', 'name'])->get();
-        $medicines = Medicine::select(['id', 'name'])->get();
-        $tests = Test::select(['id', 'name'])->get();
-        $examinations = Examination::select(['id', 'name'])->get();
+        $doctors = $this->selectService->getDoctors();
+        $patients = $this->selectService->getPatients();
+        $hospitals = $this->selectService->getHospitals();
+        $medicines = $this->selectService->getMedicines();
+        $tests = $this->selectService->getTests();
+        $examinations = $this->selectService->getExaminations();
         $prescription->load(['doctor', 'patient', 'hospital', 'medicines', 'tests', 'examinations']);
 
         return inertia('prescriptions/edit', [
