@@ -15,10 +15,8 @@ class PrescriptionMedicine extends Model
     protected $fillable = [
         'prescription_id',
         'medicine_id',
-        'dosage',
         'duration',
         'duration_type',
-        'before_food',
         'doses',
         'instructions'
     ];

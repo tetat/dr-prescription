@@ -86,24 +86,27 @@ class PrescriptionService
                 'doctor_id' => $data['doctor_id'],
                 'patient_id' => $data['patient_id'],
                 'hospital_id' => $data['hospital_id'],
-
                 'chief_complaint' => $data['chief_complaint'],
-
                 'patient_weight' => $data['patient_weight'] ?? null,
                 'patient_height' => $data['patient_height'] ?? null,
-
                 'consultation_fee' => $data['consultation_fee'] ?? null,
-
-                // now integer (days)
+                // (days)
                 'next_visit' => $data['next_visit'] ?? null,
             ]);
 
             /**
              * Medicines (pivot with extra fields will be handled later if needed)
              */
-            if (!empty($data['medicine_ids'])) {
-                $prescription->medicines()->sync($data['medicine_ids']);
+            $syncData = [];
+            foreach ($data['medicines'] as $medicine) {
+                $syncData[$medicine['medicine_id']] = [
+                    'duration' => $medicine['duration'] ?? null,
+                    'duration_type' => $medicine['duration_type'] ?? null,
+                    'doses' => json_encode($medicine['doses'] ?? []),
+                    'instructions' => $medicine['instructions'] ?? null,
+                ];
             }
+            $prescription->medicines()->sync($syncData);
 
             /**
              * Tests

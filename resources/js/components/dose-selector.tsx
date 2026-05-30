@@ -1,5 +1,6 @@
 import { Plus, Trash } from 'lucide-react';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 
 type Props = {
     label?: string;
@@ -14,9 +15,9 @@ export default function DoseSelector({
     onChange,
     maxDoses = 6,
 }: Props) {
-    const toggleDose = (index: number) => {
+    const updateDose = (index: number, dose: number) => {
         const updated = [...value];
-        updated[index] = updated[index] ? 0 : 1;
+        updated[index] = Number.isNaN(dose) ? 0 : dose;
         onChange(updated);
     };
 
@@ -32,30 +33,33 @@ export default function DoseSelector({
 
     return (
         <div className="space-y-2">
-            {/* Label */}
-            <Label className="text-sm font-medium">{label}</Label>
+            <Label>{label}</Label>
 
-            {/* Body */}
-            <div className="flex flex-wrap items-center justify-between gap-2 rounded-md border p-2">
-                {/* Checkboxes */}
+            <div className="flex flex-wrap items-center justify-between gap-1 rounded-md border p-1">
                 <div className="flex items-center gap-2">
                     {value.map((dose, index) => (
-                        <label key={index} className="flex items-center gap-1">
-                            <input
-                                type="checkbox"
-                                checked={dose === 1}
-                                onChange={() => toggleDose(index)}
-                                className="h-4 w-4"
+                        <div key={index} className="flex items-center gap-2">
+                            <Input
+                                type="number"
+                                min="0"
+                                step="1"
+                                value={dose}
+                                onChange={(e) =>
+                                    updateDose(
+                                        index,
+                                        parseFloat(e.target.value),
+                                    )
+                                }
+                                className="w-15"
                             />
 
                             {index !== value.length - 1 && (
                                 <span className="text-muted-foreground">+</span>
                             )}
-                        </label>
+                        </div>
                     ))}
                 </div>
 
-                {/* Controls */}
                 <div className="flex items-center gap-1">
                     <button
                         type="button"

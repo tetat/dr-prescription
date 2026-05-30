@@ -1,6 +1,7 @@
 import PrescriptionController from '@/actions/App/Http/Controllers/PrescriptionController';
 import DoseSelector from '@/components/dose-selector';
 import InputError from '@/components/input-error';
+import MedicineSelector from '@/components/medicine-selector';
 import MultiSelect from '@/components/multi-select';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,46 +18,21 @@ import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 
 import { create, index } from '@/routes/prescriptions';
+import { MedicineSelectOption, SelectOption } from '@/types';
 
 import { Head, useForm } from '@inertiajs/react';
 
-interface User {
-    id: number;
-    name: string;
-}
-
-interface Hospital {
-    id: number;
-    name: string;
-}
-
-interface Medicine {
-    id: number;
-    name: string;
-}
-
-interface Test {
-    id: number;
-    name: string;
-}
-
-interface Examination {
-    id: number;
-    name: string;
-}
-
 interface Props {
-    doctors: User[];
-    patients: User[];
-    hospitals: Hospital[];
-    medicines: Medicine[];
-    tests: Test[];
-    examinations: Examination[];
+    doctors: SelectOption[];
+    patients: SelectOption[];
+    hospitals: SelectOption[];
+    medicines: MedicineSelectOption[];
+    tests: SelectOption[];
+    examinations: SelectOption[];
 }
 
 interface MedicineItem {
     medicine_id: string;
-    dosage: string;
     duration: string;
     duration_type: string;
     doses: number[];
@@ -106,9 +82,8 @@ const PrescriptionCreate = ({
             medicines: [
                 {
                     medicine_id: '',
-                    dosage: '',
-                    duration: '',
-                    duration_type: 'day',
+                    duration: '7',
+                    duration_type: 'Day',
                     doses: [1, 1, 1],
                     instructions: '',
                 },
@@ -128,9 +103,8 @@ const PrescriptionCreate = ({
             ...data.medicines,
             {
                 medicine_id: '',
-                dosage: '',
-                duration: '',
-                duration_type: 'day',
+                duration: '7',
+                duration_type: 'Day',
                 doses: [1, 1, 1],
                 instructions: '',
             },
@@ -153,15 +127,10 @@ const PrescriptionCreate = ({
         setData('medicines', updated);
     };
 
-    const toggleDose = (mIndex: number, dIndex: number) => {
-        const updated = [...data.medicines];
-
-        const doses = [...updated[mIndex].doses];
-        doses[dIndex] = doses[dIndex] ? 0 : 1;
-
-        updated[mIndex].doses = doses;
-
-        setData('medicines', updated);
+    const getMedicineError = (index: number, field: string) => {
+        return (errors as Record<string, string | undefined>)[
+            `medicines.${index}.${field}`
+        ];
     };
 
     const breadcrumbsData = [
@@ -424,59 +393,35 @@ const PrescriptionCreate = ({
                                 key={index}
                                 className="space-y-3 rounded-lg border p-4"
                             >
-                                {/* Medicine Select - FULL WIDTH */}
-                                <Select
-                                    value={med.medicine_id}
-                                    onValueChange={(value) =>
-                                        updateMedicine(
-                                            index,
-                                            'medicine_id',
-                                            value,
-                                        )
-                                    }
-                                >
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Select Medicine" />
-                                    </SelectTrigger>
-
-                                    <SelectContent>
-                                        {medicines.map((m) => (
-                                            <SelectItem
-                                                key={m.id}
-                                                value={m.id.toString()}
-                                            >
-                                                {m.name}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-
-                                {/* Dosage + Duration ONE LINE (50/50) */}
-                                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                                    {/* Dosage */}
-                                    <div className="space-y-1">
-                                        <Label>Dosage</Label>
-                                        <Input
-                                            placeholder="e.g. 1 tablet"
-                                            value={med.dosage}
-                                            onChange={(e) =>
+                                {/* Medicine + Duration */}
+                                <div className="grid grid-cols-1 gap-3 md:grid-cols-12">
+                                    {/* Medicine - 70% */}
+                                    <div className="space-y-1 md:col-span-9">
+                                        <MedicineSelector
+                                            medicines={medicines}
+                                            value={med.medicine_id}
+                                            onChange={(value) =>
                                                 updateMedicine(
                                                     index,
-                                                    'dosage',
-                                                    e.target.value,
+                                                    'medicine_id',
+                                                    value,
                                                 )
                                             }
+                                            error={getMedicineError(
+                                                index,
+                                                'medicine_id',
+                                            )}
                                         />
                                     </div>
 
-                                    {/* Duration */}
-                                    <div className="space-y-1">
+                                    {/* Duration - 30% */}
+                                    <div className="space-y-1 md:col-span-3">
                                         <Label>Duration</Label>
 
                                         <div className="flex gap-2">
                                             <Input
                                                 type="number"
-                                                placeholder="e.g. 5"
+                                                placeholder="5"
                                                 value={med.duration}
                                                 onChange={(e) =>
                                                     updateMedicine(
@@ -499,26 +444,38 @@ const PrescriptionCreate = ({
                                                 }
                                             >
                                                 <SelectTrigger className="w-1/2">
-                                                    <SelectValue placeholder="Unit" />
+                                                    <SelectValue />
                                                 </SelectTrigger>
 
                                                 <SelectContent>
-                                                    <SelectItem value="day">
+                                                    <SelectItem value="Day">
                                                         Day
                                                     </SelectItem>
-                                                    <SelectItem value="week">
+                                                    <SelectItem value="Week">
                                                         Week
                                                     </SelectItem>
-                                                    <SelectItem value="month">
+                                                    <SelectItem value="Month">
                                                         Month
                                                     </SelectItem>
                                                 </SelectContent>
                                             </Select>
                                         </div>
+                                        <InputError
+                                            message={getMedicineError(
+                                                index,
+                                                'duration',
+                                            )}
+                                        />
+                                        <InputError
+                                            message={getMedicineError(
+                                                index,
+                                                'duration_type',
+                                            )}
+                                        />
                                     </div>
                                 </div>
 
-                                {/* Dose Selector */}
+                                {/* Dosage Schedule */}
                                 <DoseSelector
                                     label="Dosage Schedule"
                                     value={med.doses}
@@ -526,13 +483,16 @@ const PrescriptionCreate = ({
                                         updateMedicine(index, 'doses', value)
                                     }
                                 />
+                                <InputError
+                                    message={getMedicineError(index, 'doses')}
+                                />
 
                                 {/* Instructions */}
                                 <div className="space-y-2">
                                     <Label>Instructions</Label>
 
                                     <Textarea
-                                        placeholder="e.g. Take after meal, avoid milk, etc."
+                                        placeholder="Write instructions..."
                                         value={med.instructions}
                                         onChange={(e) =>
                                             updateMedicine(
@@ -542,12 +502,19 @@ const PrescriptionCreate = ({
                                             )
                                         }
                                     />
+                                    <InputError
+                                        message={getMedicineError(
+                                            index,
+                                            'instructions',
+                                        )}
+                                    />
                                 </div>
 
                                 {/* Remove */}
                                 <Button
                                     type="button"
                                     variant="destructive"
+                                    disabled={data.medicines.length === 1}
                                     onClick={() => removeMedicine(index)}
                                 >
                                     Remove

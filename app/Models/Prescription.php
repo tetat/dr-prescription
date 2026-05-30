@@ -44,14 +44,9 @@ class Prescription extends Model
     {
         return $this->belongsToMany(Medicine::class, 'prescription_medicines')
             ->withPivot([
-                'dosage',
                 'duration',
                 'duration_type',
-                'before_food',
-                'first_dose',
-                'second_dose',
-                'third_dose',
-                'fourth_dose',
+                'doses',
                 'instructions'
             ])
             ->withTimestamps();

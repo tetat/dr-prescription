@@ -19,10 +19,8 @@ return new class extends Migration
             $table->foreignId('medicine_id')
                 ->constrained()
                 ->cascadeOnDelete();
-            $table->string('dosage')->nullable();
             $table->integer('duration')->nullable();
             $table->string('duration_type')->nullable();
-            $table->boolean('before_food')->default(false);
             $table->json('doses')->nullable();
             $table->text('instructions')->nullable();
             $table->softDeletes();

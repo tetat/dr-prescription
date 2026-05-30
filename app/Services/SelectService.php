@@ -31,8 +31,8 @@ class SelectService
     private function getUsersByRole(string $role): Collection
     {
         return User::role($role)
-            ->select('id', 'name')
-            ->orderBy('name')
+            ->select(['id', 'name'])
+            ->orderBy('name', 'asc')
             ->get();
     }
 
@@ -78,7 +78,24 @@ class SelectService
 
     public function getMedicines(): Collection
     {
-        return $this->getOptions(Medicine::class);
+        $medicines = Medicine::query()
+            ->with([
+                'group:id,name',
+                'forms:id,short_name,long_name',
+            ])
+            ->select('id', 'name', 'strength', 'medicine_group_id')
+            ->orderBy('name')
+            ->get();
+
+        $medicines->each(function ($medicine) {
+            $medicine->search_text =
+                $medicine->name . ' ' .
+                $medicine->strength . ' ' .
+                optional($medicine->group)->name . ' ' .
+                $medicine->forms->pluck('short_name')->implode(' ');
+        });
+
+        return $medicines;
     }
 
     public function getMedForms(): Collection
