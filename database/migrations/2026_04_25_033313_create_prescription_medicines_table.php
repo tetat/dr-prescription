@@ -23,10 +23,7 @@ return new class extends Migration
             $table->integer('duration')->nullable();
             $table->string('duration_type')->nullable();
             $table->boolean('before_food')->default(false);
-            $table->boolean('first_dose')->default(true);
-            $table->boolean('second_dose')->default(true);
-            $table->boolean('third_dose')->default(true);
-            $table->boolean('fourth_dose')->default(false);
+            $table->json('doses')->nullable();
             $table->text('instructions')->nullable();
             $table->softDeletes();
             $table->timestamps();

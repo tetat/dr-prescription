@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\MedForm;
-use App\Models\MedicineGroup;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -38,8 +36,9 @@ class StoreMedicineRequest extends FormRequest
     {
         return [
             'name.required' => 'Medicine name is required.',
-            'form_ids' => 'Form is required.',
-            'form_ids.*' => 'Form is not valid.',
+            'form_ids.required' => 'Form is required.',
+            'form_ids.min' => 'At least one form is required.',
+            'form_ids.*.exists' => 'Selected form is invalid.',
             'strength.required' => 'Medicine strength is required.',
             'medicine_group_id.required' => 'Medicine group is required.',
             'medicine_group_id.exists' => 'Medicine group is invalid.',

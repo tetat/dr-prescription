@@ -19,10 +19,7 @@ class PrescriptionMedicine extends Model
         'duration',
         'duration_type',
         'before_food',
-        'first_dose',
-        'second_dose',
-        'third_dose',
-        'fourth_dose',
+        'doses',
         'instructions'
     ];
 

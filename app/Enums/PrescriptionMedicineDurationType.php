@@ -10,9 +10,7 @@ enum PrescriptionMedicineDurationType: string
     case WEEKS = 'Weeks';
     case MONTH = 'Month';
     case MONTHS = 'Months';
-    case YEAR = 'Year';
-    case YEARS = 'Years';
-    case CONTINUE = 'continue';
+    case CONTINUE = 'Continue';
 
     public static function  values() : array {
         return array_column(self::cases(), 'value');
