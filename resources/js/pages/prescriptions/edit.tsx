@@ -1,5 +1,7 @@
 import PrescriptionController from '@/actions/App/Http/Controllers/PrescriptionController';
+import DoseSelector from '@/components/dose-selector';
 import InputError from '@/components/input-error';
+import MedicineSelector from '@/components/medicine-selector';
 import MultiSelect from '@/components/multi-select';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,55 +18,21 @@ import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 
 import { edit, index } from '@/routes/prescriptions';
+import {
+    MedicineSelectOption,
+    MedicineWithPMPivot,
+    PrescriptionEditProps,
+    SelectOption,
+} from '@/types';
 
 import { Head, useForm } from '@inertiajs/react';
 
-interface User {
-    id: number;
-    name: string;
-}
-
-interface Hospital {
-    id: number;
-    name: string;
-}
-
-interface Medicine {
-    id: number;
-    name: string;
-}
-
-interface Test {
-    id: number;
-    name: string;
-}
-
-interface Examination {
-    id: number;
-    name: string;
-}
-
-interface Prescription {
-    id: number;
-    doctor: User;
-    patient: User;
-    hospital: Hospital;
-    chief_complaint: string;
-    consultation_fee: string;
-    next_visit: number;
-    medicines: Medicine[];
-    tests: Test[];
-    examinations: Examination[];
-}
-
-interface Props {
-    prescription: Prescription;
-    doctors: User[];
-    patients: User[];
-    hospitals: Hospital[];
-    medicines: Medicine[];
-    tests: Test[];
-    examinations: Examination[];
+interface MedicineFormItem {
+    medicine_id: string;
+    duration: string;
+    duration_type: string;
+    doses: number[];
+    instructions: string;
 }
 
 interface PrescriptionForm {
@@ -80,9 +48,19 @@ interface PrescriptionForm {
     consultation_fee: string;
     next_visit: string;
 
-    medicine_ids: string[];
+    medicines: MedicineFormItem[];
     test_ids: string[];
     examination_ids: string[];
+}
+
+interface Props {
+    prescription: PrescriptionEditProps;
+    doctors: SelectOption[];
+    patients: SelectOption[];
+    hospitals: SelectOption[];
+    medicines: MedicineSelectOption[];
+    tests: SelectOption[];
+    examinations: SelectOption[];
 }
 
 const PrescriptionEdit = ({
@@ -96,50 +74,85 @@ const PrescriptionEdit = ({
 }: Props) => {
     const { data, setData, put, processing, errors } =
         useForm<PrescriptionForm>({
-            doctor_id: prescription.doctor.id.toString(),
-            patient_id: prescription.patient.id.toString(),
-            hospital_id: prescription.hospital.id.toString(),
+            doctor_id: prescription.doctor_id?.toString() ?? '',
+            patient_id: prescription.patient_id?.toString() ?? '',
+            hospital_id: prescription.hospital_id?.toString() ?? '',
 
             chief_complaint: prescription.chief_complaint ?? '',
 
-            patient_weight: '',
-            patient_height: '',
+            patient_weight: prescription.patient_weight?.toString() ?? '',
+            patient_height: prescription.patient_height?.toString() ?? '',
 
-            consultation_fee: prescription.consultation_fee ?? '',
+            consultation_fee: prescription.consultation_fee?.toString() ?? '',
             next_visit: prescription.next_visit?.toString() ?? '',
 
-            medicine_ids:
-                prescription.medicines?.map((m) => m.id.toString()) ?? [],
-            test_ids: prescription.tests?.map((t) => t.id.toString()) ?? [],
+            medicines:
+                prescription.medicines?.map((m: MedicineWithPMPivot) => ({
+                    medicine_id:
+                        m.pivot?.medicine_id?.toString() ??
+                        m.pivot.medicine_id?.toString() ??
+                        '',
+                    duration: m.pivot?.duration?.toString() ?? '7',
+                    duration_type: m.pivot?.duration_type ?? 'Day',
+
+                    // IMPORTANT FIX: ensure array always
+                    doses: Array.isArray(m.pivot?.doses)
+                        ? m.pivot.doses
+                        : JSON.parse(m.pivot?.doses ?? '[1,1,1]'),
+
+                    instructions: m.pivot?.instructions ?? '',
+                })) ?? [],
+
+            test_ids:
+                prescription.tests?.map((t: SelectOption) => t.id.toString()) ??
+                [],
             examination_ids:
-                prescription.examinations?.map((e) => e.id.toString()) ?? [],
+                prescription.examinations?.map((e: SelectOption) =>
+                    e.id.toString(),
+                ) ?? [],
         });
+
+    const addMedicine = () => {
+        setData('medicines', [
+            ...data.medicines,
+            {
+                medicine_id: '',
+                duration: '7',
+                duration_type: 'Day',
+                doses: [1, 1, 1],
+                instructions: '',
+            },
+        ]);
+    };
+
+    const updateMedicine = (index: number, key: string, value: any) => {
+        const updated = [...data.medicines];
+        updated[index] = { ...updated[index], [key]: value };
+        setData('medicines', updated);
+    };
+
+    const removeMedicine = (index: number) => {
+        const updated = data.medicines.filter((_, i) => i !== index);
+        setData('medicines', updated);
+    };
+
+    const getMedicineError = (index: number, field: string) => {
+        return (errors as any)[`medicines.${index}.${field}`];
+    };
 
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-
         put(PrescriptionController.update.url(prescription.id));
     };
 
-    const breadcrumbsData = [
-        {
-            title: 'Prescriptions',
-            href: index().url,
-        },
-        {
-            title: 'Edit Prescription',
-            href: edit(prescription.id).url,
-        },
-    ];
-
     return (
-        <AppLayout breadcrumbs={breadcrumbsData}>
-            <Head title="Create Prescription" />
-
-            <p className="mt-2 text-right text-sm text-muted-foreground">
-                Fields marked with <span className="text-red-500">*</span> are
-                required
-            </p>
+        <AppLayout
+            breadcrumbs={[
+                { title: 'Prescriptions', href: index().url },
+                { title: 'Edit Prescription', href: edit(prescription.id).url },
+            ]}
+        >
+            <Head title="Edit Prescription" />
 
             <div className="mx-auto mt-6 w-4xl p-4">
                 <h2 className="py-3 text-center text-2xl font-bold">
@@ -328,28 +341,6 @@ const PrescriptionEdit = ({
                         <InputError message={errors.next_visit} />
                     </div>
 
-                    {/* Medicines */}
-                    <div className="md:col-span-2">
-                        <Label>Medicines</Label>
-
-                        <MultiSelect
-                            options={medicines}
-                            value={data.medicine_ids}
-                            onChange={(value) => setData('medicine_ids', value)}
-                            label="Select Medicines"
-                            getOptionValue={(medicine) =>
-                                medicine.id.toString()
-                            }
-                            getOptionLabel={(medicine) => medicine.name}
-                        />
-
-                        {Object.entries(errors)
-                            .filter(([key]) => key.startsWith('medicine_ids'))
-                            .map(([key, message]) => (
-                                <InputError key={key} message={message} />
-                            ))}
-                    </div>
-
                     {/* Tests */}
                     <div>
                         <Label>Tests</Label>
@@ -392,6 +383,154 @@ const PrescriptionEdit = ({
                             .map(([key, message]) => (
                                 <InputError key={key} message={message} />
                             ))}
+                    </div>
+
+                    {/* Medicines */}
+                    <div className="space-y-4 md:col-span-2">
+                        <Label>Medicines</Label>
+
+                        {data.medicines.map((med, index) => (
+                            <div
+                                key={index}
+                                className="space-y-3 rounded-lg border p-4"
+                            >
+                                {/* Medicine + Duration */}
+                                <div className="grid grid-cols-1 gap-3 md:grid-cols-12">
+                                    {/* Medicine - 70% */}
+                                    <div className="space-y-1 md:col-span-9">
+                                        <MedicineSelector
+                                            medicines={medicines}
+                                            value={med.medicine_id}
+                                            onChange={(value) =>
+                                                updateMedicine(
+                                                    index,
+                                                    'medicine_id',
+                                                    value,
+                                                )
+                                            }
+                                            error={getMedicineError(
+                                                index,
+                                                'medicine_id',
+                                            )}
+                                        />
+                                    </div>
+
+                                    {/* Duration - 30% */}
+                                    <div className="space-y-1 md:col-span-3">
+                                        <Label>Duration</Label>
+
+                                        <div className="flex gap-2">
+                                            <Input
+                                                type="number"
+                                                placeholder="5"
+                                                value={med.duration}
+                                                onChange={(e) =>
+                                                    updateMedicine(
+                                                        index,
+                                                        'duration',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                className="w-1/2"
+                                            />
+
+                                            <Select
+                                                value={med.duration_type}
+                                                onValueChange={(value) =>
+                                                    updateMedicine(
+                                                        index,
+                                                        'duration_type',
+                                                        value,
+                                                    )
+                                                }
+                                            >
+                                                <SelectTrigger className="w-1/2">
+                                                    <SelectValue />
+                                                </SelectTrigger>
+
+                                                <SelectContent>
+                                                    <SelectItem value="Day">
+                                                        Day
+                                                    </SelectItem>
+                                                    <SelectItem value="Week">
+                                                        Week
+                                                    </SelectItem>
+                                                    <SelectItem value="Month">
+                                                        Month
+                                                    </SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        <InputError
+                                            message={getMedicineError(
+                                                index,
+                                                'duration',
+                                            )}
+                                        />
+                                        <InputError
+                                            message={getMedicineError(
+                                                index,
+                                                'duration_type',
+                                            )}
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Dosage Schedule */}
+                                <DoseSelector
+                                    label="Dosage Schedule"
+                                    value={med.doses}
+                                    onChange={(value) =>
+                                        updateMedicine(index, 'doses', value)
+                                    }
+                                />
+                                <InputError
+                                    message={getMedicineError(index, 'doses')}
+                                />
+
+                                {/* Instructions */}
+                                <div className="space-y-2">
+                                    <Label>Instructions</Label>
+
+                                    <Textarea
+                                        placeholder="Write instructions..."
+                                        value={med.instructions}
+                                        onChange={(e) =>
+                                            updateMedicine(
+                                                index,
+                                                'instructions',
+                                                e.target.value,
+                                            )
+                                        }
+                                    />
+                                    <InputError
+                                        message={getMedicineError(
+                                            index,
+                                            'instructions',
+                                        )}
+                                    />
+                                </div>
+
+                                {/* Remove */}
+                                <Button
+                                    type="button"
+                                    variant="destructive"
+                                    disabled={data.medicines.length === 1}
+                                    onClick={() => removeMedicine(index)}
+                                >
+                                    Remove
+                                </Button>
+                            </div>
+                        ))}
+
+                        {/* Add Medicine */}
+                        <Button
+                            type="button"
+                            className="bg-gray-700 text-white"
+                            onClick={addMedicine}
+                        >
+                            Add Medicine
+                        </Button>
                     </div>
 
                     {/* Submit */}

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\PrescriptionMedicineDurationType;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -32,12 +33,30 @@ class UpdatePrescriptionRequest extends FormRequest
             'patient_height' => ['nullable', 'numeric', 'min:1', 'max:300'],
             'consultation_fee' => ['nullable', 'numeric', 'min:0'],
             'next_visit' => ['nullable', 'integer', 'min:1'],
-            'medicine_ids' => ['nullable', 'array'],
-            'medicine_ids.*' => ['integer', Rule::exists('medicines', 'id')],
             'test_ids' => ['nullable', 'array'],
             'test_ids.*' => ['integer', Rule::exists('tests', 'id')],
             'examination_ids' => ['nullable', 'array'],
             'examination_ids.*' => ['integer', Rule::exists('examinations', 'id')],
+
+            // Prescription Medicines
+            'medicines' => ['required', 'array', 'min:1', 'max:6'],
+            'medicines.*.medicine_id' => ['required', 'integer', Rule::exists('medicines', 'id')],
+            'medicines.*.duration' => ['required', 'integer', 'min:1'],
+            'medicines.*.duration_type' => ['required', Rule::in(PrescriptionMedicineDurationType::options())],
+            'medicines.*.doses' => [
+                'required',
+                'array',
+                function ($attribute, $value, $fail) {
+                    if (
+                        ! collect($value)
+                            ->contains(fn ($dose) => (bool) $dose)
+                    ) {
+                        $fail('At least one dose must be selected.');
+                    }
+                },
+            ],
+            'medicines.*.doses.*' => ['required', 'integer', 'min:0'],
+            'medicines.*.instructions' => ['nullable', 'string'],
         ];
     }
 
@@ -50,10 +69,15 @@ class UpdatePrescriptionRequest extends FormRequest
             'patient_id.exists' => 'Selected patient is invalid.',
             'hospital_id.required' => 'Hospital is required.',
             'hospital_id.exists' => 'Selected hospital is invalid.',
-            'chief_complaint.required' =>
-                'Chief complaint is required.',
-            'next_visit.after_or_equal' =>
-                'Next visit date cannot be in the past.',
+            'chief_complaint.required' => 'Chief complaint is required.',
+            'next_visit.after_or_equal' => 'Next visit date cannot be in the past.',
+            'medicines.*.medicine_id.required' => 'Medicine is required.',
+            'medicines.*.medicine_id.exists' => 'Selected medicine is invalid.',
+            'medicines.*.doses.required' => 'Doses is required.',
+            'medicines.*.duration.required' => 'Duration is required.',
+            'medicines.*.duration.integer' => 'Duration must be type of Integer.',
+            'medicines.*.duration_type.required' => 'Duration type is required.',
+            'medicines.*.duration_type.in' => 'Duration type is Invalid.',
         ];
     }
 }

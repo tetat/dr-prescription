@@ -27,7 +27,7 @@ export default function DoseSelector({
     };
 
     const removeDose = () => {
-        if (value.length <= 1) return;
+        if (value.length <= 3) return;
         onChange(value.slice(0, -1));
     };
 
@@ -45,10 +45,7 @@ export default function DoseSelector({
                                 step="1"
                                 value={dose}
                                 onChange={(e) =>
-                                    updateDose(
-                                        index,
-                                        parseFloat(e.target.value),
-                                    )
+                                    updateDose(index, parseInt(e.target.value))
                                 }
                                 className="w-15"
                             />
@@ -73,7 +70,7 @@ export default function DoseSelector({
                     <button
                         type="button"
                         onClick={removeDose}
-                        disabled={value.length <= 1}
+                        disabled={value.length <= 3}
                         className="inline-flex items-center justify-center rounded-md bg-red-600 p-1 text-white hover:bg-red-700 disabled:opacity-50"
                     >
                         <Trash size={14} />

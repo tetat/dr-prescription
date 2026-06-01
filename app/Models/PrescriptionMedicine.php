@@ -35,6 +35,7 @@ class PrescriptionMedicine extends Model
     {
         return [
             'duration_type' => PrescriptionMedicineDurationType::class,
+            'doses' => 'array',
         ];
     }
 }
