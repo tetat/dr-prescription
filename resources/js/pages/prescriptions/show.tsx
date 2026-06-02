@@ -69,7 +69,7 @@ const PrescriptionShow = ({ prescription }: Props) => {
 
                     <div>
                         <Label>Next Visit (days)</Label>
-                        <p>{prescription.next_visit}</p>
+                        <p>{prescription.next_visit ?? 'N/A'}</p>
                     </div>
                 </div>
 

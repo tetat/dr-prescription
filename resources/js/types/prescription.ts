@@ -32,3 +32,29 @@ export type PrescriptionEditProps = PrescriptionProps & {
     tests: TestProps[];
     examinations: ExaminationProps[];
 };
+
+export type MedicineItem = {
+    medicine_id: string;
+    duration: string;
+    duration_type: string;
+    doses: number[];
+    instructions: string;
+};
+
+export type PrescriptionFormProps = {
+    doctor_id: string;
+    patient_id: string;
+    hospital_id: string;
+
+    chief_complaint: string;
+
+    patient_weight: string;
+    patient_height: string;
+
+    consultation_fee: string;
+    next_visit: string;
+
+    medicines: MedicineItem[];
+    test_ids: string[];
+    examination_ids: string[];
+};
