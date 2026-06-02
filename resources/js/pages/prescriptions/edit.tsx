@@ -88,7 +88,6 @@ const PrescriptionEdit = ({ prescription, ...props }: Props) => {
                     errors={errors}
                     processing={processing}
                     onSubmit={onSubmit}
-                    submitLabel="Update Prescription"
                 />
             </div>
         </AppLayout>

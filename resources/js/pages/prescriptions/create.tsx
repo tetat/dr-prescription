@@ -84,7 +84,6 @@ const PrescriptionCreate = (props: Props) => {
                     errors={errors}
                     processing={processing}
                     onSubmit={onSubmit}
-                    submitLabel="Create Prescription"
                 />
             </div>
         </AppLayout>

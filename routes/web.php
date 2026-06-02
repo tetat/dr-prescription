@@ -4,6 +4,7 @@ use App\Http\Controllers\InstituteController;
 use App\Http\Controllers\ExaminationController;
 use App\Http\Controllers\DegreeController;
 use App\Http\Controllers\DoctorProfileController;
+use App\Http\Controllers\DoctorSettingController;
 use App\Http\Controllers\SpecialityController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\HospitalController;
@@ -41,6 +42,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('med-forms', MedFormController::class);
     Route::resource('medicines', MedicineController::class);
     Route::resource('prescriptions', PrescriptionController::class);
+    Route::resource('doctor-settings', DoctorSettingController::class);
 });
 
 require __DIR__ . '/settings.php';

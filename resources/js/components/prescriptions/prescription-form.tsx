@@ -33,7 +33,6 @@ interface Props {
     medicines: MedicineSelectOption[];
     tests: SelectOption[];
     examinations: SelectOption[];
-    submitLabel: string;
 }
 
 const PrescriptionForm = ({
@@ -48,7 +47,6 @@ const PrescriptionForm = ({
     medicines,
     tests,
     examinations,
-    submitLabel,
 }: Props) => {
     const updateMedicine = (index: number, key: string, value: any) => {
         const updated = [...data.medicines];
