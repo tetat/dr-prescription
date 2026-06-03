@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DoctorSettingController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\SecurityController;
 use Illuminate\Support\Facades\Route;
@@ -9,6 +10,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+    Route::get('doctor/setting', [DoctorSettingController::class, 'edit'])->name('doctor.setting');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

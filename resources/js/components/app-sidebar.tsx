@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import degrees from '@/routes/degrees';
-import doctorSettings from '@/routes/doctor-settings';
 import doctors from '@/routes/doctors';
 import examinations from '@/routes/examinations';
 import hospitals from '@/routes/hospitals';
@@ -46,8 +45,6 @@ import {
     Pill,
     Droplets,
     FileText,
-    User,
-    Settings,
 } from 'lucide-react';
 
 const mainNavItems: NavItem[] = [
@@ -69,16 +66,6 @@ const mainNavItems: NavItem[] = [
                 title: 'Doctor List',
                 href: doctors.index().url,
                 icon: Users,
-            },
-            {
-                title: 'Profile',
-                href: '/doctor/profile',
-                icon: User,
-            },
-            {
-                title: 'Settings',
-                href: doctorSettings.index().url,
-                icon: Settings,
             },
             {
                 title: 'Degrees',
