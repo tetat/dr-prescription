@@ -1,151 +1,172 @@
-import { Transition } from '@headlessui/react';
-import { Form, Head, Link, usePage } from '@inertiajs/react';
-import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
-import DeleteUser from '@/components/delete-user';
-import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
-import { edit } from '@/routes/profile';
-import { send } from '@/routes/verification';
-import type { BreadcrumbItem } from '@/types';
+import { Head, useForm } from '@inertiajs/react';
 import doctorSettings from '@/routes/doctor-settings';
-import DoctorSettingController from '@/actions/App/Http/Controllers/DoctorSettingController';
+import type { BreadcrumbItem } from '@/types';
+import { DoctorSettingProps } from '@/types/doctor';
+import { useFlashToast } from '@/hooks/use-flash-toast';
+import { Info } from 'lucide-react';
 
-export default function Profile({
-    mustVerifyEmail,
-    status,
+const DoctorSettingEdit = ({
+    doctorSetting,
 }: {
-    mustVerifyEmail: boolean;
-    status?: string;
-}) {
-    const { auth } = usePage().props;
-    const setting = auth.doctorSetting();
+    doctorSetting: DoctorSettingProps;
+}) => {
+    useFlashToast();
+
+    const { data, setData, put, processing, errors } = useForm({
+        consultation_fee: doctorSetting.consultation_fee,
+        followup_discount: doctorSetting.followup_discount,
+        emergency_fee: doctorSetting.emergency_fee,
+        followup_valid_days: doctorSetting.followup_valid_days,
+    });
+
+    const onSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        put(doctorSettings.update(doctorSetting.id).url);
+    };
+
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: 'Doctor setting',
-            href: doctorSettings.edit(setting.id).url,
+            title: 'Doctor Setting',
+            href: doctorSettings.edit(doctorSetting.id).url,
         },
     ];
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Profile settings" />
-
-            <h1 className="sr-only">Profile settings</h1>
+            <Head title="Doctor Settings" />
 
             <SettingsLayout>
-                <div className="space-y-6">
-                    <Heading
-                        variant="small"
-                        title="Profile information"
-                        description="Update your name and email address"
-                    />
+                <div className="mx-auto mt-6 w-2xl p-4">
+                    <h2 className="py-3 text-center text-2xl font-bold">
+                        Doctor Settings
+                    </h2>
 
-                    <Form
-                        {...DoctorSettingController.update.form()}
-                        options={{
-                            preserveScroll: true,
-                        }}
-                        className="space-y-6"
-                    >
-                        {({ processing, recentlySuccessful, errors }) => (
-                            <>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="name">Name</Label>
+                    <form onSubmit={onSubmit} className="flex flex-col gap-5">
+                        {/* Consultation Fee */}
+                        <div>
+                            <Label>
+                                Consultation Fee{' '}
+                                <span className="ml-1 text-red-500">*</span>
+                            </Label>
+                            <Input
+                                type="number"
+                                value={data.consultation_fee}
+                                onChange={(e) =>
+                                    setData(
+                                        'consultation_fee',
+                                        e.target.value === ''
+                                            ? ''
+                                            : Number(e.target.value),
+                                    )
+                                }
+                                placeholder="Consultation fee"
+                            />
+                            <InputError message={errors.consultation_fee} />
+                        </div>
 
-                                    <Input
-                                        id="name"
-                                        className="mt-1 block w-full"
-                                        defaultValue={auth.user.name}
-                                        name="name"
-                                        required
-                                        autoComplete="name"
-                                        placeholder="Full name"
-                                    />
+                        {/* Followup Discount */}
+                        <div>
+                            <div className="flex items-center gap-2">
+                                <Label>
+                                    Followup Discount{' '}
+                                    <span className="ml-1 text-red-500">*</span>
+                                </Label>
 
-                                    <InputError
-                                        className="mt-2"
-                                        message={errors.name}
-                                    />
-                                </div>
-
-                                <div className="grid gap-2">
-                                    <Label htmlFor="email">Email address</Label>
-
-                                    <Input
-                                        id="email"
-                                        type="email"
-                                        className="mt-1 block w-full"
-                                        defaultValue={auth.user.email}
-                                        name="email"
-                                        required
-                                        autoComplete="username"
-                                        placeholder="Email address"
-                                    />
-
-                                    <InputError
-                                        className="mt-2"
-                                        message={errors.email}
-                                    />
-                                </div>
-
-                                {mustVerifyEmail &&
-                                    auth.user.email_verified_at === null && (
-                                        <div>
-                                            <p className="-mt-4 text-sm text-muted-foreground">
-                                                Your email address is
-                                                unverified.{' '}
-                                                <Link
-                                                    href={send()}
-                                                    as="button"
-                                                    className="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
-                                                >
-                                                    Click here to resend the
-                                                    verification email.
-                                                </Link>
-                                            </p>
-
-                                            {status ===
-                                                'verification-link-sent' && (
-                                                <div className="mt-2 text-sm font-medium text-green-600">
-                                                    A new verification link has
-                                                    been sent to your email
-                                                    address.
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
-
-                                <div className="flex items-center gap-4">
-                                    <Button
-                                        disabled={processing}
-                                        data-test="update-profile-button"
+                                <div className="group relative">
+                                    <button
+                                        type="button"
+                                        className="text-xs text-blue-600"
                                     >
-                                        Save
-                                    </Button>
+                                        <Info className="h-4 w-4 cursor-pointer text-muted-foreground" />
+                                    </button>
 
-                                    <Transition
-                                        show={recentlySuccessful}
-                                        enter="transition ease-in-out"
-                                        enterFrom="opacity-0"
-                                        leave="transition ease-in-out"
-                                        leaveTo="opacity-0"
-                                    >
-                                        <p className="text-sm text-neutral-600">
-                                            Saved
-                                        </p>
-                                    </Transition>
+                                    <div className="absolute top-0 left-6 hidden w-56 rounded-md bg-black px-2 py-1 text-xs text-white group-hover:block">
+                                        You can set Followup Discount to 0 if
+                                        you don't want to give discount.
+                                    </div>
                                 </div>
-                            </>
-                        )}
-                    </Form>
+                            </div>
+
+                            <Input
+                                type="number"
+                                value={data.followup_discount}
+                                onChange={(e) =>
+                                    setData(
+                                        'followup_discount',
+                                        e.target.value === ''
+                                            ? ''
+                                            : Number(e.target.value),
+                                    )
+                                }
+                                placeholder="Followup discount"
+                            />
+
+                            <InputError message={errors.followup_discount} />
+                        </div>
+
+                        {/* Emergency Fee */}
+                        <div>
+                            <Label>
+                                Emergency Fee{' '}
+                                <span className="ml-1 text-red-500">*</span>
+                            </Label>
+                            <Input
+                                type="number"
+                                value={data.emergency_fee}
+                                onChange={(e) =>
+                                    setData(
+                                        'emergency_fee',
+                                        e.target.value === ''
+                                            ? ''
+                                            : Number(e.target.value),
+                                    )
+                                }
+                                placeholder="Emergency fee"
+                            />
+                            <InputError message={errors.emergency_fee} />
+                        </div>
+
+                        {/* Followup Valid Days */}
+                        <div>
+                            <Label>
+                                Followup Valid Days{' '}
+                                <span className="ml-1 text-red-500">*</span>
+                            </Label>
+                            <Input
+                                type="number"
+                                value={data.followup_valid_days}
+                                onChange={(e) =>
+                                    setData(
+                                        'followup_valid_days',
+                                        e.target.value === ''
+                                            ? ''
+                                            : Number(e.target.value),
+                                    )
+                                }
+                                placeholder="Valid days"
+                            />
+                            <InputError message={errors.followup_valid_days} />
+                        </div>
+
+                        {/* Submit */}
+                        <Button
+                            type="submit"
+                            disabled={processing}
+                            className="cursor-pointer bg-gray-900 text-white hover:bg-gray-800"
+                        >
+                            Update Setting
+                        </Button>
+                    </form>
                 </div>
-
-                <DeleteUser />
             </SettingsLayout>
         </AppLayout>
     );
-}
+};
+
+export default DoctorSettingEdit;

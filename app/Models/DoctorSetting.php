@@ -14,10 +14,9 @@ class DoctorSetting extends Model
     protected $fillable = [
         'doctor_id',
         'consultation_fee',
-        'followup_fee',
+        'followup_discount',
         'emergency_fee',
         'followup_valid_days',
-        'allow_free_followup',
     ];
 
     public function doctor(): BelongsTo

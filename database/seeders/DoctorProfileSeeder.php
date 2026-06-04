@@ -23,6 +23,7 @@ class DoctorProfileSeeder extends Seeder
                 'locale_title' => 'ডাঃ',
 
                 'email' => 'atiqur@dt.com',
+                'password' => '123654789',
 
                 'gender' => 'Male',
                 'blood_group' => 'B+',

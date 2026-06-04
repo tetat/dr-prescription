@@ -5,3 +5,11 @@ export type DoctorProfile = {
     licence_no: string;
     bio: string;
 };
+
+export type DoctorSettingProps = {
+    id: number;
+    consultation_fee: number | '';
+    followup_discount: number | '';
+    emergency_fee: number | '';
+    followup_valid_days: number | '';
+};

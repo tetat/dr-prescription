@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\DoctorSetting;
 use App\Http\Requests\StoreDoctorSettingRequest;
 use App\Http\Requests\UpdateDoctorSettingRequest;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class DoctorSettingController extends Controller
 {
@@ -45,7 +47,9 @@ class DoctorSettingController extends Controller
      */
     public function edit(DoctorSetting $doctorSetting)
     {
-        //
+        return inertia('settings/doctor-setting', [
+            'doctorSetting' => $doctorSetting,
+        ]);
     }
 
     /**
@@ -53,7 +57,25 @@ class DoctorSettingController extends Controller
      */
     public function update(UpdateDoctorSettingRequest $request, DoctorSetting $doctorSetting)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $data = $request->validated();
+
+            $doctorSetting->consultation_fee = $data['consultation_fee'];
+            $doctorSetting->followup_discount = $data['followup_discount'];
+            $doctorSetting->emergency_fee = $data['emergency_fee'];
+            $doctorSetting->followup_valid_days = $data['followup_valid_days'];
+
+            $doctorSetting->save();
+
+            DB::commit();
+
+            return back()->with('success', 'Setting updated successfully.');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     /**

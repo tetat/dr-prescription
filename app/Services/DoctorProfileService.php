@@ -89,6 +89,7 @@ class DoctorProfileService
     public function createDoctor(array $data): User
     {
         return DB::transaction(function () use ($data) {
+            $doctorPassword = $data['password'] ?? $data['email'];
             $doctor = User::create([
                 'name' => $data['name'],
                 'locale_name' => $data['locale_name'],
@@ -96,17 +97,16 @@ class DoctorProfileService
                 'gender' => $data['gender'],
                 'blood_group' => $data['blood_group'],
                 'address' => $data['address'],
-                'password' => $data['email'],
+                'password' => $doctorPassword,
             ]);
 
             $doctor->assignRole($data['role_ids']);
 
             $doctor->doctorSetting()->create([
                 'consultation_fee' => 500,
-                'followup_fee' => 400,
+                'followup_discount' => 100,
                 'emergency_fee' => 700,
                 'followup_valid_days' => 14,
-                'allow_free_followup' => false,
             ]);
 
             // phones

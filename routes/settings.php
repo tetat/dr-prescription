@@ -11,7 +11,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
 
-    Route::get('doctor/setting', [DoctorSettingController::class, 'edit'])->name('doctor.setting');
+    Route::resource('doctor-settings', DoctorSettingController::class)->only(['edit', 'update']);
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
