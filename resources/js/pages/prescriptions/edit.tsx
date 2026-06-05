@@ -24,6 +24,7 @@ interface Props {
 const PrescriptionEdit = ({ prescription, ...props }: Props) => {
     const { data, setData, put, processing, errors } =
         useForm<PrescriptionFormProps>({
+            id: prescription.id.toString(),
             doctor_id: prescription.doctor_id?.toString() ?? '',
             patient_id: prescription.patient_id?.toString() ?? '',
             hospital_id: prescription.hospital_id?.toString() ?? '',
@@ -34,6 +35,7 @@ const PrescriptionEdit = ({ prescription, ...props }: Props) => {
             patient_height: prescription.patient_height?.toString() ?? '',
 
             consultation_fee: prescription.consultation_fee?.toString() ?? '',
+            is_emergency: prescription.is_emergency ?? false,
             next_visit: prescription.next_visit?.toString() ?? '',
 
             medicines:
@@ -88,6 +90,7 @@ const PrescriptionEdit = ({ prescription, ...props }: Props) => {
                     errors={errors}
                     processing={processing}
                     onSubmit={onSubmit}
+                    isEditMode={true}
                 />
             </div>
         </AppLayout>

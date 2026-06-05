@@ -4,6 +4,8 @@ namespace App\Services;
 
 use Illuminate\Http\Request;
 use App\Models\Prescription;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
@@ -90,6 +92,7 @@ class PrescriptionService
                 'patient_weight' => $data['patient_weight'] ?? null,
                 'patient_height' => $data['patient_height'] ?? null,
                 'consultation_fee' => $data['consultation_fee'] ?? null,
+                'is_emergency' => $data['is_emergency'],
                 // (days)
                 'next_visit' => $data['next_visit'] ?? null,
             ]);
@@ -175,17 +178,17 @@ class PrescriptionService
     public function updatePrescription(Prescription $prescription, array $data): Prescription
     {
         return DB::transaction(function () use ($prescription, $data) {
+            $prescription->doctor_id = $data['doctor_id'];
+            $prescription->patient_id = $data['patient_id'];
+            $prescription->hospital_id = $data['hospital_id'];
+            $prescription->chief_complaint = $data['chief_complaint'];
+            $prescription->patient_weight = $data['patient_weight'] ?? null;
+            $prescription->patient_height = $data['patient_height'] ?? null;
+            $prescription->consultation_fee = $data['consultation_fee'] ?? null;
+            $prescription->is_emergency = $data['is_emergency'];
+            $prescription->next_visit = $data['next_visit'] ?? null;
 
-            $prescription->update([
-                'doctor_id' => $data['doctor_id'],
-                'patient_id' => $data['patient_id'],
-                'hospital_id' => $data['hospital_id'],
-                'chief_complaint' => $data['chief_complaint'],
-                'patient_weight' => $data['patient_weight'] ?? null,
-                'patient_height' => $data['patient_height'] ?? null,
-                'consultation_fee' => $data['consultation_fee'] ?? null,
-                'next_visit' => $data['next_visit'] ?? null,
-            ]);
+            $prescription->update();
 
             // Medicines with pivot data
             $syncData = [];
@@ -230,5 +233,37 @@ class PrescriptionService
             $prescription->examinations()->detach();
             $prescription->delete();
         });
+    }
+
+    public function consultationFee(array $data)
+    {
+        $doctor = User::with('doctorSetting')->findOrFail($data['doctor_id']);
+        $setting = $doctor->doctorSetting;
+
+        if (!$setting) return 0;
+
+        if (filter_var($data['emergency'] ?? false, FILTER_VALIDATE_BOOLEAN)) {
+            return $setting->emergency_fee;
+        }
+
+        $fee = $setting->consultation_fee;
+
+        $lastPrescription = Prescription::query()
+            ->where('doctor_id', $doctor->id)
+            ->where('patient_id', $data['patient_id'])
+            ->when(!empty($data['prescription_id']) && $data['prescription_id'] !== '0',
+                fn ($q) => $q->where('id', '!=', $data['prescription_id'])
+            )
+            ->latest()
+            ->first();
+
+        if ($lastPrescription) {
+            $days = now()->diffInDays($lastPrescription->created_at);
+            if ($days <= $setting->followup_valid_days) {
+                $fee = max(0, $fee - $setting->followup_discount);
+            }
+        }
+
+        return $fee;
     }
 }

@@ -21,7 +21,8 @@ class Prescription extends Model
         'patient_weight',
         'patient_height',
         'next_visit',
-        'consultation_fee'
+        'consultation_fee',
+        'is_emergency',
     ];
 
     public function doctor(): BelongsTo

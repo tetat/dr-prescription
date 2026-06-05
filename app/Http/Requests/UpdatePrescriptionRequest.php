@@ -32,6 +32,7 @@ class UpdatePrescriptionRequest extends FormRequest
             'patient_weight' => ['nullable', 'numeric', 'min:1', 'max:500'],
             'patient_height' => ['nullable', 'numeric', 'min:1', 'max:300'],
             'consultation_fee' => ['nullable', 'numeric', 'min:0'],
+            'is_emergency' => ['required', 'boolean'],
             'next_visit' => ['nullable', 'integer', 'min:1'],
             'test_ids' => ['nullable', 'array'],
             'test_ids.*' => ['integer', Rule::exists('tests', 'id')],

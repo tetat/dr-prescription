@@ -26,6 +26,10 @@ Route::inertia('/', 'welcome', [
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
+    Route::get(
+        'consultation-fee',
+        [PrescriptionController::class, 'consultationFee']
+    );
 
     Route::resource('doctors', DoctorProfileController::class);
     Route::resource('institutes', InstituteController::class);

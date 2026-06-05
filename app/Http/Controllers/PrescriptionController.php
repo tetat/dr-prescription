@@ -131,4 +131,26 @@ class PrescriptionController extends Controller
             return redirect()->route('prescriptions.index')->with('error', $e->getMessage());
         }
     }
+
+    public function consultationFee(Request $request)
+    {
+        try {
+            $data = $request->validate([
+                'prescription_id' => ['required', 'string'],
+                'doctor_id' => ['required', 'exists:users,id'],
+                'patient_id' => ['required', 'exists:users,id'],
+                'emergency' => ['required', 'boolean'],
+            ]);
+
+            $fee = $this->prescriptionService->consultationFee($data);
+
+            return response()->json([
+                'consultation_fee' => $fee,
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

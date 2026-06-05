@@ -5,11 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\DoctorSetting;
 use App\Http\Requests\StoreDoctorSettingRequest;
 use App\Http\Requests\UpdateDoctorSettingRequest;
+use App\Services\DoctorSettingService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
 class DoctorSettingController extends Controller
 {
+    public function __construct(
+        private DoctorSettingService $doctorSettingService
+    ){}
     /**
      * Display a listing of the resource.
      */
@@ -58,18 +62,7 @@ class DoctorSettingController extends Controller
     public function update(UpdateDoctorSettingRequest $request, DoctorSetting $doctorSetting)
     {
         try {
-            DB::beginTransaction();
-
-            $data = $request->validated();
-
-            $doctorSetting->consultation_fee = $data['consultation_fee'];
-            $doctorSetting->followup_discount = $data['followup_discount'];
-            $doctorSetting->emergency_fee = $data['emergency_fee'];
-            $doctorSetting->followup_valid_days = $data['followup_valid_days'];
-
-            $doctorSetting->save();
-
-            DB::commit();
+            $this->doctorSettingService->updateDoctorSetting($request->validated(), $doctorSetting);
 
             return back()->with('success', 'Setting updated successfully.');
         } catch (Exception $e) {

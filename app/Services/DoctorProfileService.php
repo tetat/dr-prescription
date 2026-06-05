@@ -13,6 +13,7 @@ class DoctorProfileService
 {
     public function __construct(
         private RoleService $roleService,
+        private DoctorSettingService $doctorSettingService,
     ) {}
 
     public function getDoctorQuery(): Builder
@@ -102,12 +103,7 @@ class DoctorProfileService
 
             $doctor->assignRole($data['role_ids']);
 
-            $doctor->doctorSetting()->create([
-                'consultation_fee' => 500,
-                'followup_discount' => 100,
-                'emergency_fee' => 700,
-                'followup_valid_days' => 14,
-            ]);
+            $this->doctorSettingService->createDoctorSetting($doctor->id);
 
             // phones
             $doctor->phones()->createMany($data['phones']);

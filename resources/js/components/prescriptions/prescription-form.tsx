@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import DoseSelector from '@/components/dose-selector';
 import InputError from '@/components/input-error';
 import MedicineSelector from '@/components/medicine-selector';
@@ -20,6 +20,7 @@ import {
 } from '@/types';
 import MultiSelect from '../multi-select';
 import { emptyMedicine } from '@/lib/prescription';
+import { Checkbox } from '../ui/checkbox';
 
 interface Props {
     data: PrescriptionFormProps;
@@ -33,6 +34,7 @@ interface Props {
     medicines: MedicineSelectOption[];
     tests: SelectOption[];
     examinations: SelectOption[];
+    isEditMode: boolean;
 }
 
 const PrescriptionForm = ({
@@ -47,7 +49,14 @@ const PrescriptionForm = ({
     medicines,
     tests,
     examinations,
+    isEditMode,
 }: Props) => {
+    const initialValues = useRef({
+        doctor_id: data.doctor_id,
+        patient_id: data.patient_id,
+        is_emergency: data.is_emergency,
+        consultation_fee: data.consultation_fee,
+    });
     const updateMedicine = (index: number, key: string, value: any) => {
         const updated = [...data.medicines];
         updated[index] = {
@@ -67,6 +76,44 @@ const PrescriptionForm = ({
     const addMedicine = () => {
         setData('medicines', [...data.medicines, emptyMedicine()]);
     };
+
+    const fetchFee = async () => {
+        if (!data.doctor_id || !data.patient_id) return;
+
+        try {
+            const res = await fetch(
+                `/consultation-fee?doctor_id=${data.doctor_id}&patient_id=${data.patient_id}&emergency=${data.is_emergency ? 1 : 0}&prescription_id=${data.id}`,
+            );
+            const result = await res.json();
+            setData('consultation_fee', result.consultation_fee ?? '');
+        } catch (err) {
+            alert('Internal server error!');
+        }
+    };
+
+    useEffect(() => {
+        if (isEditMode) {
+            if (data.is_emergency === false) {
+                setData(
+                    'consultation_fee',
+                    initialValues.current.consultation_fee,
+                );
+                return;
+            }
+            const hasChanged =
+                data.doctor_id !== initialValues.current.doctor_id ||
+                data.patient_id !== initialValues.current.patient_id ||
+                data.is_emergency !== initialValues.current.is_emergency;
+
+            if (!hasChanged) return;
+        }
+
+        const timeout = setTimeout(() => {
+            fetchFee();
+        }, 300);
+
+        return () => clearTimeout(timeout);
+    }, [data.doctor_id, data.patient_id, data.is_emergency]);
 
     const getMedicineError = (index: number, field: string) => {
         return errors?.[`medicines.${index}.${field}`];
@@ -210,7 +257,26 @@ const PrescriptionForm = ({
 
             {/* Consultation Fee */}
             <div>
-                <Label>Consultation Fee</Label>
+                <div className="flex items-center justify-between">
+                    <Label>Consultation Fee</Label>
+
+                    <div className="flex items-center gap-2">
+                        <Checkbox
+                            checked={Boolean(data.is_emergency)}
+                            className="border-red-700"
+                            onCheckedChange={(checked) => {
+                                if (!data.doctor_id || !data.patient_id) {
+                                    alert(
+                                        'Please select Doctor and Patient first!',
+                                    );
+                                    return;
+                                }
+                                setData('is_emergency', checked === true);
+                            }}
+                        />
+                        <span className="text-red-500">Emergency</span>
+                    </div>
+                </div>
 
                 <Input
                     type="number"
@@ -433,7 +499,11 @@ const PrescriptionForm = ({
                 disabled={processing}
                 className="cursor-pointer bg-indigo-600 text-white hover:bg-indigo-700 md:col-span-2"
             >
-                {processing ? 'Updating...' : 'Update Prescription'}
+                {processing
+                    ? 'Loading...'
+                    : isEditMode
+                      ? 'Update Prescription'
+                      : 'Create Prescription'}
             </Button>
         </form>
     );

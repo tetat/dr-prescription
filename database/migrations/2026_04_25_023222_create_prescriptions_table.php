@@ -21,6 +21,7 @@ return new class extends Migration
             $table->decimal('patient_height', 5, 2)->nullable();
             $table->integer('next_visit')->nullable();
             $table->decimal('consultation_fee', 10, 2)->nullable();
+            $table->boolean('is_emergency')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });

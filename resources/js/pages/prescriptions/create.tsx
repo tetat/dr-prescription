@@ -7,7 +7,8 @@ import {
     PrescriptionFormProps,
     SelectOption,
 } from '@/types';
-import { Head, useForm } from '@inertiajs/react';
+import { DoctorSettingProps } from '@/types/doctor';
+import { Head, useForm, usePage } from '@inertiajs/react';
 
 interface Props {
     doctors: SelectOption[];
@@ -16,11 +17,16 @@ interface Props {
     medicines: MedicineSelectOption[];
     tests: SelectOption[];
     examinations: SelectOption[];
+    doctorSetting: DoctorSettingProps;
 }
 
 const PrescriptionCreate = (props: Props) => {
+    const { auth } = usePage().props as any;
+    const defaultConsultationFee = auth.doctorSetting.consultation_fee;
+
     const { data, setData, post, processing, errors } =
         useForm<PrescriptionFormProps>({
+            id: '0',
             doctor_id: '',
             patient_id: '',
             hospital_id: '',
@@ -30,7 +36,8 @@ const PrescriptionCreate = (props: Props) => {
             patient_weight: '',
             patient_height: '',
 
-            consultation_fee: '700',
+            consultation_fee: defaultConsultationFee,
+            is_emergency: false,
             next_visit: '',
 
             medicines: [
@@ -84,6 +91,7 @@ const PrescriptionCreate = (props: Props) => {
                     errors={errors}
                     processing={processing}
                     onSubmit={onSubmit}
+                    isEditMode={false}
                 />
             </div>
         </AppLayout>

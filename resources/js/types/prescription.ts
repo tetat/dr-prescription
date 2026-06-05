@@ -12,6 +12,7 @@ export type PrescriptionProps = {
     patient_height: number;
     next_visit: number;
     consultation_fee: number;
+    is_emergency: boolean;
 };
 
 export type PMPivot = {
@@ -42,6 +43,7 @@ export type MedicineItem = {
 };
 
 export type PrescriptionFormProps = {
+    id: string;
     doctor_id: string;
     patient_id: string;
     hospital_id: string;
@@ -52,6 +54,7 @@ export type PrescriptionFormProps = {
     patient_height: string;
 
     consultation_fee: string;
+    is_emergency: boolean;
     next_visit: string;
 
     medicines: MedicineItem[];
