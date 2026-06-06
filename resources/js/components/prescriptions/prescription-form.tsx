@@ -87,6 +87,7 @@ const PrescriptionForm = ({
             const result = await res.json();
             setData('consultation_fee', result.consultation_fee ?? '');
         } catch (err) {
+            console.error('Fee calculation failed:', err);
             alert('Internal server error!');
         }
     };

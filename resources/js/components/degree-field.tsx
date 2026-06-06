@@ -1,20 +1,25 @@
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Degree, Institute } from '@/types';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from './ui/select';
+import { SelectOption } from '@/types';
 import { X } from 'lucide-react';
 
 type DegreeProps = {
     degree_id: number | string;
     institute_id: number | string;
     passing_year: string;
-}
-
+};
 
 type Props = {
     degrees: DegreeProps[];
     setDegrees: (degrees: DegreeProps[]) => void;
-    degreeOptions: Degree[];
-    instituteOptions: Institute[];
+    degreeOptions: SelectOption[];
+    instituteOptions: SelectOption[];
 };
 
 const DegreeField = ({
@@ -24,12 +29,15 @@ const DegreeField = ({
     instituteOptions,
 }: Props) => {
     const currentYear = new Date().getFullYear();
-    const years = Array.from({ length: currentYear - 1970 }, (_, i) => currentYear - i);
+    const years = Array.from(
+        { length: currentYear - 1970 },
+        (_, i) => currentYear - i,
+    );
 
     const updateDegree = (
         index: number,
         key: keyof DegreeProps,
-        value: string
+        value: string,
     ) => {
         const updated = [...degrees];
         updated[index][key] = value;
@@ -50,17 +58,16 @@ const DegreeField = ({
     return (
         <>
             {degrees.map((degree, index) => (
-                <div key={index} className="flex items-center gap-2 mb-2">
-                    <div className="flex items-center justify-between gap-1 w-11/12">
-
+                <div key={index} className="mb-2 flex items-center gap-2">
+                    <div className="flex w-11/12 items-center justify-between gap-1">
                         {/* Degree */}
-                        < Select
+                        <Select
                             value={degree.degree_id?.toString()}
                             onValueChange={(value) =>
                                 updateDegree(index, 'degree_id', value)
                             }
                         >
-                            <SelectTrigger className="w-4/12 h-9">
+                            <SelectTrigger className="h-9 w-4/12">
                                 <SelectValue placeholder="Select a Degree" />
                             </SelectTrigger>
                             <SelectContent>
@@ -73,16 +80,16 @@ const DegreeField = ({
                                     </SelectItem>
                                 ))}
                             </SelectContent>
-                        </Select >
+                        </Select>
 
                         {/* Institute */}
-                        < Select
+                        <Select
                             value={degree.institute_id?.toString()}
                             onValueChange={(value) =>
                                 updateDegree(index, 'institute_id', value)
                             }
                         >
-                            <SelectTrigger className="w-5/12 h-9">
+                            <SelectTrigger className="h-9 w-5/12">
                                 <SelectValue placeholder="Select an Institute" />
                             </SelectTrigger>
                             <SelectContent>
@@ -95,37 +102,40 @@ const DegreeField = ({
                                     </SelectItem>
                                 ))}
                             </SelectContent>
-                        </Select >
+                        </Select>
 
                         {/* Passing Year */}
-                        < Select
+                        <Select
                             value={degree.passing_year}
                             onValueChange={(value) =>
                                 updateDegree(index, 'passing_year', value)
                             }
                         >
-                            <SelectTrigger className="w-3/12 h-9">
+                            <SelectTrigger className="h-9 w-3/12">
                                 <SelectValue placeholder="Passing Year" />
                             </SelectTrigger>
                             <SelectContent>
                                 {years.map((year) => (
-                                    <SelectItem key={year} value={year.toString()}>
+                                    <SelectItem
+                                        key={year}
+                                        value={year.toString()}
+                                    >
                                         {year}
                                     </SelectItem>
                                 ))}
                             </SelectContent>
-                        </Select >
+                        </Select>
                     </div>
 
                     {/* Remove */}
-                    < Button
+                    <Button
                         type="button"
                         onClick={() => removeDegree(index)}
-                        className="bg-red-500 w-10 h-9 text-white hover:bg-red-600 "
+                        className="h-9 w-10 bg-red-500 text-white hover:bg-red-600"
                     >
                         <X />
-                    </Button >
-                </div >
+                    </Button>
+                </div>
             ))}
 
             {/* Add */}
