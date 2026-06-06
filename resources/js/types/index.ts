@@ -5,3 +5,4 @@ export type * from './selector';
 export type * from './medicine';
 export type * from './prescription';
 export type * from './doctor';
+export type * from './patient';

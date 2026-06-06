@@ -104,7 +104,7 @@ class PatientService
             $patient->email = $data['email'];
             $patient->gender = $data['gender'];
             $patient->age = $data['age'];
-            $patient->age_type = $data['aga_type'];
+            $patient->age_type = $data['age_type'];
             $patient->blood_group = $data['blood_group'];
             $patient->address = $data['address'];
             

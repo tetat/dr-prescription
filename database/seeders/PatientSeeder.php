@@ -23,7 +23,7 @@ class PatientSeeder extends Seeder
                 'gender' => 'Male',
 
                 'age' => 35,
-                'age_type' => 'Year',
+                'age_type' => 'Years',
 
                 'blood_group' => 'B+',
 
@@ -45,7 +45,7 @@ class PatientSeeder extends Seeder
                 'gender' => 'Male',
 
                 'age' => 52,
-                'age_type' => 'Year',
+                'age_type' => 'Years',
 
                 'blood_group' => 'O+',
 
