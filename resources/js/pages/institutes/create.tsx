@@ -1,8 +1,5 @@
 import InstituteController from '@/actions/App/Http/Controllers/InstituteController';
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import InstituteForm from '@/components/institutes/institute-form';
 import AppLayout from '@/layouts/app-layout';
 import { create, index } from '@/routes/institutes';
 import { Institute } from '@/types';
@@ -12,7 +9,9 @@ const InstituteCreate = () => {
     const { data, setData, post, processing, errors } = useForm<Institute>({
         id: 0,
         name: '',
+        locale_name: '',
         abbreviation: '',
+        locale_abbreviation: '',
     });
 
     const onSubmit = (e: React.FormEvent) => {
@@ -38,71 +37,14 @@ const InstituteCreate = () => {
                     Create Institute
                 </h2>
 
-                <form onSubmit={onSubmit} className="flex flex-col gap-5">
-                    {/* Name */}
-                    <div>
-                        <Label>
-                            Name <span className="ml-1 text-red-500">*</span>
-                        </Label>
-                        <Input
-                            value={data.name}
-                            onChange={(e) => setData('name', e.target.value)}
-                            placeholder="Institute name"
-                        />
-                        <InputError message={errors.name} />
-                    </div>
-
-                    {/* Locale Name */}
-                    <div>
-                        <Label>Name in your local language</Label>
-                        <Input
-                            value={data.locale_name}
-                            onChange={(e) =>
-                                setData('locale_name', e.target.value)
-                            }
-                            placeholder="Institute local name"
-                        />
-                        <InputError message={errors.locale_name} />
-                    </div>
-
-                    {/* Abbreviation */}
-                    <div>
-                        <Label>
-                            Abbreviation{' '}
-                            <span className="ml-1 text-red-500">*</span>
-                        </Label>
-                        <Input
-                            value={data.abbreviation}
-                            onChange={(e) =>
-                                setData('abbreviation', e.target.value)
-                            }
-                            placeholder="Abbreviation"
-                        />
-                        <InputError message={errors.abbreviation} />
-                    </div>
-
-                    {/* Locale Abbreviation */}
-                    <div>
-                        <Label>Abbreviation in your local language</Label>
-                        <Input
-                            value={data.locale_abbreviation}
-                            onChange={(e) =>
-                                setData('locale_abbreviation', e.target.value)
-                            }
-                            placeholder="Abbreviation in local"
-                        />
-                        <InputError message={errors.locale_abbreviation} />
-                    </div>
-
-                    {/* Submit */}
-                    <Button
-                        type="submit"
-                        disabled={processing}
-                        className="cursor-pointer bg-indigo-600 text-white hover:bg-indigo-700"
-                    >
-                        Create Institute
-                    </Button>
-                </form>
+                <InstituteForm
+                    data={data}
+                    setData={setData}
+                    processing={processing}
+                    errors={errors}
+                    onSubmit={onSubmit}
+                    isEditMode={false}
+                />
             </div>
         </AppLayout>
     );
