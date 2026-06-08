@@ -1,13 +1,9 @@
 import MedFormController from '@/actions/App/Http/Controllers/MedFormController';
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import MedformForm from '@/components/medicine/medform-form';
 import AppLayout from '@/layouts/app-layout';
 import { create, index } from '@/routes/med-forms';
 import { MedForm } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
-
 
 const MedFormCreate = () => {
     const { data, setData, post, processing, errors } = useForm<MedForm>({
@@ -39,40 +35,14 @@ const MedFormCreate = () => {
                     Create Medicine Form
                 </h2>
 
-                <form onSubmit={onSubmit} className="flex flex-col gap-5">
-                    {/* Short Name */}
-                    <div>
-                        <Label>
-                            Short Name <span className="ml-1 text-red-500">*</span>
-                        </Label>
-                        <Input
-                            value={data.short_name}
-                            onChange={(e) => setData('short_name', e.target.value)}
-                            placeholder="Short name"
-                        />
-                        <InputError message={errors.short_name} />
-                    </div>
-
-                    {/* Long Name */}
-                    <div>
-                        <Label>Long Name</Label>
-                        <Input
-                            value={data.long_name}
-                            onChange={(e) => setData('long_name', e.target.value)}
-                            placeholder="Long name"
-                        />
-                        <InputError message={errors.long_name} />
-                    </div>
-
-                    {/* Submit */}
-                    <Button
-                        type="submit"
-                        disabled={processing}
-                        className="cursor-pointer bg-indigo-600 text-white hover:bg-indigo-700"
-                    >
-                        Create Medicine Form
-                    </Button>
-                </form>
+                <MedformForm
+                    data={data}
+                    setData={setData}
+                    errors={errors}
+                    processing={processing}
+                    onSubmit={onSubmit}
+                    isEditMode={false}
+                />
             </div>
         </AppLayout>
     );
