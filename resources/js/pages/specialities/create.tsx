@@ -1,8 +1,5 @@
 import SpecialityController from '@/actions/App/Http/Controllers/SpecialityController';
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import SpecialityForm from '@/components/specialities/speciality-form';
 import AppLayout from '@/layouts/app-layout';
 import { create, index } from '@/routes/specialities';
 import { Speciality } from '@/types';
@@ -12,7 +9,9 @@ const SpecialityCreate = () => {
     const { data, setData, post, processing, errors } = useForm<Speciality>({
         id: 0,
         name: '',
+        locale_name: '',
         abbreviation: '',
+        locale_abbreviation: '',
     });
 
     const onSubmit = (e: React.FormEvent) => {
@@ -38,68 +37,14 @@ const SpecialityCreate = () => {
                     Create Speciality
                 </h2>
 
-                <form onSubmit={onSubmit} className="flex flex-col gap-5">
-                    {/* Name */}
-                    <div>
-                        <Label>
-                            Name <span className="ml-1 text-red-500">*</span>
-                        </Label>
-                        <Input
-                            value={data.name}
-                            onChange={(e) => setData('name', e.target.value)}
-                            placeholder="Speciality name"
-                        />
-                        <InputError message={errors.name} />
-                    </div>
-
-                    {/* Locale Name */}
-                    <div>
-                        <Label>Name in your local language</Label>
-                        <Input
-                            value={data.locale_name}
-                            onChange={(e) =>
-                                setData('locale_name', e.target.value)
-                            }
-                            placeholder="Speciality local name"
-                        />
-                        <InputError message={errors.locale_name} />
-                    </div>
-
-                    {/* Abbreviation */}
-                    <div>
-                        <Label>Abbreviation</Label>
-                        <Input
-                            value={data.abbreviation}
-                            onChange={(e) =>
-                                setData('abbreviation', e.target.value)
-                            }
-                            placeholder="Abbreviation"
-                        />
-                        <InputError message={errors.abbreviation} />
-                    </div>
-
-                    {/* Locale Abbreviation */}
-                    <div>
-                        <Label>Abbreviation in your local language</Label>
-                        <Input
-                            value={data.locale_abbreviation}
-                            onChange={(e) =>
-                                setData('locale_abbreviation', e.target.value)
-                            }
-                            placeholder="Abbreviation in local"
-                        />
-                        <InputError message={errors.locale_abbreviation} />
-                    </div>
-
-                    {/* Submit */}
-                    <Button
-                        type="submit"
-                        disabled={processing}
-                        className="cursor-pointer bg-indigo-600 text-white hover:bg-indigo-700"
-                    >
-                        Create Speciality
-                    </Button>
-                </form>
+                <SpecialityForm
+                    data={data}
+                    setData={setData}
+                    processing={processing}
+                    errors={errors}
+                    onSubmit={onSubmit}
+                    isEditMode={false}
+                />
             </div>
         </AppLayout>
     );

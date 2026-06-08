@@ -1,9 +1,5 @@
 import TestController from '@/actions/App/Http/Controllers/TestController';
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import TestForm from '@/components/tests/test-form';
 import AppLayout from '@/layouts/app-layout';
 import { edit, index } from '@/routes/tests';
 import { Test } from '@/types';
@@ -19,7 +15,7 @@ const TestEdit = ({ test }: { test: Test }) => {
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         put(TestController.update.url(test.id));
-    }
+    };
 
     const breadcrumbsData = [
         { title: 'Manage Tests', href: index().url },
@@ -39,40 +35,14 @@ const TestEdit = ({ test }: { test: Test }) => {
                     Edit Test
                 </h2>
 
-                <form onSubmit={onSubmit} className="flex flex-col gap-5">
-                    {/* Name */}
-                    <div>
-                        <Label>
-                            Name <span className="ml-1 text-red-500">*</span>
-                        </Label>
-                        <Input
-                            value={data.name}
-                            onChange={(e) => setData('name', e.target.value)}
-                            placeholder="Test name"
-                        />
-                        <InputError message={errors.name} />
-                    </div>
-
-                    {/* Description */}
-                    <div>
-                        <Label>Description</Label>
-                        <Textarea
-                            value={data.description}
-                            onChange={(e) => setData('description', e.target.value)}
-                            rows={3}
-                        />
-                        <InputError message={errors.description} />
-                    </div>
-
-                    {/* Submit */}
-                    <Button
-                        type="submit"
-                        disabled={processing}
-                        className="cursor-pointer bg-indigo-600 text-white hover:bg-indigo-700"
-                    >
-                        Update Test
-                    </Button>
-                </form>
+                <TestForm
+                    data={data}
+                    setData={setData}
+                    errors={errors}
+                    processing={processing}
+                    onSubmit={onSubmit}
+                    isEditMode={true}
+                />
             </div>
         </AppLayout>
     );

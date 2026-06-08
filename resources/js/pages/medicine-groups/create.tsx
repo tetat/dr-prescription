@@ -1,5 +1,5 @@
 import MedicineGroupController from '@/actions/App/Http/Controllers/MedicineGroupController';
-import MedicinegroupForm from '@/components/medicine/medicinegroup-form';
+import MedicinegroupForm from '@/components/medicines/medicinegroup-form';
 import AppLayout from '@/layouts/app-layout';
 import { create, index } from '@/routes/medicine-groups';
 import { MedicineGroup } from '@/types';

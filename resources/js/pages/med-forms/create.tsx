@@ -1,5 +1,5 @@
 import MedFormController from '@/actions/App/Http/Controllers/MedFormController';
-import MedformForm from '@/components/medicine/medform-form';
+import MedformForm from '@/components/medicines/medform-form';
 import AppLayout from '@/layouts/app-layout';
 import { create, index } from '@/routes/med-forms';
 import { MedForm } from '@/types';
