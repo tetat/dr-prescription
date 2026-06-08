@@ -19,13 +19,6 @@ export type MedForm = {
     long_name: string;
 };
 
-export type MedicineProps = {
-    id: number;
-    name: string;
-    strength: string;
-    medicine_group_id: number;
-};
-
-export type MedicineWithPMPivot = MedicineProps & {
+export type MedicineWithPMPivot = Medicine & {
     pivot: PMPivot;
 };
