@@ -1,4 +1,4 @@
-export type HospitalProps = {
+export type Hospital = {
     id: number;
     name: string;
     locale_name: string;

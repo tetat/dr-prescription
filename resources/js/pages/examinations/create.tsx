@@ -1,13 +1,9 @@
 import ExaminationController from '@/actions/App/Http/Controllers/ExaminationController';
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import ExaminationForm from '@/components/examinations/examination-form';
 import AppLayout from '@/layouts/app-layout';
 import { create, index } from '@/routes/examinations';
 import { Examination } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
-
 
 const ExaminationCreate = () => {
     const { data, setData, post, processing, errors } = useForm<Examination>({
@@ -40,55 +36,14 @@ const ExaminationCreate = () => {
                     Create Examination
                 </h2>
 
-                <form onSubmit={onSubmit} className="flex flex-col gap-5">
-                    {/* Name */}
-                    <div>
-                        <Label>
-                            Name <span className="ml-1 text-red-500">*</span>
-                        </Label>
-                        <Input
-                            value={data.name}
-                            onChange={(e) => setData('name', e.target.value)}
-                            placeholder="e.g. Blood Pressure"
-                        />
-                        <InputError message={errors.name} />
-                    </div>
-
-                    {/* Abbreviation */}
-                    <div>
-                        <Label>
-                            Abbreviation <span className="ml-1 text-red-500">*</span>
-                        </Label>
-                        <Input
-                            value={data.abbreviation}
-                            onChange={(e) => setData('abbreviation', e.target.value)}
-                            placeholder="e.g. BP"
-                        />
-                        <InputError message={errors.abbreviation} />
-                    </div>
-
-                    {/* Unit */}
-                    <div>
-                        <Label>
-                            Unit <span className="ml-1 text-red-500">*</span>
-                        </Label>
-                        <Input
-                            value={data.unit}
-                            onChange={(e) => setData('unit', e.target.value)}
-                            placeholder="e.g. mmHg, mg/dL, etc."
-                        />
-                        <InputError message={errors.unit} />
-                    </div>
-
-                    {/* Submit */}
-                    <Button
-                        type="submit"
-                        disabled={processing}
-                        className="cursor-pointer bg-indigo-600 text-white hover:bg-indigo-700"
-                    >
-                        Create Examination
-                    </Button>
-                </form>
+                <ExaminationForm
+                    data={data}
+                    setData={setData}
+                    processing={processing}
+                    errors={errors}
+                    onSubmit={onSubmit}
+                    isEditMode={false}
+                />
             </div>
         </AppLayout>
     );
