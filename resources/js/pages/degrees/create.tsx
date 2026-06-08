@@ -1,8 +1,5 @@
 import DegreeController from '@/actions/App/Http/Controllers/DegreeController';
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import DegreeForm from '@/components/degrees/degree-form';
 import AppLayout from '@/layouts/app-layout';
 import { create, index } from '@/routes/degrees';
 import { Degree } from '@/types';
@@ -40,71 +37,14 @@ const DegreeCreate = () => {
                     Create Degree
                 </h2>
 
-                <form onSubmit={onSubmit} className="flex flex-col gap-5">
-                    {/* Name */}
-                    <div>
-                        <Label>
-                            Name <span className="ml-1 text-red-500">*</span>
-                        </Label>
-                        <Input
-                            value={data.name}
-                            onChange={(e) => setData('name', e.target.value)}
-                            placeholder="Degree name"
-                        />
-                        <InputError message={errors.name} />
-                    </div>
-
-                    {/* Locale Name */}
-                    <div>
-                        <Label>Name in your local language</Label>
-                        <Input
-                            value={data.locale_name}
-                            onChange={(e) =>
-                                setData('locale_name', e.target.value)
-                            }
-                            placeholder="Degree name in local"
-                        />
-                        <InputError message={errors.locale_name} />
-                    </div>
-
-                    {/* Abbreviation */}
-                    <div>
-                        <Label>
-                            Abbreviation{' '}
-                            <span className="ml-1 text-red-500">*</span>
-                        </Label>
-                        <Input
-                            value={data.abbreviation}
-                            onChange={(e) =>
-                                setData('abbreviation', e.target.value)
-                            }
-                            placeholder="Abbreviation"
-                        />
-                        <InputError message={errors.abbreviation} />
-                    </div>
-
-                    {/* Local Abbreviation */}
-                    <div>
-                        <Label>Abbreviation in your locale language</Label>
-                        <Input
-                            value={data.locale_abbreviation}
-                            onChange={(e) =>
-                                setData('locale_abbreviation', e.target.value)
-                            }
-                            placeholder="Abbreviation in local"
-                        />
-                        <InputError message={errors.locale_abbreviation} />
-                    </div>
-
-                    {/* Submit */}
-                    <Button
-                        type="submit"
-                        disabled={processing}
-                        className="cursor-pointer bg-indigo-600 text-white hover:bg-indigo-700"
-                    >
-                        Create Degree
-                    </Button>
-                </form>
+                <DegreeForm
+                    data={data}
+                    setData={setData}
+                    errors={errors}
+                    processing={processing}
+                    onSubmit={onSubmit}
+                    isEditMode={false}
+                />
             </div>
         </AppLayout>
     );
