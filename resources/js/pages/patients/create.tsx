@@ -1,5 +1,5 @@
 import PatientController from '@/actions/App/Http/Controllers/PatientController';
-import PatientForm from '@/components/patients/patient-form';
+import PatientForm from '@/components/users/patient-form';
 import AppLayout from '@/layouts/app-layout';
 import { create, index } from '@/routes/patients';
 import { PatientProps } from '@/types';

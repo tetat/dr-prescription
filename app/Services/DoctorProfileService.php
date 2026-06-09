@@ -148,14 +148,6 @@ class DoctorProfileService
 
             $doctor->syncRoles($data['role_ids']);
 
-            $doctor->doctorSetting()->update([
-                'consultation_fee' => 500,
-                'followup_fee' => 400,
-                'emergency_fee' => 700,
-                'followup_valid_days' => 14,
-                'allow_free_followup' => false,
-            ]);
-
             // phones
             $doctor->phones()->delete();
             $doctor->phones()->createMany($data['phones']);
