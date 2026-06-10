@@ -45,7 +45,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('medicine-groups', MedicineGroupController::class);
     Route::resource('med-forms', MedFormController::class);
     Route::resource('medicines', MedicineController::class);
-    Route::resource('prescriptions', PrescriptionController::class);
+    Route::resource('prescriptions', PrescriptionController::class)
+        ->middleware('role:doctor');
     Route::resource('doctor-settings', DoctorSettingController::class);
 });
 
