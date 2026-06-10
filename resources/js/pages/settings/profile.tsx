@@ -12,6 +12,9 @@ import SettingsLayout from '@/layouts/settings/layout';
 import { edit } from '@/routes/profile';
 import { send } from '@/routes/verification';
 import type { BreadcrumbItem } from '@/types';
+import doctors from '@/routes/doctors';
+import patients from '@/routes/patients';
+import users from '@/routes/users';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -27,7 +30,18 @@ export default function Profile({
     mustVerifyEmail: boolean;
     status?: string;
 }) {
-    const { auth } = usePage().props;
+    const { auth } = usePage().props as any;
+    const doctorUrl = doctors.edit(auth.user.id);
+    const patientUrl = patients.edit(auth.user.id);
+    const userUrl = users.edit(auth.user.id);
+
+    let profileDetailUrl = userUrl;
+    if (auth.roles.includes('patient')) {
+        profileDetailUrl = patientUrl;
+    }
+    if (auth.roles.includes('doctor')) {
+        profileDetailUrl = doctorUrl;
+    }
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -124,6 +138,12 @@ export default function Profile({
                                         data-test="update-profile-button"
                                     >
                                         Save
+                                    </Button>
+
+                                    <Button asChild variant="outline">
+                                        <Link href={profileDetailUrl}>
+                                            Edit Details
+                                        </Link>
                                     </Button>
 
                                     <Transition

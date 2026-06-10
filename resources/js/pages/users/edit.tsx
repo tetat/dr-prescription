@@ -43,8 +43,6 @@ const UserEdit = ({ user, roles }: Props) => {
         { title: 'Edit User', href: edit(user.id).url },
     ];
 
-    const typedErrors = errors as Record<string, string>;
-
     return (
         <AppLayout breadcrumbs={breadcrumbsData}>
             <Head title="Edit User" />
