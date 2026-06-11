@@ -45,6 +45,7 @@ import {
     Pill,
     Droplets,
     FileText,
+    Package,
 } from 'lucide-react';
 
 const mainNavItems: NavItem[] = [
@@ -59,6 +60,11 @@ const mainNavItems: NavItem[] = [
         icon: FileText,
     },
     {
+        title: 'Patients',
+        href: patients.index().url,
+        icon: Users,
+    },
+    {
         title: 'Doctors',
         icon: Stethoscope,
         children: [
@@ -66,6 +72,11 @@ const mainNavItems: NavItem[] = [
                 title: 'Doctor List',
                 href: doctors.index().url,
                 icon: Users,
+            },
+            {
+                title: 'Specialities',
+                href: specialities.index().url,
+                icon: Layers,
             },
             {
                 title: 'Degrees',
@@ -77,37 +88,28 @@ const mainNavItems: NavItem[] = [
                 href: institutes.index().url,
                 icon: Building,
             },
-            {
-                title: 'Specialities',
-                href: specialities.index().url,
-                icon: Layers,
-            },
         ],
     },
     {
-        title: 'Hospitals',
-        href: hospitals.index().url,
-        icon: Hospital,
-    },
-    {
-        title: 'Medicine Groups',
-        href: medicineGroups.index().url,
-        icon: Dna,
-    },
-    {
-        title: 'Medicine Forms',
-        href: medForms.index().url,
-        icon: Droplets,
-    },
-    {
         title: 'Medicines',
-        href: medicines.index().url,
-        icon: Pill,
-    },
-    {
-        title: 'Patients',
-        href: patients.index().url,
-        icon: Users,
+        icon: Package,
+        children: [
+            {
+                title: 'Medicine List',
+                href: medicines.index().url,
+                icon: Pill,
+            },
+            {
+                title: 'Medicine Groups',
+                href: medicineGroups.index().url,
+                icon: Dna,
+            },
+            {
+                title: 'Medicine Forms',
+                href: medForms.index().url,
+                icon: Droplets,
+            },
+        ],
     },
     {
         title: 'Tests',
@@ -118,6 +120,11 @@ const mainNavItems: NavItem[] = [
         title: 'Examinations',
         href: examinations.index().url,
         icon: HeartPulse,
+    },
+    {
+        title: 'Hospitals',
+        href: hospitals.index().url,
+        icon: Hospital,
     },
     {
         title: 'Users',
