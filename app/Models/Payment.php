@@ -15,6 +15,7 @@ class Payment extends Model
 
     protected $fillable = [
         'prescription_id',
+        'doctor_id',
         'amount',
         'method',
         'status',
@@ -26,11 +27,27 @@ class Payment extends Model
         return $this->belongsTo(Prescription::class);
     }
 
+    public function doctor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'doctor_id');
+    }
+
+    public function isPaid(): bool
+    {
+        return $this->status === PaymentStatus::PAID;
+    }
+
+    public function isPending(): bool
+    {
+        return $this->status === PaymentStatus::PENDING;
+    }
+
     protected function casts(): array
     {
         return [
             'method' => PaymentMethod::class,
             'status' => PaymentStatus::class,
+            'paid_at' => 'datetime',
         ];
     }
 }

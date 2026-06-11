@@ -12,6 +12,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\Degree;
 use App\Models\Speciality;
+use App\Models\Payment;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -72,6 +73,12 @@ class User extends Authenticatable
     public function prescriptionsTaken(): HasMany
     {
         return $this->hasMany(Prescription::class, 'patient_id');
+    }
+
+    // 💰 payments
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
     }
 
     // polymorphic phones

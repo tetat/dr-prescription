@@ -16,6 +16,9 @@ return new class extends Migration
             $table->foreignId('prescription_id')
                 ->constrained()
                 ->cascadeOnDelete();
+            $table->foreignId('doctor_id')
+                ->constrained('users')
+                ->cascadeOnDelete();
             $table->decimal('amount', 10, 2);
             $table->string('method');
             $table->string('status');
