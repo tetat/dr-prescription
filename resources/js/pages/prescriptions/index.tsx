@@ -18,6 +18,7 @@ import TableActions from '@/components/table-actions';
 
 interface Prescription {
     id: number;
+    code: string;
     doctor: string;
     patient: string;
     hospital: string;
@@ -105,6 +106,7 @@ const PrescriptionIndex = ({ prescriptions, filters }: Props) => {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>#</TableHead>
+                                <TableHead>Code</TableHead>
                                 <TableHead>Patient</TableHead>
                                 <TableHead>Doctor</TableHead>
                                 <TableHead>Hospital</TableHead>
@@ -121,6 +123,10 @@ const PrescriptionIndex = ({ prescriptions, filters }: Props) => {
                                     <TableRow key={prescription.id}>
                                         <TableCell className="font-medium">
                                             {prescriptions.from + i}
+                                        </TableCell>
+
+                                        <TableCell>
+                                            {prescription.code}
                                         </TableCell>
 
                                         <TableCell>

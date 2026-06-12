@@ -35,7 +35,9 @@ class PrescriptionService
 
             $prescriptionQuery->where(function ($q) use ($search) {
 
-                $q->whereHas('doctor', function ($doctor) use ($search) {
+                $q->where('code', 'like', "%{$search}%")
+
+                ->orWhereHas('doctor', function ($doctor) use ($search) {
                     $doctor->where('name', 'like', "%{$search}%");
                 })
 
@@ -52,6 +54,7 @@ class PrescriptionService
                 ->get()
                 ->map(fn($prescription) => [
                     'id' => $prescription->id,
+                    'code' => $prescription->code,
                     'doctor' => $prescription->doctor->name,
                     'patient' => $prescription->patient->name,
                     'hospital' => $prescription->hospital->name,
@@ -69,6 +72,7 @@ class PrescriptionService
 
             $prescriptions->getCollection()->transform(fn($prescription) => [
                 'id' => $prescription->id,
+                'code' => $prescription->code,
                 'doctor' => $prescription->doctor->name,
                 'patient' => $prescription->patient->name,
                 'hospital' => $prescription->hospital->name,

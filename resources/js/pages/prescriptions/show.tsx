@@ -8,6 +8,7 @@ import { Head, Link } from '@inertiajs/react';
 interface Props {
     prescription: {
         id: number;
+        code: string;
         doctor: SelectOption;
         patient: SelectOption;
         hospital: SelectOption;
@@ -47,6 +48,13 @@ const PrescriptionShow = ({ prescription }: Props) => {
             <div className="mx-auto mt-6 w-2xl space-y-6 p-4">
                 {/* BASIC INFO */}
                 <div className="space-y-3 rounded-xl border p-5">
+                    <div>
+                        <Label>Code</Label>
+                        <p className="text-muted-foreground">
+                            {prescription.code}
+                        </p>
+                    </div>
+
                     <div>
                         <Label>Doctor</Label>
                         <p>{prescription.doctor?.name ?? '-'}</p>

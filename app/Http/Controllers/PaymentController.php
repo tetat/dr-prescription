@@ -5,15 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Payment;
 use App\Http\Requests\StorePaymentRequest;
 use App\Http\Requests\UpdatePaymentRequest;
+use App\Models\Prescription;
+use App\Models\User;
 use App\Services\PaymentService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
-    public function __construct(private PaymentService $paymentService)
-    {
-        
-    }
+    public function __construct(private PaymentService $paymentService){}
     /**
      * Display a listing of the resource.
      */
@@ -32,7 +32,15 @@ class PaymentController extends Controller
      */
     public function create()
     {
-        //
+        $prescriptions = Prescription::query()
+            ->where('doctor_id', Auth::id())
+            ->select('id', 'code', 'consultation_fee')
+            ->latest()
+            ->get();
+
+        return inertia('payments/create', [
+            'prescriptions' => $prescriptions,
+        ]);
     }
 
     /**

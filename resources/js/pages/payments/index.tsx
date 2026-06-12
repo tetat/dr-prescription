@@ -1,6 +1,6 @@
-import { Head, router, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
-import { index } from '@/routes/payments';
+import { create, index } from '@/routes/payments';
 import type { BreadcrumbItem } from '@/types';
 import {
     Table,
@@ -83,14 +83,24 @@ const PaymentIndex = ({ payments, filters }: Props) => {
 
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
                 <div className="relative min-h-[100vh] flex-1 rounded-xl border border-sidebar-border/70 p-4 md:min-h-min dark:border-sidebar-border">
-                    {/* Search + Controls */}
-                    <div className="mb-4 flex w-full items-center justify-between gap-4">
-                        <TableSearch
-                            data={data}
-                            setData={setData}
-                            placeHolderMsg="Payments"
-                            route={index().url}
-                        />
+                    <div className="flex justify-between">
+                        <div className="mb-4 flex w-full items-center justify-between gap-4">
+                            <TableSearch
+                                data={data}
+                                setData={setData}
+                                placeHolderMsg="Prescriptions"
+                                route={index().url}
+                            />
+
+                            <div className="ml-auto">
+                                <Link
+                                    href={create().url}
+                                    className="mx-4 inline-block rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                                >
+                                    Create Payment
+                                </Link>
+                            </div>
+                        </div>
                     </div>
 
                     {/* Table */}

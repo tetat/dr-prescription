@@ -14,6 +14,7 @@ class Prescription extends Model
     use HasFactory;
 
     protected $fillable = [
+        'code',
         'patient_id',
         'doctor_id',
         'hospital_id',
@@ -78,5 +79,14 @@ class Prescription extends Model
     public function prescriptionMedicines(): HasMany
     {
         return $this->hasMany(PrescriptionMedicine::class);
+    }
+
+    protected static function booted()
+    {
+        static::created(function ($p) {
+            $p->forceFill([
+                'code' => 'P-' . str_pad($p->id, 6, '0', STR_PAD_LEFT),
+            ])->saveQuietly();
+        });
     }
 }

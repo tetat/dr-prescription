@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('prescriptions', function (Blueprint $table) {
             $table->id();
+            $table->string('code')->unique()->nullable();
             $table->foreignId('patient_id')->constrained('users');
             $table->foreignId('doctor_id')->constrained('users');
             $table->foreignId('hospital_id')->constrained();
