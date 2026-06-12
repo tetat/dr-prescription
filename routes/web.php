@@ -15,6 +15,7 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MedicineGroupController;
 use App\Http\Controllers\MedicineController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PrescriptionController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
@@ -47,6 +48,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('medicines', MedicineController::class);
     Route::resource('prescriptions', PrescriptionController::class)
         ->middleware('role:doctor');
+    Route::resource('payments', PaymentController::class);
     Route::resource('doctor-settings', DoctorSettingController::class);
 });
 

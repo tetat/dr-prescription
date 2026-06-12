@@ -5,7 +5,6 @@ namespace App\Services;
 use Illuminate\Http\Request;
 use App\Models\Prescription;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 

@@ -5,15 +5,26 @@ namespace App\Http\Controllers;
 use App\Models\Payment;
 use App\Http\Requests\StorePaymentRequest;
 use App\Http\Requests\UpdatePaymentRequest;
+use App\Services\PaymentService;
+use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
+    public function __construct(private PaymentService $paymentService)
+    {
+        
+    }
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $payments = $this->paymentService->getPaymentTableData($request);
+
+        return inertia('payments/index', [
+            'payments' => $payments,
+            'filters' => $request->only('search', 'perPage'),
+        ]);
     }
 
     /**

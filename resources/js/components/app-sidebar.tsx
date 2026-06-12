@@ -21,6 +21,7 @@ import medForms from '@/routes/med-forms';
 import medicineGroups from '@/routes/medicine-groups';
 import medicines from '@/routes/medicines';
 import patients from '@/routes/patients';
+import payments from '@/routes/payments';
 import permissions from '@/routes/permissions';
 import prescriptions from '@/routes/prescriptions';
 import roles from '@/routes/roles';
@@ -46,6 +47,7 @@ import {
     Droplets,
     FileText,
     Package,
+    DollarSign,
 } from 'lucide-react';
 
 const mainNavItems: NavItem[] = [
@@ -87,6 +89,11 @@ const mainNavItems: NavItem[] = [
                 title: 'Institutes',
                 href: institutes.index().url,
                 icon: Building,
+            },
+            {
+                title: 'Payments',
+                href: payments.index().url,
+                icon: DollarSign,
             },
         ],
     },
