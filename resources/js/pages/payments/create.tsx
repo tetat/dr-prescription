@@ -2,7 +2,7 @@ import PaymentController from '@/actions/App/Http/Controllers/PaymentController'
 import PaymentForm from '@/components/payments/payment-form';
 import AppLayout from '@/layouts/app-layout';
 import { create, index } from '@/routes/prescriptions';
-import { Head, useForm, usePage } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 
 interface Props {
     prescriptions: {

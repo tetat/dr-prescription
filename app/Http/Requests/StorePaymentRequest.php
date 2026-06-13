@@ -2,8 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\PaymentMethod;
+use App\Enums\PaymentStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StorePaymentRequest extends FormRequest
 {
@@ -12,7 +15,7 @@ class StorePaymentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +26,28 @@ class StorePaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'prescription_id' => [
+                'required', Rule::exists('prescriptions', 'id'),
+            ],
+
+            'amount' => [
+                'required',
+                'numeric',
+                'min:0',
+            ],
+
+            'method' => [
+                'required', Rule::in(PaymentMethod::options()),
+            ],
+
+            'status' => [
+                'required', Rule::in(PaymentStatus::options()),
+            ],
+
+            'paid_at' => [
+                'nullable',
+                'date',
+            ],
         ];
     }
 }
