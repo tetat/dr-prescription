@@ -35,12 +35,12 @@ interface Props {
 }
 
 const PaymentForm = ({
+    prescriptions,
     data,
     setData,
     errors,
     processing,
     onSubmit,
-    prescriptions,
     isEditMode,
 }: Props) => {
     const handlePrescriptionChange = (value: string) => {
@@ -116,9 +116,10 @@ const PaymentForm = ({
                     </SelectTrigger>
 
                     <SelectContent>
-                        <SelectItem value="cash">Cash</SelectItem>
-                        <SelectItem value="card">Card</SelectItem>
-                        <SelectItem value="bkash">Bkash</SelectItem>
+                        <SelectItem value="Cash">Cash</SelectItem>
+                        <SelectItem value="bKash">bKash</SelectItem>
+                        <SelectItem value="Nagad">Nagad</SelectItem>
+                        <SelectItem value="Bank">Bank</SelectItem>
                     </SelectContent>
                 </Select>
 
@@ -127,19 +128,23 @@ const PaymentForm = ({
 
             {/* Status */}
             <div>
-                <Label>Status</Label>
+                <Label>
+                    Status <span className="text-red-500">*</span>
+                </Label>
 
                 <Select
                     value={data.status}
                     onValueChange={(value) => setData('status', value)}
                 >
                     <SelectTrigger className="w-full">
-                        <SelectValue />
+                        <SelectValue placeholder="Select Status" />
                     </SelectTrigger>
 
                     <SelectContent>
-                        <SelectItem value="pending">Pending</SelectItem>
-                        <SelectItem value="paid">Paid</SelectItem>
+                        <SelectItem value="Pending">Pending</SelectItem>
+                        <SelectItem value="Paid">Paid</SelectItem>
+                        <SelectItem value="Partial">Partial</SelectItem>
+                        <SelectItem value="Refunded">Refunded</SelectItem>
                     </SelectContent>
                 </Select>
 

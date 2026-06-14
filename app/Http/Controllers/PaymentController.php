@@ -8,6 +8,7 @@ use App\Http\Requests\UpdatePaymentRequest;
 use App\Models\Prescription;
 use App\Models\User;
 use App\Services\PaymentService;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -48,7 +49,14 @@ class PaymentController extends Controller
      */
     public function store(StorePaymentRequest $request)
     {
-        //
+        try {
+            $this->paymentService->createPayment($request->validated());
+
+            return redirect()->route('payments.index')->with('success', 'Doctor created successfully.');
+        } catch (Exception $e) {
+            dd($e->getMessage());
+            return redirect()->route('payments.index')->with('error', $e->getMessage());
+        }
     }
 
     /**

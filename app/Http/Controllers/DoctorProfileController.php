@@ -52,7 +52,6 @@ class DoctorProfileController extends Controller
      */
     public function store(StoreDoctorProfileRequest $request)
     {
-        // dd($request->validated());
         try {
             $this->doctorProfileService->createDoctor($request->validated());
 

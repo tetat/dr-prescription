@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\Payment;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PaymentService
 {
@@ -78,5 +80,19 @@ class PaymentService
         );
 
         return $payments;
+    }
+
+    public function createPayment(array $data)
+    {
+        DB::transaction(function () use ($data) {
+            Payment::create([
+                'doctor_id' => Auth::id(),
+                'prescription_id' => $data['prescription_id'],
+                'amount' => $data['amount'],
+                'method' => $data['method'],
+                'status' => $data['status'],
+                'paid_at' => $data['paid_at'],
+            ]);
+        });
     }
 }

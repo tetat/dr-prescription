@@ -1,6 +1,6 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
-import { create, index } from '@/routes/payments';
+import { create, index, show, edit, destroy } from '@/routes/payments';
 import type { BreadcrumbItem } from '@/types';
 import {
     Table,
@@ -14,6 +14,7 @@ import {
 import TableSearch from '@/components/table-search';
 import { Paginate } from '@/components/paginate';
 import { useFlashToast } from '@/hooks/use-flash-toast';
+import TableActions from '@/components/table-actions';
 
 interface Payment {
     id: number;
@@ -117,6 +118,9 @@ const PaymentIndex = ({ payments, filters }: Props) => {
                                 <TableHead>Method</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead>Paid At</TableHead>
+                                <TableHead className="text-right">
+                                    Actions
+                                </TableHead>
                             </TableRow>
                         </TableHeader>
 
@@ -141,6 +145,15 @@ const PaymentIndex = ({ payments, filters }: Props) => {
                                         <TableCell>{payment.status}</TableCell>
 
                                         <TableCell>{payment.paid_at}</TableCell>
+                                        <TableCell className="flex items-center justify-end gap-2">
+                                            <TableActions
+                                                show={show(payment.id).url}
+                                                edit={edit(payment.id).url}
+                                                destroy={
+                                                    destroy(payment.id).url
+                                                }
+                                            />
+                                        </TableCell>
                                     </TableRow>
                                 ))
                             ) : (

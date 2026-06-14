@@ -12,12 +12,12 @@ interface Props {
     }[];
 }
 
-const PaymentCreate = (props: Props) => {
+const PaymentCreate = ({ prescriptions }: Props) => {
     const { data, setData, post, processing, errors } = useForm({
         prescription_id: '',
         amount: '',
         method: '',
-        status: 'pending',
+        status: 'Pending',
         paid_at: '',
     });
 
@@ -53,7 +53,7 @@ const PaymentCreate = (props: Props) => {
                 </h2>
 
                 <PaymentForm
-                    {...props}
+                    prescriptions={prescriptions}
                     data={data}
                     setData={setData}
                     errors={errors}
