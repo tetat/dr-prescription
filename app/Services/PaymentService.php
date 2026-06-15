@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Payment;
+use App\Models\Prescription;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,9 +15,9 @@ class PaymentService
     {
         return [
             'id' => $payment->id,
+            'prescription_code' => $payment->prescription?->code,
             'doctor' => $payment->doctor?->name,
             'patient' => $payment->prescription?->patient?->name,
-            'hospital' => $payment->prescription?->hospital?->name,
             'amount' => $payment->amount,
             'method' => $payment->method?->value,
             'status' => $payment->status?->value,
@@ -93,6 +94,43 @@ class PaymentService
                 'status' => $data['status'],
                 'paid_at' => $data['paid_at'],
             ]);
+        });
+    }
+
+    public function showPayment(Payment $payment)
+    {
+        $payment->load([
+            'doctor',
+            'prescription.patient',
+            'prescription.hospital',
+        ]);
+
+        return $this->transformPayment($payment);
+    }
+
+    public function updatePayment(Payment $payment, array $data)
+    {
+        DB::transaction(function () use ($payment, $data) {
+            $prescription = Prescription::findOrFail(
+                $data['prescription_id']
+            );
+    
+            $payment->update([
+                'prescription_id' => $prescription->id,
+                'amount' => $prescription->consultation_fee,
+                'method' => $data['method'],
+                'status' => $data['status'],
+                'paid_at' => $data['paid_at'] ?? null,
+            ]);
+    
+            $payment->fresh();
+        });
+    }
+
+    public function deletePayment(Payment $payment): void
+    {
+        DB::transaction(function () use ($payment) {
+            $payment->delete();
         });
     }
 }

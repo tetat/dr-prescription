@@ -18,9 +18,9 @@ import TableActions from '@/components/table-actions';
 
 interface Payment {
     id: number;
+    prescription_code: string;
     doctor: string | null;
     patient: string | null;
-    hospital: string | null;
     amount: number;
     method: string | null;
     status: string | null;
@@ -111,9 +111,9 @@ const PaymentIndex = ({ payments, filters }: Props) => {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>#</TableHead>
+                                <TableHead>Prescription Code</TableHead>
                                 <TableHead>Patient</TableHead>
                                 <TableHead>Doctor</TableHead>
-                                <TableHead>Hospital</TableHead>
                                 <TableHead>Amount</TableHead>
                                 <TableHead>Method</TableHead>
                                 <TableHead>Status</TableHead>
@@ -131,12 +131,11 @@ const PaymentIndex = ({ payments, filters }: Props) => {
                                         <TableCell className="font-medium">
                                             {payments.from + i}
                                         </TableCell>
-
+                                        <TableCell>
+                                            {payment.prescription_code}
+                                        </TableCell>
                                         <TableCell>{payment.patient}</TableCell>
                                         <TableCell>{payment.doctor}</TableCell>
-                                        <TableCell>
-                                            {payment.hospital}
-                                        </TableCell>
 
                                         <TableCell>{payment.amount}</TableCell>
 

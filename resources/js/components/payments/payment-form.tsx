@@ -43,16 +43,25 @@ const PaymentForm = ({
     onSubmit,
     isEditMode,
 }: Props) => {
+    // const handlePrescriptionChange = (value: string) => {
+    //     const prescription = prescriptions.find(
+    //         (p) => p.id.toString() === value,
+    //     );
+
+    //     setData((prev: any) => ({
+    //         ...prev,
+    //         prescription_id: value,
+    //         amount: prescription?.consultation_fee?.toString() ?? '',
+    //     }));
+    // };
+
     const handlePrescriptionChange = (value: string) => {
         const prescription = prescriptions.find(
             (p) => p.id.toString() === value,
         );
 
-        setData((prev: any) => ({
-            ...prev,
-            prescription_id: value,
-            amount: prescription?.consultation_fee?.toString() ?? '',
-        }));
+        setData('prescription_id', value);
+        setData('amount', prescription?.consultation_fee?.toString() ?? '');
     };
 
     return (
@@ -164,7 +173,12 @@ const PaymentForm = ({
                 <InputError message={errors.paid_at} />
             </div>
 
-            <Button type="submit" disabled={processing} className="w-full">
+            {/* Submit */}
+            <Button
+                type="submit"
+                disabled={processing}
+                className="cursor-pointer bg-indigo-600 text-white hover:bg-indigo-700"
+            >
                 {processing
                     ? 'Loading...'
                     : isEditMode
