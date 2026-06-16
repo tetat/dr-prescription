@@ -59,6 +59,7 @@ class PrescriptionService
                     'patient' => $prescription->patient->name,
                     'hospital' => $prescription->hospital->name,
                     'next_visit' => $prescription->next_visit ?? 'N/A',
+                    'consultation_fee' => $prescription->consultation_fee,
                 ]);
             $prescriptions = [
                 'data' => $allPrescriptions,
@@ -77,6 +78,7 @@ class PrescriptionService
                 'patient' => $prescription->patient->name,
                 'hospital' => $prescription->hospital->name,
                 'next_visit' => $prescription->next_visit ?? 'N/A',
+                'consultation_fee' => $prescription->consultation_fee,
             ]);
         }
 

@@ -30,12 +30,14 @@ interface Props {
     errors: Record<string, any>;
     processing: boolean;
     onSubmit: (e: React.FormEvent) => void;
-    prescriptions: PrescriptionOption[];
+    prescriptions?: PrescriptionOption[];
+    readonlyPrescription?: PrescriptionOption;
     isEditMode: boolean;
 }
 
 const PaymentForm = ({
     prescriptions,
+    readonlyPrescription,
     data,
     setData,
     errors,
@@ -43,20 +45,8 @@ const PaymentForm = ({
     onSubmit,
     isEditMode,
 }: Props) => {
-    // const handlePrescriptionChange = (value: string) => {
-    //     const prescription = prescriptions.find(
-    //         (p) => p.id.toString() === value,
-    //     );
-
-    //     setData((prev: any) => ({
-    //         ...prev,
-    //         prescription_id: value,
-    //         amount: prescription?.consultation_fee?.toString() ?? '',
-    //     }));
-    // };
-
     const handlePrescriptionChange = (value: string) => {
-        const prescription = prescriptions.find(
+        const prescription = prescriptions?.find(
             (p) => p.id.toString() === value,
         );
 
@@ -67,33 +57,43 @@ const PaymentForm = ({
     return (
         <form onSubmit={onSubmit} className="flex flex-col gap-5">
             {/* Prescription */}
-            <div>
-                <Label>
-                    Prescription <span className="text-red-500">*</span>
-                </Label>
+            {readonlyPrescription ? (
+                <div>
+                    <Label>Prescription</Label>
 
-                <Select
-                    value={data.prescription_id}
-                    onValueChange={handlePrescriptionChange}
-                >
-                    <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select Prescription" />
-                    </SelectTrigger>
+                    <Input value={readonlyPrescription.code} disabled />
 
-                    <SelectContent>
-                        {prescriptions.map((prescription) => (
-                            <SelectItem
-                                key={prescription.id}
-                                value={prescription.id.toString()}
-                            >
-                                {prescription.code}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
+                    <InputError message={errors.prescription_id} />
+                </div>
+            ) : (
+                <div>
+                    <Label>
+                        Prescription <span className="text-red-500">*</span>
+                    </Label>
 
-                <InputError message={errors.prescription_id} />
-            </div>
+                    <Select
+                        value={data.prescription_id}
+                        onValueChange={handlePrescriptionChange}
+                    >
+                        <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select Prescription" />
+                        </SelectTrigger>
+
+                        <SelectContent>
+                            {prescriptions?.map((prescription) => (
+                                <SelectItem
+                                    key={prescription.id}
+                                    value={prescription.id.toString()}
+                                >
+                                    {prescription.code}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+
+                    <InputError message={errors.prescription_id} />
+                </div>
+            )}
 
             {/* Amount */}
             <div>
@@ -117,14 +117,14 @@ const PaymentForm = ({
                 </Label>
 
                 <Select
-                    value={data.method}
+                    value={data.method || 'Cash'}
                     onValueChange={(value) => setData('method', value)}
                 >
                     <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select Method" />
                     </SelectTrigger>
 
-                    <SelectContent>
+                    <SelectContent className="z-[99999]" position="popper">
                         <SelectItem value="Cash">Cash</SelectItem>
                         <SelectItem value="bKash">bKash</SelectItem>
                         <SelectItem value="Nagad">Nagad</SelectItem>
@@ -132,7 +132,7 @@ const PaymentForm = ({
                     </SelectContent>
                 </Select>
 
-                <InputError message={errors.method} />
+                <InputError message={errors.method || 'Pending'} />
             </div>
 
             {/* Status */}
@@ -149,7 +149,7 @@ const PaymentForm = ({
                         <SelectValue placeholder="Select Status" />
                     </SelectTrigger>
 
-                    <SelectContent>
+                    <SelectContent className="z-[99999]" position="popper">
                         <SelectItem value="Pending">Pending</SelectItem>
                         <SelectItem value="Paid">Paid</SelectItem>
                         <SelectItem value="Partial">Partial</SelectItem>
@@ -166,7 +166,7 @@ const PaymentForm = ({
 
                 <Input
                     type="datetime-local"
-                    value={data.paid_at}
+                    value={data.paid_at || ''}
                     onChange={(e) => setData('paid_at', e.target.value)}
                 />
 

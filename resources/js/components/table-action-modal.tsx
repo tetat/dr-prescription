@@ -1,5 +1,5 @@
 import { Link, router } from '@inertiajs/react';
-import { Eye, MoreVertical, Pencil, Trash2 } from 'lucide-react';
+import { DollarSign, Eye, MoreVertical, Pencil, Trash2 } from 'lucide-react';
 import { Button } from './ui/button';
 import {
     Dialog,
@@ -13,9 +13,10 @@ interface PathProps {
     show: string;
     edit: string;
     destroy: string;
+    onPay: () => void;
 }
 
-const TableActionModal = ({ show, edit, destroy }: PathProps) => {
+const TableActionModal = ({ show, edit, destroy, onPay }: PathProps) => {
     const handleDelete = () => {
         router.delete(destroy, {
             onBefore: () => confirm('Are you sure you want to delete?'),
@@ -59,6 +60,10 @@ const TableActionModal = ({ show, edit, destroy }: PathProps) => {
                     >
                         <Trash2 size={18} />
                         Delete
+                    </Button>
+
+                    <Button className="justify-center gap-2" onClick={onPay}>
+                        <DollarSign size={18} /> Pay
                     </Button>
                 </div>
             </DialogContent>

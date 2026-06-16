@@ -14,8 +14,10 @@ import {
 import TableSearch from '@/components/table-search';
 import { Paginate } from '@/components/paginate';
 import { useFlashToast } from '@/hooks/use-flash-toast';
-import TableActions from '@/components/table-actions';
 import TableActionModal from '@/components/table-action-modal';
+import { useState } from 'react';
+import payments from '@/routes/payments';
+import PaymentModal from '@/components/payments/payment-modal';
 
 interface Prescription {
     id: number;
@@ -24,6 +26,7 @@ interface Prescription {
     patient: string;
     hospital: string;
     next_visit: string;
+    consultation_fee: number;
 }
 
 interface LinkProps {
@@ -55,6 +58,50 @@ const PrescriptionIndex = ({ prescriptions, filters }: Props) => {
         search: filters.search || '',
         perPage: filters.perPage || '10',
     });
+    const {
+        data: paymentData,
+        setData: setPaymentData,
+        post,
+        processing,
+        errors,
+        reset,
+    } = useForm({
+        prescription_id: '',
+        amount: '',
+        method: '',
+        status: 'Pending',
+        paid_at: '',
+    });
+
+    const [paymentOpen, setPaymentOpen] = useState(false);
+    const [selectedPrescription, setSelectedPrescription] =
+        useState<Prescription | null>(null);
+
+    const handlePay = (prescription: Prescription) => {
+        setSelectedPrescription(prescription);
+
+        setPaymentData((prev: any) => ({
+            ...prev,
+            prescription_id: prescription.id.toString(),
+            amount: prescription.consultation_fee?.toString() ?? '',
+            method: 'Cash',
+            status: 'Pending',
+            paid_at: '',
+        }));
+
+        setPaymentOpen(true);
+    };
+
+    const submitPayment = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        post(payments.store().url, {
+            onSuccess: () => {
+                reset();
+                setPaymentOpen(false);
+            },
+        });
+    };
 
     const handlePerPageChange = (value: string) => {
         setData('perPage', value);
@@ -150,6 +197,9 @@ const PrescriptionIndex = ({ prescriptions, filters }: Props) => {
                                             <TableActionModal
                                                 show={show(prescription.id).url}
                                                 edit={edit(prescription.id).url}
+                                                onPay={() =>
+                                                    handlePay(prescription)
+                                                }
                                                 destroy={
                                                     destroy(prescription.id).url
                                                 }
@@ -178,6 +228,17 @@ const PrescriptionIndex = ({ prescriptions, filters }: Props) => {
                     />
                 </div>
             </div>
+            <PaymentModal
+                key={selectedPrescription?.id || 'new'}
+                open={paymentOpen}
+                setOpen={setPaymentOpen}
+                prescription={selectedPrescription}
+                data={paymentData}
+                setData={setPaymentData}
+                errors={errors}
+                processing={processing}
+                onSubmit={submitPayment}
+            />
         </AppLayout>
     );
 };
