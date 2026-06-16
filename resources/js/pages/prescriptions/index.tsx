@@ -15,6 +15,7 @@ import TableSearch from '@/components/table-search';
 import { Paginate } from '@/components/paginate';
 import { useFlashToast } from '@/hooks/use-flash-toast';
 import TableActions from '@/components/table-actions';
+import TableActionModal from '@/components/table-action-modal';
 
 interface Prescription {
     id: number;
@@ -146,7 +147,7 @@ const PrescriptionIndex = ({ prescriptions, filters }: Props) => {
                                         </TableCell>
 
                                         <TableCell className="flex items-center justify-end gap-2">
-                                            <TableActions
+                                            <TableActionModal
                                                 show={show(prescription.id).url}
                                                 edit={edit(prescription.id).url}
                                                 destroy={
