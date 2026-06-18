@@ -111,17 +111,11 @@ class PaymentService
     public function updatePayment(Payment $payment, array $data)
     {
         DB::transaction(function () use ($payment, $data) {
-            $prescription = Prescription::findOrFail(
-                $data['prescription_id']
-            );
-    
-            $payment->update([
-                'prescription_id' => $prescription->id,
-                'amount' => $prescription->consultation_fee,
-                'method' => $data['method'],
-                'status' => $data['status'],
-                'paid_at' => $data['paid_at'] ?? null,
-            ]);
+            $payment->prescription_id = $data['prescription_id'];
+            $payment->amount = $data['amount'];
+            $payment->method = $data['method'];
+            $payment->status = $data['status'];
+            $payment->paid_at = $data['paid_at'] ?? null;
     
             $payment->fresh();
         });

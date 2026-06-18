@@ -1,73 +1,93 @@
 import { Link, router } from '@inertiajs/react';
 import { DollarSign, Eye, MoreVertical, Pencil, Trash2 } from 'lucide-react';
 import { Button } from './ui/button';
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from './ui/dialog';
+import { useEffect, useRef, useState } from 'react';
 
 interface PathProps {
     show: string;
     edit: string;
     destroy: string;
-    onPay: () => void;
+    onPay?: () => void;
 }
 
 const TableActionModal = ({ show, edit, destroy, onPay }: PathProps) => {
+    const [open, setOpen] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
+
     const handleDelete = () => {
         router.delete(destroy, {
             onBefore: () => confirm('Are you sure you want to delete?'),
         });
     };
 
+    // close on outside click
+    useEffect(() => {
+        const handler = (e: MouseEvent) => {
+            if (ref.current && !ref.current.contains(e.target as Node)) {
+                setOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handler);
+        return () => document.removeEventListener('mousedown', handler);
+    }, []);
+
     return (
-        <Dialog>
-            <DialogTrigger asChild>
-                <Button size="icon" variant="outline">
-                    <MoreVertical size={18} />
-                </Button>
-            </DialogTrigger>
+        <div ref={ref} className="relative inline-block">
+            <Button
+                size="icon"
+                variant="outline"
+                onClick={() => setOpen(!open)}
+            >
+                <MoreVertical size={18} />
+            </Button>
 
-            <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                    <DialogTitle>Actions</DialogTitle>
-                </DialogHeader>
-
-                <div className="flex flex-col gap-3">
+            {open && (
+                <div className="fixed right-10 z-[9999] mt-2 flex w-40 flex-col gap-2 rounded border bg-white p-2 shadow">
                     <Link
                         href={show}
-                        className="flex items-center gap-2 rounded bg-slate-400 p-2 text-white hover:bg-slate-600"
+                        onClick={() => setOpen(false)}
+                        className="flex items-center gap-2 rounded bg-slate-400 px-2 py-1 text-sm text-white hover:bg-slate-600"
                     >
-                        <Eye size={18} />
-                        View
+                        <Eye size={16} />
+                        <span>View</span>
                     </Link>
 
                     <Link
                         href={edit}
-                        className="flex items-center gap-2 rounded bg-green-500 p-2 text-white hover:bg-green-700"
+                        onClick={() => setOpen(false)}
+                        className="flex items-center gap-2 rounded bg-green-500 px-2 py-1 text-sm text-white hover:bg-green-700"
                     >
-                        <Pencil size={18} />
-                        Edit
+                        <Pencil size={16} />
+                        <span>Edit</span>
                     </Link>
 
-                    <Button
-                        variant="destructive"
-                        className="justify-start gap-2"
-                        onClick={handleDelete}
+                    <button
+                        onClick={() => {
+                            handleDelete();
+                            setOpen(false);
+                        }}
+                        className="flex w-full items-center gap-2 rounded bg-red-400 px-2 py-1 text-sm text-white hover:bg-red-600"
                     >
-                        <Trash2 size={18} />
-                        Delete
-                    </Button>
+                        <Trash2 size={16} />
+                        <span>Delete</span>
+                    </button>
 
-                    <Button className="justify-center gap-2" onClick={onPay}>
-                        <DollarSign size={18} /> Pay
-                    </Button>
+                    {onPay && (
+                        <button
+                            onClick={() => {
+                                onPay?.();
+                                setOpen(false);
+                            }}
+                            className="hover:bg-blu flex w-full items-center gap-2 rounded bg-blue-500 px-2 py-1 text-sm text-white hover:bg-blue-600"
+                        >
+                            <DollarSign size={16} />
+                            <span>Pay</span>
+                        </button>
+                    )}
                 </div>
-            </DialogContent>
-        </Dialog>
+            )}
+        </div>
     );
 };
 

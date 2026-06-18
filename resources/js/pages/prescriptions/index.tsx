@@ -18,6 +18,7 @@ import TableActionModal from '@/components/table-action-modal';
 import { useState } from 'react';
 import payments from '@/routes/payments';
 import PaymentModal from '@/components/payments/payment-modal';
+import { toast } from 'sonner';
 
 interface Prescription {
     id: number;
@@ -71,6 +72,7 @@ const PrescriptionIndex = ({ prescriptions, filters }: Props) => {
         method: '',
         status: 'Pending',
         paid_at: '',
+        from: '',
     });
 
     const [paymentOpen, setPaymentOpen] = useState(false);
@@ -78,16 +80,23 @@ const PrescriptionIndex = ({ prescriptions, filters }: Props) => {
         useState<Prescription | null>(null);
 
     const handlePay = (prescription: Prescription) => {
+        const remaining = Number(prescription.consultation_fee);
+
+        if (remaining <= 0) {
+            toast.success('Payment already completed.');
+            return;
+        }
+
         setSelectedPrescription(prescription);
 
-        setPaymentData((prev: any) => ({
-            ...prev,
+        setPaymentData({
             prescription_id: prescription.id.toString(),
-            amount: prescription.consultation_fee?.toString() ?? '',
+            amount: prescription.consultation_fee.toString(),
             method: 'Cash',
             status: 'Pending',
             paid_at: '',
-        }));
+            from: 'prescription',
+        });
 
         setPaymentOpen(true);
     };
@@ -159,6 +168,7 @@ const PrescriptionIndex = ({ prescriptions, filters }: Props) => {
                                 <TableHead>Doctor</TableHead>
                                 <TableHead>Hospital</TableHead>
                                 <TableHead>Next Visit</TableHead>
+                                <TableHead>Payment</TableHead>
                                 <TableHead className="text-right">
                                     Actions
                                 </TableHead>
@@ -191,6 +201,20 @@ const PrescriptionIndex = ({ prescriptions, filters }: Props) => {
 
                                         <TableCell>
                                             {prescription.next_visit}
+                                        </TableCell>
+
+                                        <TableCell>
+                                            {Number(
+                                                prescription.consultation_fee,
+                                            ) <= 0 ? (
+                                                <span className="rounded bg-green-100 px-2 py-1 text-green-700">
+                                                    Paid
+                                                </span>
+                                            ) : (
+                                                <span className="rounded bg-red-100 px-2 py-1 text-red-700">
+                                                    Due
+                                                </span>
+                                            )}
                                         </TableCell>
 
                                         <TableCell className="flex items-center justify-end gap-2">

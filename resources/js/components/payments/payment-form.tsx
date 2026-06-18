@@ -132,7 +132,7 @@ const PaymentForm = ({
                     </SelectContent>
                 </Select>
 
-                <InputError message={errors.method || 'Pending'} />
+                <InputError message={errors.method} />
             </div>
 
             {/* Status */}

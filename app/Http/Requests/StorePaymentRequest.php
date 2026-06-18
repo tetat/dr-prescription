@@ -48,6 +48,7 @@ class StorePaymentRequest extends FormRequest
                 'nullable',
                 'date',
             ],
+            'from' => ['nullable', 'string']
         ];
     }
 }

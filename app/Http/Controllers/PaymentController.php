@@ -34,7 +34,7 @@ class PaymentController extends Controller
     {
         $prescriptions = Prescription::query()
             ->where('doctor_id', Auth::id())
-            ->select('id', 'code', 'consultation_fee')
+            ->select(['id', 'code', 'consultation_fee'])
             ->latest()
             ->get();
 
@@ -48,13 +48,18 @@ class PaymentController extends Controller
      */
     public function store(StorePaymentRequest $request)
     {
+        $return_route = $request->input('from') === 'prescription'
+            ? 'prescriptions.index'
+            : 'payments.index';
+
         try {
             $this->paymentService->createPayment($request->validated());
 
-            return redirect()->route('payments.index')->with('success', 'Payment created successfully.');
+            return redirect()->route($return_route)
+                ->with('success', 'Payment created successfully.');
         } catch (Exception $e) {
-            dd($e->getMessage());
-            return redirect()->route('payments.index')->with('error', $e->getMessage());
+            return redirect()->route($return_route)
+                ->with('error', $e->getMessage());
         }
     }
 

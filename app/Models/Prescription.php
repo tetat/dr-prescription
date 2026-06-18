@@ -76,6 +76,13 @@ class Prescription extends Model
         return $this->hasMany(Payment::class);
     }
 
+    public function getRemainingFeeAttribute()
+    {
+        $paid = $this->payments()->sum('amount');
+
+        return max(0, $this->consultation_fee - $paid);
+    }
+
     public function prescriptionMedicines(): HasMany
     {
         return $this->hasMany(PrescriptionMedicine::class);
