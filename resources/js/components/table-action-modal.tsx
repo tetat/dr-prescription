@@ -1,5 +1,12 @@
 import { Link, router } from '@inertiajs/react';
-import { DollarSign, Eye, MoreVertical, Pencil, Trash2 } from 'lucide-react';
+import {
+    DollarSign,
+    Eye,
+    MoreVertical,
+    Pencil,
+    Printer,
+    Trash2,
+} from 'lucide-react';
 import { Button } from './ui/button';
 import { useEffect, useRef, useState } from 'react';
 
@@ -8,9 +15,16 @@ interface PathProps {
     edit: string;
     destroy: string;
     onPay?: () => void;
+    prescription_id?: number;
 }
 
-const TableActionModal = ({ show, edit, destroy, onPay }: PathProps) => {
+const TableActionModal = ({
+    show,
+    edit,
+    destroy,
+    onPay,
+    prescription_id,
+}: PathProps) => {
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
 
@@ -84,6 +98,16 @@ const TableActionModal = ({ show, edit, destroy, onPay }: PathProps) => {
                             <DollarSign size={16} />
                             <span>Pay</span>
                         </button>
+                    )}
+                    {prescription_id && (
+                        <Link
+                            href={`/print/prescription/${prescription_id}`}
+                            onClick={() => setOpen(false)}
+                            className="flex items-center gap-2 rounded bg-green-500 px-2 py-1 text-sm text-white hover:bg-green-700"
+                        >
+                            <Printer size={16} />
+                            <span>Print</span>
+                        </Link>
                     )}
                 </div>
             )}

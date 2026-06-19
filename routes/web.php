@@ -17,6 +17,7 @@ use App\Http\Controllers\MedicineGroupController;
 use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PrescriptionController;
+use App\Http\Controllers\PrintController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
@@ -48,6 +49,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('medicines', MedicineController::class);
     Route::resource('prescriptions', PrescriptionController::class)
         ->middleware('role:doctor');
+    Route::get('print/prescription/{prescription_id}', [PrintController::class, 'prescription'])
+        ->middleware('role:doctor')
+        ->name('print.prescription');
     Route::resource('payments', PaymentController::class);
     Route::resource('doctor-settings', DoctorSettingController::class);
 });

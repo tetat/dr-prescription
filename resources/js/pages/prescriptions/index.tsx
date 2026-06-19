@@ -227,6 +227,9 @@ const PrescriptionIndex = ({ prescriptions, filters }: Props) => {
                                                 destroy={
                                                     destroy(prescription.id).url
                                                 }
+                                                prescription_id={
+                                                    prescription.id
+                                                }
                                             />
                                         </TableCell>
                                     </TableRow>
