@@ -78,7 +78,9 @@ class Prescription extends Model
 
     public function getRemainingFeeAttribute()
     {
-        $paid = $this->payments()->sum('amount');
+        $paid = $this->relationLoaded('payments')
+            ? $this->payments->sum('amount')
+            : $this->payments()->sum('amount');
 
         return max(0, $this->consultation_fee - $paid);
     }

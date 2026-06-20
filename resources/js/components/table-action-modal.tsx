@@ -81,7 +81,7 @@ const TableActionModal = ({
                             handleDelete();
                             setOpen(false);
                         }}
-                        className="flex w-full items-center gap-2 rounded bg-red-400 px-2 py-1 text-sm text-white hover:bg-red-600"
+                        className="flex w-full items-center gap-2 rounded bg-red-500 px-2 py-1 text-sm text-white hover:bg-red-600"
                     >
                         <Trash2 size={16} />
                         <span>Delete</span>
@@ -103,7 +103,7 @@ const TableActionModal = ({
                         <Link
                             href={`/print/prescription/${prescription_id}`}
                             onClick={() => setOpen(false)}
-                            className="flex items-center gap-2 rounded bg-green-500 px-2 py-1 text-sm text-white hover:bg-green-700"
+                            className="flex items-center gap-2 rounded bg-indigo-600 px-2 py-1 text-sm text-white hover:bg-indigo-700"
                         >
                             <Printer size={16} />
                             <span>Print</span>
