@@ -11,9 +11,13 @@ class PrintController extends Controller
     {
         $prescription = Prescription::with([
             'doctor.doctorProfile',
+            'doctor.degrees',
+            'doctor.specialities',
             'patient',
             'hospital',
             'medicines',
+            'tests',
+            'examinations',
             'payments',
         ])->findOrFail($prescription_id);
 

@@ -3,13 +3,30 @@ import { Head } from '@inertiajs/react';
 import { Printer } from 'lucide-react';
 import { useEffect } from 'react';
 
+interface Examination {
+    id: number;
+    name: string;
+    pivot: {
+        result?: string;
+        interpretation?: string;
+    };
+}
+
+interface Test {
+    id: number;
+    name: string;
+    pivot: {
+        result?: string;
+    };
+}
+
 interface Medicine {
     id: number;
     name: string;
     pivot: {
-        duration: string;
+        duration: number;
         duration_type: string;
-        doses: string;
+        doses: string[];
         instructions: string;
     };
 }
@@ -24,8 +41,11 @@ interface Payment {
 interface Doctor {
     id: number;
     name: string;
+    locale_name: string;
+
     doctor_profile?: {
         title: string;
+        locale_title: string;
         licence_no: string;
         bio: string;
     };
@@ -34,6 +54,9 @@ interface Doctor {
 interface Patient {
     id: number;
     name: string;
+    age: number;
+    age_type: string;
+    gender: string;
 }
 
 interface Hospital {
@@ -54,6 +77,8 @@ interface Prescription {
     hospital: Hospital;
 
     medicines: Medicine[];
+    examinations: Examination[];
+    tests: Test[];
     payments: Payment[];
 }
 
@@ -63,104 +88,162 @@ interface Props {
 
 export default function PrescriptionPrint({ prescription }: Props) {
     useEffect(() => {
-        // auto print when page opens
-        window.print();
+        setTimeout(() => window.print(), 500);
     }, []);
 
     return (
-        <AppLayout>
+        <>
             <Head title={`Prescription ${prescription.code}`} />
 
-            <div className="mx-auto max-w-4xl bg-white p-6 text-black print:p-0">
+            <div className="min-h-screen bg-white text-black">
                 {/* Header */}
-                <div className="mb-6 border-b pb-4 text-center">
-                    <h1 className="text-2xl font-bold">Prescription Receipt</h1>
-                    <p className="text-sm text-gray-600">
-                        Code: {prescription.code}
-                    </p>
+                <div className="border-b pb-4 text-center">
+                    <h1 className="text-3xl font-bold">
+                        {prescription.hospital.name}
+                    </h1>
+
+                    <div className="mt-4 grid grid-cols-3">
+                        {/* Doctor Bengali */}
+                        <div className="text-left">
+                            <h2 className="text-xl font-bold">
+                                {prescription.doctor.locale_name}
+                            </h2>
+
+                            <p>
+                                {
+                                    prescription.doctor.doctor_profile
+                                        ?.locale_title
+                                }
+                            </p>
+                        </div>
+
+                        {/* Hospital */}
+                        <div className="text-center">
+                            <h2 className="font-bold text-green-600">
+                                OMEGA HOSPITAL
+                            </h2>
+                        </div>
+
+                        {/* Doctor English */}
+                        <div className="text-right">
+                            <h2 className="text-xl font-bold">
+                                {prescription.doctor.name}
+                            </h2>
+
+                            <p>{prescription.doctor.doctor_profile?.title}</p>
+
+                            <p>
+                                Licence:
+                                {prescription.doctor.doctor_profile?.licence_no}
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
-                {/* Info */}
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                        <h2 className="font-semibold">Doctor</h2>
-                        <p>{prescription.doctor.name}</p>
-                        <p>{prescription.doctor.doctor_profile?.title}</p>
-                        <p>
-                            License:{' '}
-                            {prescription.doctor.doctor_profile?.licence_no}
-                        </p>
+                {/* Patient Info */}
+                <div className="mt-4 flex border-y py-2 text-sm">
+                    <div className="flex-1">
+                        <strong>Name:</strong> {prescription.patient.name}
                     </div>
 
-                    <div>
-                        <h2 className="font-semibold">Patient</h2>
-                        <p>{prescription.patient.name}</p>
+                    <div className="w-32">
+                        <strong>Age:</strong> {prescription.patient.age}{' '}
+                        {prescription.patient.age_type}
+                    </div>
 
-                        <h2 className="mt-2 font-semibold">Hospital</h2>
-                        <p>{prescription.hospital.name}</p>
+                    <div className="w-24">
+                        <strong>Sex:</strong> {prescription.patient.gender}
+                    </div>
+
+                    <div className="w-40 text-right">
+                        <strong>Date:</strong> {new Date().toLocaleDateString()}
                     </div>
                 </div>
 
-                {/* Complaint */}
-                <div className="mt-4">
-                    <h2 className="font-semibold">Chief Complaint</h2>
-                    <p>{prescription.chief_complaint}</p>
-                </div>
+                {/* Body */}
+                <div className="flex min-h-[700px]">
+                    {/* Left Side */}
+                    <div className="w-1/3 border-r p-4">
+                        <div>
+                            <h3 className="font-bold">Chief Complaints</h3>
 
-                {/* Medicines */}
-                <div className="mt-6">
-                    <h2 className="font-semibold">Medicines</h2>
+                            <p className="mt-2">
+                                {prescription.chief_complaint}
+                            </p>
+                        </div>
 
-                    <table className="mt-2 w-full border text-sm">
-                        <thead>
-                            <tr className="bg-gray-100">
-                                <th className="border p-2">Name</th>
-                                <th className="border p-2">Duration</th>
-                                <th className="border p-2">Doses</th>
-                                <th className="border p-2">Instructions</th>
-                            </tr>
-                        </thead>
+                        <div className="mt-8">
+                            <h3 className="font-bold">Examinations</h3>
 
-                        <tbody>
-                            {prescription.medicines.map((m) => (
-                                <tr key={m.id}>
-                                    <td className="border p-2">{m.name}</td>
-                                    <td className="border p-2">
-                                        {m.pivot.duration}{' '}
-                                        {m.pivot.duration_type}
-                                    </td>
-                                    <td className="border p-2">
-                                        {m.pivot.doses}
-                                    </td>
-                                    <td className="border p-2">
-                                        {m.pivot.instructions}
-                                    </td>
-                                </tr>
+                            {prescription.examinations.map((exam) => (
+                                <div key={exam.id}>{exam.name}</div>
                             ))}
-                        </tbody>
-                    </table>
-                </div>
+                        </div>
 
-                {/* Payment */}
-                <div className="mt-6 text-sm">
-                    <h2 className="font-semibold">Payment Summary</h2>
+                        <div className="mt-8">
+                            <h3 className="font-bold">Investigations</h3>
 
-                    <p>Total Fee: {prescription.consultation_fee}</p>
+                            {prescription.tests.map((test) => (
+                                <div key={test.id}>{test.name}</div>
+                            ))}
+                        </div>
+                    </div>
 
-                    <p>Remaining: {prescription.remaining_fee}</p>
+                    {/* Right Side */}
+                    <div className="w-2/3 p-4">
+                        <div className="font-serif text-3xl">Rx</div>
+
+                        <div className="mt-4 space-y-2">
+                            {prescription.medicines.map((medicine, index) => (
+                                <div
+                                    key={medicine.id}
+                                    className="flex items-start pb-2 text-sm"
+                                >
+                                    <div className="mr-2 font-semibold">
+                                        {index + 1}.
+                                    </div>
+
+                                    <div className="flex-1">
+                                        <span className="font-bold">
+                                            {medicine.name}
+                                        </span>
+
+                                        <span className="ml-3">
+                                            {Array.isArray(medicine.pivot.doses)
+                                                ? medicine.pivot.doses.join(
+                                                      ' - ',
+                                                  )
+                                                : medicine.pivot.doses}
+                                        </span>
+
+                                        <span className="ml-3">
+                                            {medicine.pivot.duration}{' '}
+                                            {medicine.pivot.duration_type}
+                                        </span>
+
+                                        {medicine.pivot.instructions && (
+                                            <span className="ml-3 text-gray-600">
+                                                ({medicine.pivot.instructions})
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {prescription.next_visit && (
+                            <div className="mt-12 text-right">
+                                {prescription.next_visit} দিন পর দেখা করবেন।
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 {/* Footer */}
-                <div className="mt-10 text-center text-xs text-gray-500 print:hidden">
-                    <button
-                        onClick={() => window.print()}
-                        className="inline-flex items-center gap-2 rounded bg-black px-4 py-2 text-white"
-                    >
-                        <Printer size={16} />
-                        Print
-                    </button>
+                <div className="border-t py-4 text-center text-sm">
+                    {prescription.hospital.name}
                 </div>
             </div>
-        </AppLayout>
+        </>
     );
 }
