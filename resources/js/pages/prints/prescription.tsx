@@ -1,7 +1,6 @@
-import AppLayout from '@/layouts/app-layout';
 import { Head } from '@inertiajs/react';
-import { Printer } from 'lucide-react';
-import { useEffect } from 'react';
+import { HospitalIcon } from 'lucide-react';
+// import { useEffect } from 'react';
 
 interface Examination {
     id: number;
@@ -26,7 +25,7 @@ interface Medicine {
     pivot: {
         duration: number;
         duration_type: string;
-        doses: string[];
+        doses: number[];
         instructions: string;
     };
 }
@@ -62,6 +61,7 @@ interface Patient {
 interface Hospital {
     id: number;
     name: string;
+    logo: string;
 }
 
 interface Prescription {
@@ -87,9 +87,24 @@ interface Props {
 }
 
 export default function PrescriptionPrint({ prescription }: Props) {
-    useEffect(() => {
-        setTimeout(() => window.print(), 500);
-    }, []);
+    // useEffect(() => {
+    //     setTimeout(() => window.print(), 500);
+    // }, []);
+
+    const formatDoses = (doses: any) => {
+        if (Array.isArray(doses)) {
+            return doses.join(' + ');
+        }
+
+        if (typeof doses === 'string') {
+            return doses
+                .replace(/[\[\]]/g, '')
+                .split(',')
+                .join(' + ');
+        }
+
+        return '';
+    };
 
     return (
         <>
@@ -118,10 +133,16 @@ export default function PrescriptionPrint({ prescription }: Props) {
                         </div>
 
                         {/* Hospital */}
-                        <div className="text-center">
-                            <h2 className="font-bold text-green-600">
-                                OMEGA HOSPITAL
-                            </h2>
+                        <div className="flex flex-col items-center text-center">
+                            {prescription.hospital.logo ? (
+                                <img
+                                    src={prescription.hospital.logo}
+                                    alt={prescription.hospital.name}
+                                    className="h-12 w-auto object-contain"
+                                />
+                            ) : (
+                                <HospitalIcon className="h-12 w-auto object-contain" />
+                            )}
                         </div>
 
                         {/* Doctor English */}
@@ -209,11 +230,7 @@ export default function PrescriptionPrint({ prescription }: Props) {
                                         </span>
 
                                         <span className="ml-3">
-                                            {Array.isArray(medicine.pivot.doses)
-                                                ? medicine.pivot.doses.join(
-                                                      ' - ',
-                                                  )
-                                                : medicine.pivot.doses}
+                                            {formatDoses(medicine.pivot.doses)}
                                         </span>
 
                                         <span className="ml-3">
