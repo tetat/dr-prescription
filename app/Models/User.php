@@ -48,9 +48,20 @@ class User extends Authenticatable
 
     public function degrees(): BelongsToMany
     {
-        return $this->belongsToMany(Degree::class, 'degree_doctor', 'doctor_id', 'degree_id')
+        return $this->belongsToMany(
+            Degree::class,
+            'degree_doctor',
+            'doctor_id',
+            'degree_id'
+        )
+            ->using(DegreeDoctor::class)
             ->withPivot('institute_id', 'passing_year')
             ->withTimestamps();
+    }
+
+    public function degreeDoctors(): HasMany
+    {
+        return $this->hasMany(DegreeDoctor::class, 'doctor_id');
     }
 
     public function specialities(): BelongsToMany

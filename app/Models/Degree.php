@@ -25,4 +25,14 @@ class Degree extends Model
             ->withPivot('institute_id', 'passing_year')
             ->withTimestamps();
     }
+
+    public function institutes(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Institute::class,
+            'degree_doctor',
+            'degree_id',
+            'institute_id'
+        )->withPivot('doctor_id', 'passing_year');
+    }
 }

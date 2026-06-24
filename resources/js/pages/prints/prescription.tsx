@@ -37,6 +37,33 @@ interface Payment {
     status: string;
 }
 
+interface Institute {
+    id: number;
+    name: string;
+    locale_name: string;
+    abbreviation: string;
+    locale_abbreviation: string;
+}
+
+interface Degree {
+    id: number;
+    abbreviation: string;
+    locale_abbreviation: string;
+}
+
+interface DegreeDoctor {
+    id: number;
+    passing_year: string;
+
+    degree: Degree;
+    institute: Institute;
+}
+
+interface Speciality {
+    id: number;
+    name: string;
+}
+
 interface Doctor {
     id: number;
     name: string;
@@ -45,9 +72,11 @@ interface Doctor {
     doctor_profile?: {
         title: string;
         locale_title: string;
-        licence_no: string;
         bio: string;
     };
+
+    degree_doctors: DegreeDoctor[];
+    specialities: Speciality[];
 }
 
 interface Patient {
@@ -97,14 +126,12 @@ export default function PrescriptionPrint({ prescription }: Props) {
         }
 
         if (typeof doses === 'string') {
-            return doses
-                .replace(/[\[\]]/g, '')
-                .split(',')
-                .join(' + ');
+            return doses.replace(/\[|\]/g, '').split(',').join(' + ');
         }
 
         return '';
     };
+    // console.log(prescription);
 
     return (
         <>
@@ -112,7 +139,7 @@ export default function PrescriptionPrint({ prescription }: Props) {
 
             <div className="min-h-screen bg-white text-black">
                 {/* Header */}
-                <div className="border-b pb-4 text-center">
+                <div className="pb-1 text-center">
                     <h1 className="text-3xl font-bold">
                         {prescription.hospital.name}
                     </h1>
@@ -121,15 +148,29 @@ export default function PrescriptionPrint({ prescription }: Props) {
                         {/* Doctor Bengali */}
                         <div className="text-left">
                             <h2 className="text-xl font-bold">
-                                {prescription.doctor.locale_name}
-                            </h2>
-
-                            <p>
                                 {
                                     prescription.doctor.doctor_profile
                                         ?.locale_title
-                                }
+                                }{' '}
+                                {prescription.doctor.locale_name}
+                            </h2>
+
+                            <p className="text-sm">
+                                {prescription.doctor.degree_doctors
+                                    .map(
+                                        (item) =>
+                                            `${item.degree.locale_abbreviation} (${item.institute.locale_abbreviation})`,
+                                    )
+                                    .join(', ')}
                             </p>
+
+                            {prescription.doctor.specialities.length > 0 && (
+                                <p className="text-sm text-gray-600">
+                                    {prescription.doctor.specialities
+                                        .map((speciality) => speciality.name)
+                                        .join(', ')}
+                                </p>
+                            )}
                         </div>
 
                         {/* Hospital */}
@@ -148,15 +189,26 @@ export default function PrescriptionPrint({ prescription }: Props) {
                         {/* Doctor English */}
                         <div className="text-right">
                             <h2 className="text-xl font-bold">
+                                {prescription.doctor.doctor_profile?.title}{' '}
                                 {prescription.doctor.name}
                             </h2>
 
-                            <p>{prescription.doctor.doctor_profile?.title}</p>
-
-                            <p>
-                                Licence:
-                                {prescription.doctor.doctor_profile?.licence_no}
+                            <p className="text-sm">
+                                {prescription.doctor.degree_doctors
+                                    .map(
+                                        (item) =>
+                                            `${item.degree.abbreviation} (${item.institute.abbreviation})`,
+                                    )
+                                    .join(', ')}
                             </p>
+
+                            {prescription.doctor.specialities.length > 0 && (
+                                <p className="text-sm text-gray-600">
+                                    {prescription.doctor.specialities
+                                        .map((speciality) => speciality.name)
+                                        .join(', ')}
+                                </p>
+                            )}
                         </div>
                     </div>
                 </div>

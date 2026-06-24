@@ -11,7 +11,8 @@ class PrintController extends Controller
     {
         $prescription = Prescription::with([
             'doctor.doctorProfile',
-            'doctor.degrees',
+            'doctor.degreeDoctors.degree',
+            'doctor.degreeDoctors.institute',
             'doctor.specialities',
             'patient',
             'hospital',

@@ -15,7 +15,7 @@ class DegreeDoctor extends Pivot
     protected $fillable = [
         'doctor_id',
         'degree_id',
-        'institution_id',
+        'institute_id',
         'passing_year',
     ];
 
