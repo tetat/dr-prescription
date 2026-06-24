@@ -9,3 +9,9 @@ export type Hospital = {
     address: string;
     locale_address: string;
 };
+
+export type PrintHospitalProps = {
+    id: number;
+    name: string;
+    logo: string;
+};

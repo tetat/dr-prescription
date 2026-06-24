@@ -4,3 +4,12 @@ export type ExaminationProps = {
     abbreviation: string;
     unit: string;
 };
+
+export type PrintExaminationProps = {
+    id: number;
+    name: string;
+    pivot: {
+        result?: string;
+        interpretation?: string;
+    };
+};

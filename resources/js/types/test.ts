@@ -3,3 +3,11 @@ export type TestProps = {
     name: string;
     description: string;
 };
+
+export type PrintTestProps = {
+    id: number;
+    name: string;
+    pivot: {
+        result?: string;
+    };
+};

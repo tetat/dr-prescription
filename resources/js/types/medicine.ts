@@ -22,3 +22,14 @@ export type MedForm = {
 export type MedicineWithPMPivot = Medicine & {
     pivot: PMPivot;
 };
+
+export type PrintMedicineProps = {
+    id: number;
+    name: string;
+    pivot: {
+        duration: number;
+        duration_type: string;
+        doses: number[];
+        instructions: string;
+    };
+};

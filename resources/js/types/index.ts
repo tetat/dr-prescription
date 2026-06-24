@@ -7,3 +7,5 @@ export type * from './prescription';
 export type * from './doctor';
 export type * from './patient';
 export type * from './hospital';
+export type * from './examination';
+export type * from './test';

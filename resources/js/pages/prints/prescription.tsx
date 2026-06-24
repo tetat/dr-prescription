@@ -1,34 +1,13 @@
+import {
+    PrintExaminationProps,
+    PrintHospitalProps,
+    PrintMedicineProps,
+    PrintPatientProps,
+    PrintTestProps,
+} from '@/types';
 import { Head } from '@inertiajs/react';
 import { HospitalIcon } from 'lucide-react';
 // import { useEffect } from 'react';
-
-interface Examination {
-    id: number;
-    name: string;
-    pivot: {
-        result?: string;
-        interpretation?: string;
-    };
-}
-
-interface Test {
-    id: number;
-    name: string;
-    pivot: {
-        result?: string;
-    };
-}
-
-interface Medicine {
-    id: number;
-    name: string;
-    pivot: {
-        duration: number;
-        duration_type: string;
-        doses: number[];
-        instructions: string;
-    };
-}
 
 interface Payment {
     id: number;
@@ -62,6 +41,9 @@ interface DegreeDoctor {
 interface Speciality {
     id: number;
     name: string;
+    locale_name: string;
+    abbreviation: string;
+    locale_abbreviation: string;
 }
 
 interface Doctor {
@@ -79,20 +61,6 @@ interface Doctor {
     specialities: Speciality[];
 }
 
-interface Patient {
-    id: number;
-    name: string;
-    age: number;
-    age_type: string;
-    gender: string;
-}
-
-interface Hospital {
-    id: number;
-    name: string;
-    logo: string;
-}
-
 interface Prescription {
     id: number;
     code: string;
@@ -102,12 +70,12 @@ interface Prescription {
     next_visit: string | null;
 
     doctor: Doctor;
-    patient: Patient;
-    hospital: Hospital;
+    patient: PrintPatientProps;
+    hospital: PrintHospitalProps;
 
-    medicines: Medicine[];
-    examinations: Examination[];
-    tests: Test[];
+    medicines: PrintMedicineProps[];
+    examinations: PrintExaminationProps[];
+    tests: PrintTestProps[];
     payments: Payment[];
 }
 
@@ -167,7 +135,14 @@ export default function PrescriptionPrint({ prescription }: Props) {
                             {prescription.doctor.specialities.length > 0 && (
                                 <p className="text-sm text-gray-600">
                                     {prescription.doctor.specialities
-                                        .map((speciality) => speciality.name)
+                                        .map(
+                                            (speciality) =>
+                                                `${speciality.locale_name}${
+                                                    speciality.locale_abbreviation
+                                                        ? ` (${speciality.locale_abbreviation})`
+                                                        : ''
+                                                }`,
+                                        )
                                         .join(', ')}
                                 </p>
                             )}
@@ -205,7 +180,14 @@ export default function PrescriptionPrint({ prescription }: Props) {
                             {prescription.doctor.specialities.length > 0 && (
                                 <p className="text-sm text-gray-600">
                                     {prescription.doctor.specialities
-                                        .map((speciality) => speciality.name)
+                                        .map(
+                                            (speciality) =>
+                                                `${speciality.name}${
+                                                    speciality.abbreviation
+                                                        ? ` (${speciality.abbreviation})`
+                                                        : ''
+                                                }`,
+                                        )
                                         .join(', ')}
                                 </p>
                             )}

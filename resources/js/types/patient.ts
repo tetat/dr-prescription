@@ -11,3 +11,11 @@ export type PatientProps = {
     address?: string;
     phones: Phone[];
 };
+
+export type PrintPatientProps = {
+    id: number;
+    name: string;
+    age: number;
+    age_type: string;
+    gender: string;
+};
