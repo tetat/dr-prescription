@@ -291,8 +291,20 @@ export default function PrescriptionPrint({ prescription }: Props) {
                 </div>
 
                 {/* Footer */}
-                <div className="border-t py-4 text-center text-sm">
-                    {prescription.hospital.name}
+                <div className="border-t py-4 text-center">
+                    {prescription.hospital.logo ? (
+                        <img
+                            src={prescription.hospital.logo}
+                            alt={prescription.hospital.name}
+                            className="mx-auto h-12 w-auto object-contain"
+                        />
+                    ) : (
+                        <HospitalIcon className="mx-auto h-12 w-12" />
+                    )}
+
+                    <p className="mt-2 text-sm font-semibold">
+                        {prescription.hospital.name}
+                    </p>
                 </div>
             </div>
         </>
