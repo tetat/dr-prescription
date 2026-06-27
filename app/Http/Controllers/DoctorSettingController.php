@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\DoctorSetting;
-use App\Http\Requests\StoreDoctorSettingRequest;
 use App\Http\Requests\UpdateDoctorSettingRequest;
 use App\Services\DoctorSettingService;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class DoctorSettingController extends Controller
 {
@@ -33,7 +33,7 @@ class DoctorSettingController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreDoctorSettingRequest $request)
+    public function store(Request $request)
     {
         //
     }

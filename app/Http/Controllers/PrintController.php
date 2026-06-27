@@ -16,6 +16,7 @@ class PrintController extends Controller
             'doctor.specialities',
             'patient',
             'hospital',
+            'hospital.phones',
             'medicines',
             'tests',
             'examinations',

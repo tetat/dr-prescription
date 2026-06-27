@@ -1,4 +1,5 @@
 import {
+    Phone,
     PrintExaminationProps,
     PrintHospitalProps,
     PrintMedicineProps,
@@ -61,6 +62,10 @@ interface Doctor {
     specialities: Speciality[];
 }
 
+interface HospitalProps extends PrintHospitalProps {
+    phones: Phone[];
+}
+
 interface Prescription {
     id: number;
     code: string;
@@ -71,7 +76,7 @@ interface Prescription {
 
     doctor: Doctor;
     patient: PrintPatientProps;
-    hospital: PrintHospitalProps;
+    hospital: HospitalProps;
 
     medicines: PrintMedicineProps[];
     examinations: PrintExaminationProps[];
@@ -305,6 +310,16 @@ export default function PrescriptionPrint({ prescription }: Props) {
                     <p className="mt-2 text-sm font-semibold">
                         {prescription.hospital.name}
                     </p>
+
+                    {prescription.hospital.phones.length > 0 && (
+                        <div className="mt-2 text-xs text-gray-600">
+                            {prescription.hospital.phones.map((phone) => (
+                                <div key={phone.number}>
+                                    {phone.country_code + phone.number}
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
         </>
