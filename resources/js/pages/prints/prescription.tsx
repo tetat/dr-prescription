@@ -8,6 +8,7 @@ import {
 } from '@/types';
 import { Head } from '@inertiajs/react';
 import { HospitalIcon } from 'lucide-react';
+import HospitalFooter from './hospital-footer';
 // import { useEffect } from 'react';
 
 interface Payment {
@@ -296,31 +297,11 @@ export default function PrescriptionPrint({ prescription }: Props) {
                 </div>
 
                 {/* Footer */}
-                <div className="border-t py-4 text-center">
-                    {prescription.hospital.logo ? (
-                        <img
-                            src={prescription.hospital.logo}
-                            alt={prescription.hospital.name}
-                            className="mx-auto h-12 w-auto object-contain"
-                        />
-                    ) : (
-                        <HospitalIcon className="mx-auto h-12 w-12" />
-                    )}
-
-                    <p className="mt-2 text-sm font-semibold">
-                        {prescription.hospital.name}
-                    </p>
-
-                    {prescription.hospital.phones.length > 0 && (
-                        <div className="mt-2 text-xs text-gray-600">
-                            {prescription.hospital.phones.map((phone) => (
-                                <div key={phone.number}>
-                                    {phone.country_code + phone.number}
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
+                <HospitalFooter
+                    hospitalName={prescription.hospital.name}
+                    hospitalLogo={prescription.hospital.logo}
+                    phones={prescription.hospital.phones}
+                />
             </div>
         </>
     );
