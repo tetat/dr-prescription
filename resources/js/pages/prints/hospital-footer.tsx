@@ -12,6 +12,9 @@ export default function HospitalFooter({
     hospitalLogo,
     phones,
 }: Props) {
+    const changeNumberToLocale = (num: string | number) =>
+        String(num).replace(/\d/g, (d) => '০১২৩৪৫৬৭৮৯'[Number(d)]);
+
     return (
         <div className="border-t py-4">
             <div className="grid grid-cols-3 items-end">
@@ -47,7 +50,9 @@ export default function HospitalFooter({
 
                     {phones.map((phone) => (
                         <div key={phone.country_code}>
-                            {phone.country_code + phone.number}
+                            {changeNumberToLocale(
+                                phone.country_code + phone.number,
+                            )}
                         </div>
                     ))}
                 </div>
