@@ -105,20 +105,23 @@ export default function PrescriptionPrint({ prescription }: Props) {
 
         return '';
     };
+
+    const changeNumberToLocale = (num: string | number) =>
+        String(num).replace(/\d/g, (d) => '০১২৩৪৫৬৭৮৯'[Number(d)]);
     // console.log(prescription);
 
     return (
         <>
             <Head title={`Prescription ${prescription.code}`} />
 
-            <div className="min-h-screen bg-white text-black">
+            <div className="mx-auto flex h-[297mm] w-[210mm] flex-col overflow-hidden bg-white px-6 py-4 text-black">
                 {/* Header */}
-                <div className="pb-1 text-center">
+                <div className="pb-2 text-center">
                     <h1 className="text-3xl font-bold">
                         {prescription.hospital.name}
                     </h1>
 
-                    <div className="mt-4 grid grid-cols-3">
+                    <div className="mt-3 grid grid-cols-3">
                         {/* Doctor Bengali */}
                         <div className="text-left">
                             <h2 className="text-xl font-bold">
@@ -155,15 +158,15 @@ export default function PrescriptionPrint({ prescription }: Props) {
                         </div>
 
                         {/* Hospital */}
-                        <div className="flex flex-col items-center text-center">
+                        <div className="flex items-center justify-center">
                             {prescription.hospital.logo ? (
                                 <img
                                     src={prescription.hospital.logo}
                                     alt={prescription.hospital.name}
-                                    className="h-12 w-auto object-contain"
+                                    className="h-16 w-auto object-contain"
                                 />
                             ) : (
-                                <HospitalIcon className="h-12 w-auto object-contain" />
+                                <HospitalIcon className="h-14 w-14" />
                             )}
                         </div>
 
@@ -202,7 +205,7 @@ export default function PrescriptionPrint({ prescription }: Props) {
                 </div>
 
                 {/* Patient Info */}
-                <div className="mt-4 flex border-y py-2 text-sm">
+                <div className="mt-3 flex border-y py-2 text-sm">
                     <div className="flex-1">
                         <strong>Name:</strong> {prescription.patient.name}
                     </div>
@@ -221,28 +224,34 @@ export default function PrescriptionPrint({ prescription }: Props) {
                     </div>
                 </div>
 
-                {/* Body */}
-                <div className="flex min-h-[700px]">
-                    {/* Left Side */}
-                    <div className="w-1/3 border-r p-4">
+                {/* Main Body */}
+                <div className="flex flex-1">
+                    {/* Left */}
+                    <div className="w-1/3 border-r p-4 text-sm">
                         <div>
-                            <h3 className="font-bold">Chief Complaints</h3>
+                            <h3 className="font-bold uppercase">
+                                Chief Complaints
+                            </h3>
 
                             <p className="mt-2">
                                 {prescription.chief_complaint}
                             </p>
                         </div>
 
-                        <div className="mt-8">
-                            <h3 className="font-bold">Examinations</h3>
+                        <div className="mt-6">
+                            <h3 className="font-bold uppercase">
+                                Examinations
+                            </h3>
 
                             {prescription.examinations.map((exam) => (
                                 <div key={exam.id}>{exam.name}</div>
                             ))}
                         </div>
 
-                        <div className="mt-8">
-                            <h3 className="font-bold">Investigations</h3>
+                        <div className="mt-6">
+                            <h3 className="font-bold uppercase">
+                                Investigations
+                            </h3>
 
                             {prescription.tests.map((test) => (
                                 <div key={test.id}>{test.name}</div>
@@ -250,58 +259,63 @@ export default function PrescriptionPrint({ prescription }: Props) {
                         </div>
                     </div>
 
-                    {/* Right Side */}
-                    <div className="w-2/3 p-4">
-                        <div className="font-serif text-3xl">Rx</div>
+                    {/* Right */}
+                    <div className="flex w-2/3 flex-col p-4">
+                        <div className="font-serif text-2xl">Rx,</div>
 
-                        <div className="mt-4 space-y-2">
-                            {prescription.medicines.map((medicine, index) => (
-                                <div
-                                    key={medicine.id}
-                                    className="flex items-start pb-2 text-sm"
-                                >
-                                    <div className="mr-2 font-semibold">
-                                        {index + 1}.
-                                    </div>
+                        <div className="mt-3 flex-1">
+                            <div className="space-y-3">
+                                {prescription.medicines.map(
+                                    (medicine, index) => (
+                                        <div key={medicine.id}>
+                                            <div className="text-md font-bold">
+                                                {index + 1}. {medicine.name}
+                                            </div>
 
-                                    <div className="flex-1">
-                                        <span className="font-bold">
-                                            {medicine.name}
-                                        </span>
-
-                                        <span className="ml-3">
-                                            {formatDoses(medicine.pivot.doses)}
-                                        </span>
-
-                                        <span className="ml-3">
-                                            {medicine.pivot.duration}{' '}
-                                            {medicine.pivot.duration_type}
-                                        </span>
-
-                                        {medicine.pivot.instructions && (
-                                            <span className="ml-3 text-gray-600">
-                                                ({medicine.pivot.instructions})
-                                            </span>
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
+                                            <div className="mt-1 ml-6 text-sm text-gray-700">
+                                                {formatDoses(
+                                                    medicine.pivot.doses,
+                                                )}
+                                                {' • '}
+                                                {medicine.pivot.duration}{' '}
+                                                {medicine.pivot.duration_type}
+                                                {medicine.pivot.instructions &&
+                                                    ` • ${medicine.pivot.instructions}`}
+                                            </div>
+                                        </div>
+                                    ),
+                                )}
+                            </div>
                         </div>
 
                         {prescription.next_visit && (
-                            <div className="mt-12 text-right">
-                                {prescription.next_visit} দিন পর দেখা করবেন।
+                            <div className="border-t pt-3 text-right text-sm">
+                                <span className="font-medium">
+                                    {changeNumberToLocale(
+                                        prescription.next_visit,
+                                    )}{' '}
+                                    দিন পর দেখা করবেন।
+                                </span>
+
+                                {/* <br />
+
+                                <span className="text-gray-600">
+                                    পরবর্তী সাক্ষাতের সময় ব্যবস্থাপত্রটি সাথে
+                                    নিয়ে আসবেন।
+                                </span> */}
                             </div>
                         )}
                     </div>
                 </div>
 
                 {/* Footer */}
-                <HospitalFooter
-                    hospitalName={prescription.hospital.name}
-                    hospitalLogo={prescription.hospital.logo}
-                    phones={prescription.hospital.phones}
-                />
+                <div className="mt-auto">
+                    <HospitalFooter
+                        hospitalName={prescription.hospital.name}
+                        hospitalLogo={prescription.hospital.logo}
+                        phones={prescription.hospital.phones}
+                    />
+                </div>
             </div>
         </>
     );

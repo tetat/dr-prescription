@@ -1,0 +1,17 @@
+@page {
+    size: A4;
+    margin: 8mm;
+}
+
+@media print {
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
