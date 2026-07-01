@@ -14,4 +14,5 @@ export type PrintHospitalProps = {
     id: number;
     name: string;
     logo: string;
+    logo_url: string;
 };

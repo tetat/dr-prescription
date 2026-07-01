@@ -44,7 +44,7 @@ const PrescriptionCreate = (props: Props) => {
                 {
                     medicine_id: '',
                     duration: '7',
-                    duration_type: 'Day',
+                    duration_type: 'Days',
                     doses: [1, 1, 1],
                     instructions: '',
                 },

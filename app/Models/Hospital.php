@@ -13,6 +13,10 @@ class Hospital extends Model
     /** @use HasFactory<\Database\Factories\HospitalFactory> */
     use HasFactory;
 
+    protected $appends = [
+        'logo_url',
+    ];
+
     protected $fillable = [
         'name',
         'locale_name',

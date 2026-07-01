@@ -410,6 +410,15 @@ const PrescriptionForm = ({
                                         </SelectTrigger>
 
                                         <SelectContent>
+                                            <SelectItem value="Days">
+                                                Days
+                                            </SelectItem>
+                                            <SelectItem value="Weeks">
+                                                Weeks
+                                            </SelectItem>
+                                            <SelectItem value="Months">
+                                                Months
+                                            </SelectItem>
                                             <SelectItem value="Day">
                                                 Day
                                             </SelectItem>
