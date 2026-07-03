@@ -1,10 +1,13 @@
 import {
+    Degree,
+    Institute,
     Phone,
     PrintExaminationProps,
     PrintHospitalProps,
     PrintMedicineProps,
     PrintPatientProps,
     PrintTestProps,
+    Speciality,
 } from '@/types';
 import { Head } from '@inertiajs/react';
 import { HospitalIcon } from 'lucide-react';
@@ -18,34 +21,12 @@ interface Payment {
     status: string;
 }
 
-interface Institute {
-    id: number;
-    name: string;
-    locale_name: string;
-    abbreviation: string;
-    locale_abbreviation: string;
-}
-
-interface Degree {
-    id: number;
-    abbreviation: string;
-    locale_abbreviation: string;
-}
-
 interface DegreeDoctor {
     id: number;
     passing_year: string;
 
     degree: Degree;
     institute: Institute;
-}
-
-interface Speciality {
-    id: number;
-    name: string;
-    locale_name: string;
-    abbreviation: string;
-    locale_abbreviation: string;
 }
 
 interface Doctor {
