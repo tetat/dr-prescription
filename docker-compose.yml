@@ -1,0 +1,75 @@
+services:
+  app:
+    build:
+      context: .
+
+    container_name: dr-prescription-app
+
+    working_dir: /var/www
+
+    env_file:
+      - .env
+
+    volumes:
+      - .:/var/www
+      - vendor:/var/www/vendor
+      - node_modules:/var/www/node_modules
+
+    ports:
+      - "8000:8000"
+      - "5173:5173"
+
+    depends_on:
+      database:
+        condition: service_healthy
+
+  database:
+    image: mysql:8.0
+
+    container_name: dr-prescription-db
+
+    restart: unless-stopped
+
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+
+    ports:
+      - "3306:3306"
+
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${DB_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+
+    container_name: dr-prescription-phpmyadmin
+
+    restart: unless-stopped
+
+    depends_on:
+      database:
+        condition: service_healthy
+
+    environment:
+      PMA_HOST: database
+      PMA_PORT: 3306
+      PMA_USER: ${DB_USERNAME}
+      PMA_PASSWORD: ${DB_PASSWORD}
+      PMA_ARBITRARY: 1
+
+    ports:
+      - "8080:80"
+
+volumes:
+  mysql-data:
+  vendor:
+  node_modules:
