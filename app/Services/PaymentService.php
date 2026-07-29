@@ -27,11 +27,14 @@ class PaymentService
 
     public function getPaymentQuery(): Builder
     {
+        $doctorId = auth()->id();
+
         return Payment::with([
             'doctor',
             'prescription.patient',
             'prescription.hospital',
-        ]);
+        ])
+        ->where('doctor_id', $doctorId);
     }
 
     public function getPaymentTableData(Request $request)

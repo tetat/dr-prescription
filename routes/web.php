@@ -52,7 +52,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('print/prescription/{prescription_id}', [PrintController::class, 'prescription'])
         ->middleware('role:doctor')
         ->name('print.prescription');
-    Route::resource('payments', PaymentController::class);
+    Route::resource('payments', PaymentController::class)
+        ->middleware('role:doctor');
     Route::resource('doctor-settings', DoctorSettingController::class);
 });
 

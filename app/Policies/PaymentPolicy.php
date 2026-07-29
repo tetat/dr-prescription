@@ -21,7 +21,7 @@ class PaymentPolicy
      */
     public function view(User $user, Payment $payment): bool
     {
-        return false;
+        return $payment->doctor_id === $user->id;
     }
 
     /**
@@ -37,7 +37,7 @@ class PaymentPolicy
      */
     public function update(User $user, Payment $payment): bool
     {
-        return false;
+        return $payment->doctor_id === $user->id;
     }
 
     /**
@@ -45,7 +45,7 @@ class PaymentPolicy
      */
     public function delete(User $user, Payment $payment): bool
     {
-        return false;
+        return $payment->doctor_id === $user->id;
     }
 
     /**

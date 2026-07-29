@@ -68,6 +68,8 @@ class PaymentController extends Controller
      */
     public function show(Payment $payment)
     {
+        $this->authorize('view', $payment);
+        
         return inertia('payments/show', [
             'payment' => $this->paymentService->showPayment($payment),
         ]);
@@ -78,6 +80,8 @@ class PaymentController extends Controller
      */
     public function edit(Payment $payment)
     {
+        $this->authorize('update', $payment);
+
         $prescriptions = Prescription::query()
             ->where('doctor_id', Auth::id())
             ->select('id', 'code', 'consultation_fee')
@@ -107,6 +111,8 @@ class PaymentController extends Controller
         UpdatePaymentRequest $request,
         Payment $payment
     ) {
+        $this->authorize('update', $payment);
+
         try {
             $this->paymentService->updatePayment(
                 $payment,
@@ -126,6 +132,8 @@ class PaymentController extends Controller
      */
     public function destroy(Payment $payment)
     {
+        $this->authorize('delete', $payment);
+        
         try {
             $this->paymentService->deletePayment($payment);
 

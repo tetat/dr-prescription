@@ -12,7 +12,7 @@ interface HospitalProps extends Hospital {
 }
 
 const HospitalEdit = ({ hospital }: { hospital: HospitalProps }) => {
-    const { data, setData, put, processing, errors } = useForm<HospitalProps>({
+    const { data, setData, processing, errors } = useForm<HospitalProps>({
         id: hospital.id,
         name: hospital.name,
         locale_name: hospital.locale_name ?? '',
