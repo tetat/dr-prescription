@@ -71,6 +71,8 @@ class PrescriptionController extends Controller
      */
     public function show(Prescription $prescription)
     {
+        $this->authorize('view', $prescription);
+
         $prescription = $this->prescriptionService->getShowData($prescription);
 
         return inertia('prescriptions/show', [
@@ -83,6 +85,8 @@ class PrescriptionController extends Controller
      */
     public function edit(Prescription $prescription)
     {
+        $this->authorize('update', $prescription);
+
         $doctors = $this->selectService->getDoctors();
         $patients = $this->selectService->getPatients();
         $hospitals = $this->selectService->getHospitals();
@@ -108,7 +112,8 @@ class PrescriptionController extends Controller
      */
     public function update(UpdatePrescriptionRequest $request, Prescription $prescription)
     {
-        // dd($request->validated());
+        $this->authorize('update', $prescription);
+
         try {
             $this->prescriptionService->updatePrescription($prescription, $request->validated());
 
@@ -123,6 +128,8 @@ class PrescriptionController extends Controller
      */
     public function destroy(Prescription $prescription)
     {
+        $this->authorize('delete', $prescription);
+
         try {
             $this->prescriptionService->deletePrescription($prescription);
 

@@ -18,9 +18,9 @@ class DoctorSettingService
         return DB::transaction(function() use ($doctor_id) {
             $doctorSetting = DoctorSetting::create([
                 'doctor_id' => $doctor_id,
-                'consultation_fee' => 500,
-                'followup_discount' => 100,
-                'emergency_fee' => 700,
+                'consultation_fee' => 1000,
+                'followup_discount' => 200,
+                'emergency_fee' => 1500,
                 'followup_valid_days' => 14,
             ]);
 

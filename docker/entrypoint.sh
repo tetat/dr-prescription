@@ -6,6 +6,10 @@ cd /var/www
 
 echo "Starting Laravel..."
 
+# Recreate storage symlink for the container
+rm -f public/storage
+php artisan storage:link
+
 # Install Composer dependencies
 if [ ! -f vendor/autoload.php ]; then
     composer install --no-interaction

@@ -22,6 +22,7 @@ import { toast } from 'sonner';
 
 interface Prescription {
     id: number;
+    date: string;
     code: string;
     doctor: string;
     patient: string;
@@ -163,6 +164,7 @@ const PrescriptionIndex = ({ prescriptions, filters }: Props) => {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>#</TableHead>
+                                <TableHead>Date</TableHead>
                                 <TableHead>Code</TableHead>
                                 <TableHead>Patient</TableHead>
                                 <TableHead>Doctor</TableHead>
@@ -181,6 +183,10 @@ const PrescriptionIndex = ({ prescriptions, filters }: Props) => {
                                     <TableRow key={prescription.id}>
                                         <TableCell className="font-medium">
                                             {prescriptions.from + i}
+                                        </TableCell>
+
+                                        <TableCell>
+                                            {prescription.date}
                                         </TableCell>
 
                                         <TableCell>

@@ -23,6 +23,8 @@ class PrintController extends Controller
             'payments',
         ])->findOrFail($prescription_id);
 
+        $this->authorize('print', $prescription);
+
         return inertia('prints/prescription', [
             'prescription' => $prescription,
         ]);

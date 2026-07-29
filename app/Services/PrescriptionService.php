@@ -12,7 +12,9 @@ class PrescriptionService
 {
     public function getPrescriptionQuery(): Builder
     {
-        $query = Prescription::with([
+        $doctorId = auth()->id();
+
+        return Prescription::with([
             'doctor',
             'patient',
             'hospital',
@@ -20,9 +22,7 @@ class PrescriptionService
             'tests',
             'examinations',
             'payments'
-        ]);
-
-        return $query;
+        ])->where('doctor_id', $doctorId);
     }
 
     public function getPrescriptionTableData(Request $request)
@@ -54,11 +54,17 @@ class PrescriptionService
                 ->get()
                 ->map(fn($prescription) => [
                     'id' => $prescription->id,
+                    'date' => $prescription->created_at->format('d M Y'),
                     'code' => $prescription->code,
                     'doctor' => $prescription->doctor->name,
                     'patient' => $prescription->patient->name,
                     'hospital' => $prescription->hospital->name,
-                    'next_visit' => $prescription->next_visit ?? 'N/A',
+                    'next_visit' => $prescription->next_visit
+                        ? $prescription->created_at
+                            ->copy()
+                            ->addDays((int) $prescription->next_visit)
+                            ->format('d M Y')
+                        : 'N/A',
                     'consultation_fee' => $prescription->remaining_fee,
                 ]);
             $prescriptions = [
@@ -73,11 +79,17 @@ class PrescriptionService
 
             $prescriptions->getCollection()->transform(fn($prescription) => [
                 'id' => $prescription->id,
+                'date' => $prescription->created_at->format('d M Y'),
                 'code' => $prescription->code,
                 'doctor' => $prescription->doctor->name,
                 'patient' => $prescription->patient->name,
                 'hospital' => $prescription->hospital->name,
-                'next_visit' => $prescription->next_visit ?? 'N/A',
+                'next_visit' => $prescription->next_visit
+                    ? $prescription->created_at
+                        ->copy()
+                        ->addDays((int) $prescription->next_visit)
+                        ->format('d M Y')
+                    : 'N/A',
                 'consultation_fee' => $prescription->remaining_fee,
             ]);
         }

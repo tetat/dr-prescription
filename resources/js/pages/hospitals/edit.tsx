@@ -3,7 +3,7 @@ import HospitalForm from '@/components/hospitals/hospital-form';
 import AppLayout from '@/layouts/app-layout';
 import { edit, index } from '@/routes/hospitals';
 import { Hospital, Phone } from '@/types';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, router } from '@inertiajs/react';
 
 interface HospitalProps extends Hospital {
     logo: File | null;
@@ -29,7 +29,17 @@ const HospitalEdit = ({ hospital }: { hospital: HospitalProps }) => {
 
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        put(HospitalController.update.url(hospital.id));
+
+        router.post(
+            HospitalController.update.url(hospital.id),
+            {
+                ...data,
+                _method: 'PUT',
+            },
+            {
+                forceFormData: true,
+            },
+        );
     };
 
     const breadcrumbsData = [

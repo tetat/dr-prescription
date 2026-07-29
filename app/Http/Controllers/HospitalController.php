@@ -40,7 +40,7 @@ class HospitalController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(StoreHospitalRequest $request)
-    {        
+    {
         try {
             $this->hospitalService->createHospital($request);
 
@@ -81,6 +81,7 @@ class HospitalController extends Controller
      */
     public function update(UpdateHospitalRequest $request, Hospital $hospital)
     {
+        // dd($request->all(), $request->file('logo'));
         try {
             $this->hospitalService->updateHospital($request, $hospital);
 

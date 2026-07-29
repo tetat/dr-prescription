@@ -16,20 +16,28 @@ class DegreeSeeder extends Seeder
         $degrees = [
             [
                 'name' => 'Bachelor of Medicine and Bachelor of Surgery',
+                'locale_name' => 'চিকিৎসাবিদ্যা ও শল্যচিকিৎসায় স্নাতক',
                 'abbreviation' => 'MBBS',
+                'locale_abbreviation' => 'এমবিবিএস',
             ],
             [
                 'name' => 'Fellow of the College of Physicians and Surgeons',
+                'locale_name' => 'কলেজ অব ফিজিশিয়ানস অ্যান্ড সার্জনস-এর ফেলো',
                 'abbreviation' => 'FCPS',
+                'locale_abbreviation' => 'এফসিপিএস',
             ],
             [
                 'name' => 'Doctor of Medicine',
+                'locale_name' => 'ডক্টর অব মেডিসিন',
                 'abbreviation' => 'MD',
+                'locale_abbreviation' => 'এমডি',
             ],
             [
                 'name' => 'Master of Surgery',
+                'locale_name' => 'মাস্টার অব সার্জারি',
                 'abbreviation' => 'MS',
-            ]
+                'locale_abbreviation' => 'এমএস',
+            ],
         ];
 
         foreach ($degrees as $degree) {

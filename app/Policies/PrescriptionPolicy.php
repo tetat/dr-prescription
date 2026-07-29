@@ -21,7 +21,15 @@ class PrescriptionPolicy
      */
     public function view(User $user, Prescription $prescription): bool
     {
-        return false;
+        return $prescription->doctor_id === $user->id;
+    }
+
+    /**
+     * Determine whether the user can print the model.
+     */
+    public function print(User $user, Prescription $prescription): bool
+    {
+        return $prescription->doctor_id === $user->id;
     }
 
     /**
@@ -37,7 +45,7 @@ class PrescriptionPolicy
      */
     public function update(User $user, Prescription $prescription): bool
     {
-        return false;
+        return $prescription->doctor_id === $user->id;
     }
 
     /**
@@ -45,7 +53,7 @@ class PrescriptionPolicy
      */
     public function delete(User $user, Prescription $prescription): bool
     {
-        return false;
+        return $prescription->doctor_id === $user->id;
     }
 
     /**

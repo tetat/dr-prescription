@@ -97,7 +97,11 @@ export default function PrescriptionPrint({ prescription }: Props) {
 
             <div className="mx-auto flex h-[297mm] w-[210mm] flex-col overflow-hidden bg-white px-6 py-4 text-black">
                 {/* Header */}
-                <div className="pb-2 text-center">
+                <div className="relative pb-2 text-center">
+                    <div className="absolute top-2 right-0 px-2 py-1 text-xs">
+                        Rx #{prescription.code}
+                    </div>
+
                     <h1 className="text-3xl font-bold">
                         {prescription.hospital.name}
                     </h1>
