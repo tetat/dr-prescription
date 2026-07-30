@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InstituteController;
 use App\Http\Controllers\ExaminationController;
 use App\Http\Controllers\DegreeController;
@@ -27,7 +28,9 @@ Route::inertia('/', 'welcome', [
 ])->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
+    // Route::inertia('dashboard', 'dashboard')->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'dashboard'])
+        ->name('dashboard');
     Route::get(
         'consultation-fee',
         [PrescriptionController::class, 'consultationFee']

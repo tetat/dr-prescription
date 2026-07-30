@@ -5,6 +5,20 @@ import type { BreadcrumbItem } from '@/types';
 
 import { Users, CalendarDays, FileText, UsersRound } from 'lucide-react';
 
+interface Props {
+    stats: {
+        patients: number;
+        appointments: number;
+        prescriptions: number;
+    };
+    recentPatients: {
+        id: number;
+        name: string;
+        chief_complaint: string | null;
+        date: string;
+    }[];
+}
+
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Dashboard',
@@ -12,7 +26,10 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Dashboard() {
+export default function Dashboard({
+    stats,
+    recentPatients,
+}: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
@@ -28,7 +45,9 @@ export default function Dashboard() {
                                     Total Patients
                                 </p>
 
-                                <h2 className="mt-2 text-3xl font-bold">245</h2>
+                                <h2 className="mt-2 text-3xl font-bold">
+                                    {stats.patients}
+                                </h2>
                             </div>
 
                             <div className="rounded-full bg-blue-100 p-3 dark:bg-blue-500/20">
@@ -45,7 +64,9 @@ export default function Dashboard() {
                                     Today's Appointments
                                 </p>
 
-                                <h2 className="mt-2 text-3xl font-bold">12</h2>
+                                <h2 className="mt-2 text-3xl font-bold">
+                                    {stats.appointments}
+                                </h2>
                             </div>
 
                             <div className="rounded-full bg-green-100 p-3 dark:bg-green-500/20">
@@ -62,7 +83,9 @@ export default function Dashboard() {
                                     Prescriptions This Month
                                 </p>
 
-                                <h2 className="mt-2 text-3xl font-bold">38</h2>
+                                <h2 className="mt-2 text-3xl font-bold">
+                                    {stats.prescriptions}
+                                </h2>
                             </div>
 
                             <div className="rounded-full bg-purple-100 p-3 dark:bg-purple-500/20">
@@ -83,47 +106,30 @@ export default function Dashboard() {
                     </div>
 
                     <div className="space-y-3">
-                        <div className="flex items-center justify-between rounded-lg border p-3">
-                            <div>
-                                <p className="font-medium">Rahim Uddin</p>
+                        {recentPatients.length > 0 ? (
+                            recentPatients.map((patient) => (
+                                <div
+                                    key={patient.id}
+                                    className="flex items-center justify-between rounded-lg border p-3"
+                                >
+                                    <div>
+                                        <p className="font-medium">{patient.name}</p>
 
-                                <p className="text-sm text-muted-foreground">
-                                    Fever & Headache
-                                </p>
-                            </div>
+                                        <p className="text-sm text-muted-foreground">
+                                            {patient.chief_complaint || 'No chief complaint'}
+                                        </p>
+                                    </div>
 
-                            <span className="text-sm text-muted-foreground">
-                                Today
-                            </span>
-                        </div>
-
-                        <div className="flex items-center justify-between rounded-lg border p-3">
-                            <div>
-                                <p className="font-medium">Anatlus Amir</p>
-
-                                <p className="text-sm text-muted-foreground">
-                                    Asthma
-                                </p>
-                            </div>
-
-                            <span className="text-sm text-muted-foreground">
-                                Yesterday
-                            </span>
-                        </div>
-
-                        <div className="flex items-center justify-between rounded-lg border p-3">
-                            <div>
-                                <p className="font-medium">Karim Ahmed</p>
-
-                                <p className="text-sm text-muted-foreground">
-                                    Diabetes Follow-up
-                                </p>
-                            </div>
-
-                            <span className="text-sm text-muted-foreground">
-                                2 days ago
-                            </span>
-                        </div>
+                                    <span className="text-sm text-muted-foreground">
+                                        {patient.date}
+                                    </span>
+                                </div>
+                            ))
+                        ) : (
+                            <p className="text-center text-muted-foreground">
+                                No recent patients.
+                            </p>
+                        )}
                     </div>
                 </div>
             </div>
