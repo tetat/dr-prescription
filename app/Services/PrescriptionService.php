@@ -191,14 +191,7 @@ class PrescriptionService
                 'name' => $test->name,
             ];
         });
-
-        // $prescription->examinations = $prescription->examinations->map(function ($examination) {
-        //     return [
-        //         'id' => $examination->id,
-        //         'name' => $examination->name,
-        //     ];
-        // });
-        // dd($prescription->examinations->first());
+        
         $prescription->examinations = $prescription->examinations->map(function ($exam) {
             return [
                 'examination_id' => $exam->id,

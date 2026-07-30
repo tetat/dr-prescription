@@ -40,6 +40,7 @@ class PatientService
                 ->get()
                 ->map(fn($patient) => [
                         'id' => $patient->id,
+                        'date' => $patient->created_at->format('d M Y'),
                         'name' => $patient->name,
                         'email' => $patient->email ?? 'N/A',
                         'gender' => $patient->gender->value,
@@ -61,6 +62,7 @@ class PatientService
 
             $patients->getCollection()->transform(fn($patient) => [
                 'id' => $patient->id,
+                'date' => $patient->created_at->format('d M Y'),
                 'name' => $patient->name,
                 'email' => $patient->email ?? 'N/A',
                 'gender' => ucfirst($patient->gender->value),

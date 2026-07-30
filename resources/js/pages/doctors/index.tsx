@@ -34,6 +34,7 @@ interface FilterProps {
 }
 
 interface DoctorData extends User {
+    date: string;
     licence_no: string;
     title: string;
     roles: string[];
@@ -111,6 +112,7 @@ const DoctorIndex = ({ doctors, filters }: IndexProps) => {
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="w-[100px]">#</TableHead>
+                                <TableHead>Date</TableHead>
                                 <TableHead>Name</TableHead>
                                 <TableHead>Title</TableHead>
                                 <TableHead>Email</TableHead>
@@ -129,6 +131,7 @@ const DoctorIndex = ({ doctors, filters }: IndexProps) => {
                                         <TableCell className="font-medium">
                                             {i + doctors.from}
                                         </TableCell>
+                                        <TableCell>{doctor.date}</TableCell>
                                         <TableCell>{doctor.name}</TableCell>
                                         <TableCell>{doctor.title}</TableCell>
                                         <TableCell>{doctor.email}</TableCell>

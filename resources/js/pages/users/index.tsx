@@ -34,6 +34,7 @@ interface FilterProps {
 }
 
 interface UserProps extends User {
+    date: string;
     roles: string[];
 }
 
@@ -109,6 +110,7 @@ const UserIndex = ({ users, filters }: IndexProps) => {
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="w-[100px]">#</TableHead>
+                                <TableHead>Date</TableHead>
                                 <TableHead>Name</TableHead>
                                 <TableHead>Email</TableHead>
                                 <TableHead>Gender</TableHead>
@@ -127,6 +129,7 @@ const UserIndex = ({ users, filters }: IndexProps) => {
                                         <TableCell className="font-medium">
                                             {index + users.from}
                                         </TableCell>
+                                        <TableCell>{user.date}</TableCell>
                                         <TableCell>{user.name}</TableCell>
                                         <TableCell>{user.email}</TableCell>
                                         <TableCell>{user.gender}</TableCell>

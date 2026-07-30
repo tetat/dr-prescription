@@ -62,6 +62,7 @@ class UserService
                 ->get()
                 ->map(fn($user) => [
                         'id' => $user->id,
+                        'date' => $user->created_at->format('d M Y'),
                         'name' => $user->name,
                         'email' => $user->email,
                         'roles' => $user->roles->pluck('label')->toArray(),
@@ -82,6 +83,7 @@ class UserService
 
             $users->getCollection()->transform(fn($user) => [
                 'id' => $user->id,
+                'date' => $user->created_at->format('d M Y'),
                 'name' => $user->name,
                 'email' => $user->email,
                 'roles' => $user->roles->pluck('label')->toArray(),

@@ -47,6 +47,7 @@ class DoctorProfileService
                 ->get()
                 ->map(fn($doctor) => [
                         'id' => $doctor->id,
+                        'date' => $doctor->created_at->format('d M Y'),
                         'name' => $doctor->name,
                         'title' => $doctor->doctorProfile->title ?? 'N/A',
                         'email' => $doctor->email,
@@ -67,6 +68,7 @@ class DoctorProfileService
 
             $doctors->getCollection()->transform(fn($doctor) => [
                 'id' => $doctor->id,
+                'date' => $doctor->created_at->format('d M Y'),
                 'name' => $doctor->name,
                 'title' => $doctor->doctorProfile->title ?? 'N/A',
                 'email' => $doctor->email,

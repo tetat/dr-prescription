@@ -32,8 +32,12 @@ interface FilterProps {
     perPage: string;
 }
 
+interface PatientProps extends User {
+    date: string;
+}
+
 interface UserPagination {
-    data: User[];
+    data: PatientProps[];
     links: LinkProps[];
     from: number;
     to: number;
@@ -104,6 +108,7 @@ const PatientIndex = ({ patients, filters }: IndexProps) => {
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="w-[100px]">#</TableHead>
+                                <TableHead>Date</TableHead>
                                 <TableHead>Name</TableHead>
                                 <TableHead>Email</TableHead>
                                 <TableHead>Gender</TableHead>
@@ -122,6 +127,7 @@ const PatientIndex = ({ patients, filters }: IndexProps) => {
                                         <TableCell className="font-medium">
                                             {index + patients.from}
                                         </TableCell>
+                                        <TableCell>{patient.date}</TableCell>
                                         <TableCell>{patient.name}</TableCell>
                                         <TableCell>{patient.email}</TableCell>
                                         <TableCell>{patient.gender}</TableCell>

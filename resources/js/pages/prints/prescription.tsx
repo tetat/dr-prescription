@@ -89,7 +89,6 @@ export default function PrescriptionPrint({ prescription }: Props) {
 
     const changeNumberToLocale = (num: string | number) =>
         String(num).replace(/\d/g, (d) => '০১২৩৪৫৬৭৮৯'[Number(d)]);
-    // console.log(prescription);
 
     return (
         <>
@@ -212,13 +211,13 @@ export default function PrescriptionPrint({ prescription }: Props) {
                 {/* Main Body */}
                 <div className="flex flex-1">
                     {/* Left */}
-                    <div className="flex w-1/3 flex-col justify-between border-r p-4 text-sm">
+                    <div className="flex w-1/3 flex-col justify-between border-r p-2 text-sm">
                         <div className="flex flex-1 flex-col">
                             <h3 className="font-semibold uppercase">
                                 Chief Complaints
                             </h3>
 
-                            <div className="p-2">
+                            <div className="p-1">
                                 <p>{prescription.chief_complaint}</p>
                             </div>
                         </div>
@@ -226,12 +225,12 @@ export default function PrescriptionPrint({ prescription }: Props) {
                         <div className="flex flex-1 flex-col">
                             <h3 className="font-semibold uppercase">Examinations</h3>
 
-                            <div className="mt-2 space-y-2">
+                            <div className="space-y-2">
                                 {prescription.examinations.length > 0 ? (
                                     prescription.examinations.map((exam) => (
                                         <div
                                             key={exam.id}
-                                            className="p-2 text-sm"
+                                            className="p-1 text-sm"
                                         >
                                             <div className="font-medium">
                                                 {exam.name}
@@ -273,7 +272,7 @@ export default function PrescriptionPrint({ prescription }: Props) {
                                 Investigations
                             </h3>
 
-                            <div className="p-2">
+                            <div className="p-1">
                                 {prescription.tests.map((test) => (
                                     <div key={test.id}>{test.name}</div>
                                 ))}
@@ -282,7 +281,7 @@ export default function PrescriptionPrint({ prescription }: Props) {
                     </div>
 
                     {/* Right */}
-                    <div className="flex w-2/3 flex-col px-4 py-2">
+                    <div className="flex w-2/3 flex-col p-2">
                         <div className="font-serif text-xl">Rx,</div>
 
                         <div className="mt-1 flex-1">
