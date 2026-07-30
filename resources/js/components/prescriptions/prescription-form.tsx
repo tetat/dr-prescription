@@ -21,6 +21,7 @@ import {
 import MultiSelect from '../multi-select';
 import { emptyMedicine } from '@/lib/prescription';
 import { Checkbox } from '../ui/checkbox';
+import ExaminationField from '../examination-field';
 
 interface Props {
     data: PrescriptionFormProps;
@@ -183,35 +184,6 @@ const PrescriptionForm = ({
                 <InputError message={errors.patient_id} />
             </div>
 
-            {/* HOSPITAL */}
-            <div className="md:col-span-2">
-                <Label>
-                    Hospital <span className="ml-1 text-red-500">*</span>
-                </Label>
-
-                <Select
-                    value={data.hospital_id}
-                    onValueChange={(value) => setData('hospital_id', value)}
-                >
-                    <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select Hospital" />
-                    </SelectTrigger>
-
-                    <SelectContent>
-                        {hospitals.map((hospital) => (
-                            <SelectItem
-                                key={hospital.id}
-                                value={hospital.id.toString()}
-                            >
-                                {hospital.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-
-                <InputError message={errors.hospital_id} />
-            </div>
-
             {/* CHIEF COMPLAINT */}
             <div className="md:col-span-2">
                 <Label>
@@ -306,6 +278,35 @@ const PrescriptionForm = ({
                 <InputError message={errors.next_visit} />
             </div>
 
+            {/* HOSPITAL */}
+            <div>
+                <Label>
+                    Hospital <span className="ml-1 text-red-500">*</span>
+                </Label>
+
+                <Select
+                    value={data.hospital_id}
+                    onValueChange={(value) => setData('hospital_id', value)}
+                >
+                    <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select Hospital" />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                        {hospitals.map((hospital) => (
+                            <SelectItem
+                                key={hospital.id}
+                                value={hospital.id.toString()}
+                            >
+                                {hospital.name}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+
+                <InputError message={errors.hospital_id} />
+            </div>
+
             {/* Tests */}
             <div>
                 <Label>Tests</Label>
@@ -327,7 +328,7 @@ const PrescriptionForm = ({
             </div>
 
             {/* Examinations */}
-            <div>
+            {/* <div className="md:col-span-2">
                 <Label>Examinations</Label>
 
                 <MultiSelect
@@ -344,6 +345,14 @@ const PrescriptionForm = ({
                     .map(([key, message]) => (
                         <InputError key={key} message={message} />
                     ))}
+            </div> */}
+            <div className="md:col-span-2">
+                <ExaminationField
+                    examinations={data.examinations}
+                    setExaminations={(items) => setData('examinations', items)}
+                    options={examinations}
+                    errors={errors}
+                />
             </div>
 
             {/* Medicines */}

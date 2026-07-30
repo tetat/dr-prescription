@@ -138,9 +138,19 @@ class PrescriptionService
             /**
              * Examinations
              */
-            if (!empty($data['examination_ids'])) {
-                $prescription->examinations()->sync($data['examination_ids']);
+            // if (!empty($data['examination_ids'])) {
+            //     $prescription->examinations()->sync($data['examination_ids']);
+            // }
+            $syncExaminations = [];
+
+            foreach ($data['examinations'] ?? [] as $exam) {
+                $syncExaminations[$exam['examination_id']] = [
+                    'result' => $exam['result'] ?: null,
+                    'interpretation' => $exam['interpretation'] ?: null,
+                ];
             }
+
+            $prescription->examinations()->sync($syncExaminations);
 
             return $prescription;
         });
@@ -182,10 +192,19 @@ class PrescriptionService
             ];
         });
 
-        $prescription->examinations = $prescription->examinations->map(function ($examination) {
+        // $prescription->examinations = $prescription->examinations->map(function ($examination) {
+        //     return [
+        //         'id' => $examination->id,
+        //         'name' => $examination->name,
+        //     ];
+        // });
+        // dd($prescription->examinations->first());
+        $prescription->examinations = $prescription->examinations->map(function ($exam) {
             return [
-                'id' => $examination->id,
-                'name' => $examination->name,
+                'examination_id' => $exam->id,
+                'name' => $exam->name,
+                'result' => $exam->pivot->result,
+                'interpretation' => $exam->pivot->interpretation,
             ];
         });
 
@@ -227,9 +246,19 @@ class PrescriptionService
             );
 
             // Examinations
-            $prescription->examinations()->sync(
-                $data['examination_ids'] ?? []
-            );
+            // $prescription->examinations()->sync(
+            //     $data['examination_ids'] ?? []
+            // );
+            $syncExaminations = [];
+
+            foreach ($data['examinations'] ?? [] as $exam) {
+                $syncExaminations[$exam['examination_id']] = [
+                    'result' => $exam['result'] ?: null,
+                    'interpretation' => $exam['interpretation'] ?: null,
+                ];
+            }
+
+            $prescription->examinations()->sync($syncExaminations);
 
             return $prescription->fresh([
                 'doctor',

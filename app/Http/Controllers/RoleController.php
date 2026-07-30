@@ -61,6 +61,8 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
+        $this->authorize('view', $role);
+
         return inertia('roles/show', [
             'role' => $role->load('permissions'),
         ]);
@@ -71,6 +73,8 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
+        $this->authorize('update', $role);
+
         $permissions = $this->permissionService->getGroupedPermissions();
 
         return inertia('roles/edit', [
@@ -84,6 +88,8 @@ class RoleController extends Controller
      */
     public function update(UpdateRoleRequest $request, Role $role)
     {
+        $this->authorize('update', $role);
+
         try {
             $this->roleService->updateRole($role, $request->validated());
 
@@ -98,6 +104,8 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
+        $this->authorize('delete', $role);
+        
         if ($role->name === 'super-admin' || $role->name === 'doctor' || $role->name === 'patient') {
             return redirect()->back()->with('error', $role->label . ' role cannot be deleted.');
         }

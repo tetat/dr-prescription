@@ -36,9 +36,12 @@ class UpdatePrescriptionRequest extends FormRequest
             'next_visit' => ['nullable', 'integer', 'min:1'],
             'test_ids' => ['nullable', 'array'],
             'test_ids.*' => ['integer', Rule::exists('tests', 'id')],
-            'examination_ids' => ['nullable', 'array'],
-            'examination_ids.*' => ['integer', Rule::exists('examinations', 'id')],
-
+            // 'examination_ids' => ['nullable', 'array'],
+            // 'examination_ids.*' => ['integer', Rule::exists('examinations', 'id')],
+            'examinations' => ['nullable', 'array'],
+            'examinations.*.examination_id' => ['required', 'exists:examinations,id', 'distinct'],
+            'examinations.*.result' => ['nullable', 'string', 'max:255'],
+            'examinations.*.interpretation' => ['nullable', 'string', 'max:255'],
             // Prescription Medicines
             'medicines' => ['required', 'array', 'min:1', 'max:6'],
             'medicines.*.medicine_id' => ['required', 'integer', Rule::exists('medicines', 'id')],

@@ -50,7 +50,7 @@ const PrescriptionCreate = (props: Props) => {
                 },
             ],
             test_ids: [],
-            examination_ids: [],
+            examinations: [],
         });
 
     const onSubmit = (e: React.FormEvent) => {

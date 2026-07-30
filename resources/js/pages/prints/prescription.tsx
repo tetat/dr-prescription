@@ -218,20 +218,53 @@ export default function PrescriptionPrint({ prescription }: Props) {
                                 Chief Complaints
                             </h3>
 
-                            <div className="mt-2">
+                            <div className="p-2">
                                 <p>{prescription.chief_complaint}</p>
                             </div>
                         </div>
 
                         <div className="flex flex-1 flex-col">
-                            <h3 className="font-semibold uppercase">
-                                Examinations
-                            </h3>
+                            <h3 className="font-semibold uppercase">Examinations</h3>
 
-                            <div className="mt-2">
-                                {prescription.examinations.map((exam) => (
-                                    <div key={exam.id}>{exam.name}</div>
-                                ))}
+                            <div className="mt-2 space-y-2">
+                                {prescription.examinations.length > 0 ? (
+                                    prescription.examinations.map((exam) => (
+                                        <div
+                                            key={exam.id}
+                                            className="p-2 text-sm"
+                                        >
+                                            <div className="font-medium">
+                                                {exam.name}
+                                                {exam.abbreviation && (
+                                                    <span className="text-gray-500">
+                                                        {' '}
+                                                        ({exam.abbreviation})
+                                                    </span>
+                                                )}
+                                            </div>
+
+                                            {exam.pivot?.result && (
+                                                <div className='text-xs'>
+                                                    <span className="font-medium">Result:</span>{' '}
+                                                    {exam.pivot?.result ?? '—'}
+                                                </div>
+                                            )}
+                                            
+                                            {exam.pivot?.interpretation && (
+                                                <div className='text-xs'>
+                                                    <span className="font-medium">
+                                                        Interpretation:
+                                                    </span>{' '}
+                                                    {exam.pivot?.interpretation ?? '—'}
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p className="text-sm text-gray-500">
+                                        No examinations.
+                                    </p>
+                                )}
                             </div>
                         </div>
 
@@ -240,7 +273,7 @@ export default function PrescriptionPrint({ prescription }: Props) {
                                 Investigations
                             </h3>
 
-                            <div className="mt-2">
+                            <div className="p-2">
                                 {prescription.tests.map((test) => (
                                     <div key={test.id}>{test.name}</div>
                                 ))}

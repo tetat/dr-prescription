@@ -16,6 +16,10 @@ class RoleService
         $roleQuery = Role::query();
         $authUser = auth()->user();
 
+        if ($authUser->hasRole('super-admin')) {
+            return $roleQuery;
+        }
+
         if ($authUser->hasRole('admin')) {
             $roleQuery->whereNotIn('name', ['super-admin']);
         } elseif ($authUser->hasRole('doctor')) {
@@ -23,7 +27,7 @@ class RoleService
                 'super-admin',
                 'admin',
             ]);
-        } elseif (!$authUser->hasRole('super-admin')) {
+        } else {
             $roleQuery->whereNotIn('name', [
                 'super-admin',
                 'admin',

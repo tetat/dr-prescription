@@ -8,6 +8,7 @@ export type ExaminationProps = {
 export type PrintExaminationProps = {
     id: number;
     name: string;
+    abbreviation: string;
     pivot: {
         result?: string;
         interpretation?: string;

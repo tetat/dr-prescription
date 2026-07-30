@@ -42,6 +42,12 @@ export type MedicineItem = {
     instructions: string;
 };
 
+export type ExaminationItem = {
+    examination_id: string;
+    result: string;
+    interpretation: string;
+};
+
 export type PrescriptionFormProps = {
     id: string;
     doctor_id: string;
@@ -59,5 +65,5 @@ export type PrescriptionFormProps = {
 
     medicines: MedicineItem[];
     test_ids: string[];
-    examination_ids: string[];
+    examinations: ExaminationItem[];
 };

@@ -58,10 +58,12 @@ const PrescriptionEdit = ({ prescription, ...props }: Props) => {
             test_ids:
                 prescription.tests?.map((t: SelectOption) => t.id.toString()) ??
                 [],
-            examination_ids:
-                prescription.examinations?.map((e: SelectOption) =>
-                    e.id.toString(),
-                ) ?? [],
+            examinations:
+                prescription.examinations?.map((e: any) => ({
+                    examination_id: e.id.toString(),
+                    result: e.pivot?.result ?? '',
+                    interpretation: e.pivot?.interpretation ?? '',
+                })) ?? [],
         });
 
     const onSubmit = (e: React.FormEvent) => {
