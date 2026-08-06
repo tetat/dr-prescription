@@ -328,24 +328,6 @@ const PrescriptionForm = ({
             </div>
 
             {/* Examinations */}
-            {/* <div className="md:col-span-2">
-                <Label>Examinations</Label>
-
-                <MultiSelect
-                    options={examinations}
-                    value={data.examination_ids}
-                    onChange={(value) => setData('examination_ids', value)}
-                    label="Select Examinations"
-                    getOptionValue={(exam) => exam.id.toString()}
-                    getOptionLabel={(exam) => exam.name}
-                />
-
-                {Object.entries(errors)
-                    .filter(([key]) => key.startsWith('examination_ids'))
-                    .map(([key, message]) => (
-                        <InputError key={key} message={message} />
-                    ))}
-            </div> */}
             <div className="md:col-span-2">
                 <ExaminationField
                     examinations={data.examinations}

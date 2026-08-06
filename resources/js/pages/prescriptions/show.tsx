@@ -5,6 +5,16 @@ import { edit, index } from '@/routes/prescriptions';
 import { MedicineWithPMPivot, SelectOption } from '@/types';
 import { Head, Link } from '@inertiajs/react';
 
+interface ExaminationProps {
+    name: string;
+    abbreviation: string;
+    id: number;
+    pivot: {
+        result: string;
+        interpretation: string;
+    };
+}
+
 interface Props {
     prescription: {
         id: number;
@@ -18,7 +28,7 @@ interface Props {
 
         medicines: MedicineWithPMPivot[];
         tests: SelectOption[];
-        examinations: SelectOption[];
+        examinations: ExaminationProps[];
     };
 }
 
@@ -144,13 +154,35 @@ const PrescriptionShow = ({ prescription }: Props) => {
                 {/* EXAMINATIONS */}
                 <div className="rounded-xl border p-5">
                     <Label>Examinations</Label>
-                    <div className="mt-2 space-y-1">
-                        {prescription.examinations.length ? (
-                            prescription.examinations.map((e) => (
-                                <p key={e.id}>{e.name}</p>
+
+                    <div className="mt-3 space-y-3">
+                        {prescription.examinations.length > 0 ? (
+                            prescription.examinations.map((exam) => (
+                                <div
+                                    key={exam.id}
+                                    className="border-b pb-2 last:border-b-0 last:pb-0"
+                                >
+                                    <div className="flex items-center justify-between">
+                                        <span className="font-medium">
+                                            {exam.abbreviation ?? exam.name}
+                                        </span>
+
+                                        <span>
+                                            {exam.pivot?.result || "—"}
+                                        </span>
+                                    </div>
+
+                                    {exam.pivot?.interpretation && (
+                                        <p className="mt-1 text-sm text-muted-foreground">
+                                            {exam.pivot.interpretation}
+                                        </p>
+                                    )}
+                                </div>
                             ))
                         ) : (
-                            <p className="text-gray-500">No examinations</p>
+                            <p className="text-sm text-muted-foreground">
+                                No examinations
+                            </p>
                         )}
                     </div>
                 </div>

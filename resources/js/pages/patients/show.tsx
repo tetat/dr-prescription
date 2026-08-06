@@ -52,7 +52,7 @@ const PatientShow = ({ patient }: Props) => {
                                     Email
                                 </Label>
                                 <p className="mt-1 w-fit rounded bg-muted px-2 py-1 font-mono text-sm text-blue-600">
-                                    {patient.email}
+                                    {patient.email ?? 'N/A'}
                                 </p>
                             </div>
 
