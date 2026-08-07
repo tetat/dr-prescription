@@ -55,9 +55,11 @@ const PrescriptionEdit = ({ prescription, ...props }: Props) => {
                     instructions: m.pivot?.instructions ?? '',
                 })) ?? [],
 
-            test_ids:
-                prescription.tests?.map((t: SelectOption) => t.id.toString()) ??
-                [],
+            tests:
+                prescription.tests?.map((t: any) => ({
+                    test_id: t.id.toString(),
+                    result: t.pivot?.result ?? '',
+                })) ?? [],
             examinations:
                 prescription.examinations?.map((e: any) => ({
                     examination_id: e.id.toString(),

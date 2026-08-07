@@ -144,9 +144,10 @@ class PrescriptionController extends Controller
         try {
             $data = $request->validate([
                 'prescription_id' => ['required', 'string'],
-                'doctor_id' => ['required', 'exists:users,id'],
-                'patient_id' => ['required', 'exists:users,id'],
-                'emergency' => ['required', 'boolean'],
+                'doctor_id'       => ['required', 'exists:users,id'],
+                'patient_id'      => ['required', 'exists:users,id'],
+                'hospital_id'     => ['required', 'exists:hospitals,id'],
+                'emergency'       => ['required', 'boolean'],
             ]);
 
             $fee = $this->prescriptionService->consultationFee($data);

@@ -49,7 +49,7 @@ const PrescriptionCreate = (props: Props) => {
                     instructions: '',
                 },
             ],
-            test_ids: [],
+            tests: [],
             examinations: [],
         });
 

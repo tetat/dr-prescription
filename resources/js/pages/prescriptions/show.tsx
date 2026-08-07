@@ -15,6 +15,14 @@ interface ExaminationProps {
     };
 }
 
+interface TestsProps {
+    name: string;
+    id: number;
+    pivot: {
+        result: string;
+    };
+}
+
 interface Props {
     prescription: {
         id: number;
@@ -27,7 +35,7 @@ interface Props {
         next_visit: number;
 
         medicines: MedicineWithPMPivot[];
-        tests: SelectOption[];
+        tests: TestsProps[];
         examinations: ExaminationProps[];
     };
 }
@@ -57,81 +65,76 @@ const PrescriptionShow = ({ prescription }: Props) => {
 
             <div className="mx-auto mt-6 w-2xl space-y-6 p-4">
                 {/* BASIC INFO */}
-                <div className="space-y-3 rounded-xl border p-5">
-                    <div>
-                        <Label>Code</Label>
-                        <p className="text-muted-foreground">
-                            {prescription.code}
-                        </p>
-                    </div>
+                <div className="rounded-xl border p-5">
+                    <h3 className="mb-4 font-semibold uppercase">Basic Information</h3>
 
-                    <div>
-                        <Label>Doctor</Label>
-                        <p>{prescription.doctor?.name ?? '-'}</p>
-                    </div>
+                    <div className="space-y-3">
+                        <div className="flex justify-between">
+                            <Label>Code</Label>
+                            <p className="font-medium">{prescription.code}</p>
+                        </div>
 
-                    <div>
-                        <Label>Patient</Label>
-                        <p>{prescription.patient?.name ?? '-'}</p>
-                    </div>
+                        <div className="flex justify-between">
+                            <Label>Doctor</Label>
+                            <p>{prescription.doctor?.name ?? '-'}</p>
+                        </div>
 
-                    <div>
-                        <Label>Hospital</Label>
-                        <p>{prescription.hospital?.name ?? '-'}</p>
-                    </div>
+                        <div className="flex justify-between">
+                            <Label>Patient</Label>
+                            <p>{prescription.patient?.name ?? '-'}</p>
+                        </div>
 
-                    <div>
-                        <Label>Consultation Fee</Label>
-                        <p>{prescription.consultation_fee}</p>
-                    </div>
+                        <div className="flex justify-between">
+                            <Label>Hospital</Label>
+                            <p>{prescription.hospital?.name ?? '-'}</p>
+                        </div>
 
-                    <div>
-                        <Label>Next Visit (days)</Label>
-                        <p>{prescription.next_visit ?? 'N/A'}</p>
+                        <div className="flex justify-between">
+                            <Label>Consultation Fee</Label>
+                            <p>{prescription.consultation_fee}</p>
+                        </div>
+
+                        <div className="flex justify-between">
+                            <Label>Next Visit (days)</Label>
+                            <p>{prescription.next_visit ?? 'N/A'}</p>
+                        </div>
                     </div>
                 </div>
 
                 {/* MEDICINES */}
                 <div className="rounded-xl border p-5">
-                    <Label>Medicines</Label>
+                    <h3 className="font-semibold uppercase">Medicines</h3>
 
-                    <div className="mt-3 space-y-3">
+                    <div className="mt-3 space-y-4">
                         {prescription.medicines.map((m, index) => (
-                            <div key={index} className="rounded-md border p-3">
-                                <p className="font-semibold">{m.name}</p>
+                            <div key={index} className="rounded-lg border p-4">
+                                <div className="grid grid-cols-[140px_1fr] gap-y-3">
+                                    <Label>Medicine</Label>
+                                    <p className="font-medium">{m.name}</p>
 
-                                <p className="text-sm text-gray-600">
-                                    Duration: {m.pivot.duration}{' '}
-                                    {m.pivot.duration_type}
-                                </p>
+                                    <Label>Duration</Label>
+                                    <p>
+                                        {m.pivot.duration} {m.pivot.duration_type}
+                                    </p>
 
-                                <div className="flex items-center gap-2">
-                                    {stringToArray(m.pivot.doses).map(
-                                        (dose, i) => (
-                                            <div
-                                                key={i}
-                                                className="flex items-center gap-2"
-                                            >
-                                                <p>{dose}</p>
+                                    <Label>Dosage</Label>
+                                    <div className="flex items-center gap-2">
+                                        {stringToArray(m.pivot.doses).map((dose, i, arr) => (
+                                            <div key={i} className="flex items-center gap-2">
+                                                <span>{dose}</span>
 
-                                                {i !==
-                                                    stringToArray(m.pivot.doses)
-                                                        .length -
-                                                        1 && (
+                                                {i < arr.length - 1 && (
                                                     <span className="text-muted-foreground">
                                                         +
                                                     </span>
                                                 )}
                                             </div>
-                                        ),
-                                    )}
-                                </div>
+                                        ))}
+                                    </div>
 
-                                {m.pivot.instructions && (
-                                    <p className="text-sm text-gray-600">
-                                        Instructions: {m.pivot.instructions}
-                                    </p>
-                                )}
+                                    <Label>Instructions</Label>
+                                    <p>{m.pivot.instructions || "N/A"}</p>
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -140,10 +143,20 @@ const PrescriptionShow = ({ prescription }: Props) => {
                 {/* TESTS */}
                 <div className="rounded-xl border p-5">
                     <Label>Tests</Label>
-                    <div className="mt-2 space-y-1">
+
+                    <div className="mt-2 space-y-2">
                         {prescription.tests.length ? (
                             prescription.tests.map((t) => (
-                                <p key={t.id}>{t.name}</p>
+                                <div
+                                    key={t.id}
+                                    className="flex items-center justify-between border-b pb-1 last:border-b-0"
+                                >
+                                    <span>{t.name}</span>
+
+                                    <span className="text-muted-foreground">
+                                        {t.pivot?.result ?? 'Waiting'}
+                                    </span>
+                                </div>
                             ))
                         ) : (
                             <p className="text-gray-500">No tests</p>

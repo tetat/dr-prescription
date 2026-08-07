@@ -12,54 +12,52 @@ import {
 import { SelectOption } from '@/types';
 import { Plus, Trash2 } from 'lucide-react';
 
-export interface ExaminationItem {
-    examination_id: string;
+export interface TestItem {
+    test_id: string;
     result: string;
-    interpretation: string;
 }
 
 interface Props {
-    examinations: ExaminationItem[];
-    setExaminations: (value: ExaminationItem[]) => void;
+    tests: TestItem[];
+    setTests: (value: TestItem[]) => void;
     options: SelectOption[];
     errors: Record<string, string>;
 }
 
-const ExaminationField = ({
-    examinations,
-    setExaminations,
+const TestField = ({
+    tests,
+    setTests,
     options,
     errors,
 }: Props) => {
     const update = (
         index: number,
-        key: keyof ExaminationItem,
+        key: keyof TestItem,
         value: string,
     ) => {
-        const items = [...examinations];
+        const items = [...tests];
         items[index][key] = value;
-        setExaminations(items);
+        setTests(items);
     };
 
     const add = () => {
-        setExaminations([
-            ...examinations,
+        setTests([
+            ...tests,
             {
-                examination_id: '',
+                test_id: '',
                 result: '',
-                interpretation: '',
             },
         ]);
     };
 
     const remove = (index: number) => {
-        setExaminations(examinations.filter((_, i) => i !== index));
+        setTests(tests.filter((_, i) => i !== index));
     };
 
     return (
         <>
             <div className="flex items-center justify-between">
-                <Label>Examinations</Label>
+                <Label>Tests</Label>
 
                 <Button
                     type="button"
@@ -68,11 +66,11 @@ const ExaminationField = ({
                     onClick={add}
                 >
                     <Plus className="h-4 w-4" />
-                    Examination
+                    Test
                 </Button>
             </div>
 
-            {examinations.map((exam, index) => (
+            {tests.map((test, index) => (
                 <div
                     key={index}
                     className="relative mt-1 grid grid-cols-12 gap-3 rounded-lg border pt-3 pb-1.5 px-3"
@@ -89,16 +87,16 @@ const ExaminationField = ({
                     </Button>
 
                     <div className="col-span-4">
-                        <Label>Examination</Label>
+                        <Label>Test</Label>
 
                         <Select
-                            value={exam.examination_id}
+                            value={test.test_id}
                             onValueChange={(value) =>
-                                update(index, 'examination_id', value)
+                                update(index, 'test_id', value)
                             }
                         >
                             <SelectTrigger>
-                                <SelectValue placeholder="Select examination" />
+                                <SelectValue placeholder="Select test" />
                             </SelectTrigger>
 
                             <SelectContent>
@@ -114,7 +112,7 @@ const ExaminationField = ({
                         </Select>
 
                         <InputError
-                            message={errors[`examinations.${index}.examination_id`]}
+                            message={errors[`tests.${index}.test_id`]}
                         />
                     </div>
 
@@ -122,7 +120,7 @@ const ExaminationField = ({
                         <Label>Result</Label>
 
                         <Input
-                            value={exam.result}
+                            value={test.result}
                             onChange={(e) =>
                                 update(index, 'result', e.target.value)
                             }
@@ -130,23 +128,7 @@ const ExaminationField = ({
                         />
 
                         <InputError
-                            message={errors[`examinations.${index}.result`]}
-                        />
-                    </div>
-
-                    <div className="col-span-5">
-                        <Label>Interpretation</Label>
-
-                        <Input
-                            value={exam.interpretation}
-                            onChange={(e) =>
-                                update(index, 'interpretation', e.target.value)
-                            }
-                            placeholder="Interpretation"
-                        />
-
-                        <InputError
-                            message={errors[`examinations.${index}.interpretation`]}
+                            message={errors[`tests.${index}.result`]}
                         />
                     </div>
                 </div>
@@ -155,4 +137,4 @@ const ExaminationField = ({
     );
 };
 
-export default ExaminationField;
+export default TestField;

@@ -114,9 +114,7 @@ class PrescriptionService
                 'next_visit' => $data['next_visit'] ?? null,
             ]);
 
-            /**
-             * Medicines (pivot with extra fields will be handled later if needed)
-             */
+            // Medicines (pivot with extra fields will be handled later if needed)
             $syncData = [];
             foreach ($data['medicines'] as $medicine) {
                 $syncData[$medicine['medicine_id']] = [
@@ -128,28 +126,23 @@ class PrescriptionService
             }
             $prescription->medicines()->sync($syncData);
 
-            /**
-             * Tests
-             */
-            if (!empty($data['test_ids'])) {
-                $prescription->tests()->sync($data['test_ids']);
+            // Tests
+            $syncTests = [];
+            foreach ($data['tests'] ?? [] as $test) {
+                $syncTests[$test['test_id']] = [
+                    'result' => $test['result'] ?: null,
+                ];
             }
+            $prescription->tests()->sync($syncTests);
 
-            /**
-             * Examinations
-             */
-            // if (!empty($data['examination_ids'])) {
-            //     $prescription->examinations()->sync($data['examination_ids']);
-            // }
+            // Examinations
             $syncExaminations = [];
-
             foreach ($data['examinations'] ?? [] as $exam) {
                 $syncExaminations[$exam['examination_id']] = [
                     'result' => $exam['result'] ?: null,
                     'interpretation' => $exam['interpretation'] ?: null,
                 ];
             }
-
             $prescription->examinations()->sync($syncExaminations);
 
             return $prescription;
@@ -189,6 +182,7 @@ class PrescriptionService
             return [
                 'id' => $test->id,
                 'name' => $test->name,
+                'result' => $test->pivot->result,
             ];
         });
         
@@ -221,7 +215,6 @@ class PrescriptionService
 
             // Medicines with pivot data
             $syncData = [];
-
             foreach ($data['medicines'] ?? [] as $medicine) {
                 $syncData[$medicine['medicine_id']] = [
                     'duration' => $medicine['duration'] ?? null,
@@ -230,27 +223,25 @@ class PrescriptionService
                     'instructions' => $medicine['instructions'] ?? null,
                 ];
             }
-
             $prescription->medicines()->sync($syncData);
 
             // Tests
-            $prescription->tests()->sync(
-                $data['test_ids'] ?? []
-            );
+            $syncTests = [];
+            foreach ($data['tests'] ?? [] as $test) {
+                $syncTests[$test['test_id']] = [
+                    'result' => $test['result'] ?: null,
+                ];
+            }
+            $prescription->tests()->sync($syncTests);
 
             // Examinations
-            // $prescription->examinations()->sync(
-            //     $data['examination_ids'] ?? []
-            // );
             $syncExaminations = [];
-
             foreach ($data['examinations'] ?? [] as $exam) {
                 $syncExaminations[$exam['examination_id']] = [
                     'result' => $exam['result'] ?: null,
                     'interpretation' => $exam['interpretation'] ?: null,
                 ];
             }
-
             $prescription->examinations()->sync($syncExaminations);
 
             return $prescription->fresh([
@@ -279,8 +270,11 @@ class PrescriptionService
         $doctor = User::with('doctorSetting')->findOrFail($data['doctor_id']);
         $setting = $doctor->doctorSetting;
 
-        if (!$setting) return 0;
+        if (! $setting) {
+            return 0;
+        }
 
+        // Emergency fee
         if (filter_var($data['emergency'] ?? false, FILTER_VALIDATE_BOOLEAN)) {
             return $setting->emergency_fee;
         }
@@ -290,7 +284,9 @@ class PrescriptionService
         $lastPrescription = Prescription::query()
             ->where('doctor_id', $doctor->id)
             ->where('patient_id', $data['patient_id'])
-            ->when(!empty($data['prescription_id']) && $data['prescription_id'] !== '0',
+            ->where('hospital_id', $data['hospital_id']) // Same hospital
+            ->when(
+                !empty($data['prescription_id']) && $data['prescription_id'] !== '0',
                 fn ($q) => $q->where('id', '!=', $data['prescription_id'])
             )
             ->latest()
@@ -298,6 +294,7 @@ class PrescriptionService
 
         if ($lastPrescription) {
             $days = now()->diffInDays($lastPrescription->created_at);
+
             if ($days <= $setting->followup_valid_days) {
                 $fee = max(0, $fee - $setting->followup_discount);
             }

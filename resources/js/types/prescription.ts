@@ -48,6 +48,11 @@ export type ExaminationItem = {
     interpretation: string;
 };
 
+export type TestItem = {
+    test_id: string;
+    result: string;
+};
+
 export type PrescriptionFormProps = {
     id: string;
     doctor_id: string;
@@ -64,6 +69,6 @@ export type PrescriptionFormProps = {
     next_visit: string;
 
     medicines: MedicineItem[];
-    test_ids: string[];
+    tests: TestItem[];
     examinations: ExaminationItem[];
 };

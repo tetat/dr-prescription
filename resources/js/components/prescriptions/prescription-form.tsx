@@ -18,10 +18,11 @@ import {
     PrescriptionFormProps,
     SelectOption,
 } from '@/types';
-import MultiSelect from '../multi-select';
 import { emptyMedicine } from '@/lib/prescription';
 import { Checkbox } from '../ui/checkbox';
 import ExaminationField from '../examination-field';
+import { Plus, Trash2 } from 'lucide-react';
+import TestField from '../test-field';
 
 interface Props {
     data: PrescriptionFormProps;
@@ -79,11 +80,15 @@ const PrescriptionForm = ({
     };
 
     const fetchFee = async () => {
-        if (!data.doctor_id || !data.patient_id) return;
+        if (!data.doctor_id || !data.patient_id || !data.hospital_id) return;
 
         try {
             const res = await fetch(
-                `/consultation-fee?doctor_id=${data.doctor_id}&patient_id=${data.patient_id}&emergency=${data.is_emergency ? 1 : 0}&prescription_id=${data.id}`,
+                `/consultation-fee?doctor_id=${data.doctor_id}` +
+                `&patient_id=${data.patient_id}` +
+                `&hospital_id=${data.hospital_id}` +
+                `&emergency=${data.is_emergency ? 1 : 0}` +
+                `&prescription_id=${data.id}`,
             );
             const result = await res.json();
             setData('consultation_fee', result.consultation_fee ?? '');
@@ -115,7 +120,7 @@ const PrescriptionForm = ({
         }, 300);
 
         return () => clearTimeout(timeout);
-    }, [data.doctor_id, data.patient_id, data.is_emergency]);
+    }, [data.doctor_id, data.patient_id, data.hospital_id, data.is_emergency]);
 
     const getMedicineError = (index: number, field: string) => {
         return errors?.[`medicines.${index}.${field}`];
@@ -184,8 +189,37 @@ const PrescriptionForm = ({
                 <InputError message={errors.patient_id} />
             </div>
 
+            {/* HOSPITAL */}
+            <div className='md:col-span-2'>
+                <Label>
+                    Hospital <span className="ml-1 text-red-500">*</span>
+                </Label>
+
+                <Select
+                    value={data.hospital_id}
+                    onValueChange={(value) => setData('hospital_id', value)}
+                >
+                    <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select Hospital" />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                        {hospitals.map((hospital) => (
+                            <SelectItem
+                                key={hospital.id}
+                                value={hospital.id.toString()}
+                            >
+                                {hospital.name}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+
+                <InputError message={errors.hospital_id} />
+            </div>
+
             {/* CHIEF COMPLAINT */}
-            <div className="md:col-span-2">
+            <div className='md:col-span-2'>
                 <Label>
                     Chief Complaint <span className="ml-1 text-red-500">*</span>
                 </Label>
@@ -238,10 +272,8 @@ const PrescriptionForm = ({
                             checked={Boolean(data.is_emergency)}
                             className="border-red-700"
                             onCheckedChange={(checked) => {
-                                if (!data.doctor_id || !data.patient_id) {
-                                    alert(
-                                        'Please select Doctor and Patient first!',
-                                    );
+                                if (!data.doctor_id || !data.patient_id || !data.hospital_id) {
+                                    alert('Please select Doctor, Patient and Hospital first!');
                                     return;
                                 }
                                 setData('is_emergency', checked === true);
@@ -278,53 +310,14 @@ const PrescriptionForm = ({
                 <InputError message={errors.next_visit} />
             </div>
 
-            {/* HOSPITAL */}
-            <div>
-                <Label>
-                    Hospital <span className="ml-1 text-red-500">*</span>
-                </Label>
-
-                <Select
-                    value={data.hospital_id}
-                    onValueChange={(value) => setData('hospital_id', value)}
-                >
-                    <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select Hospital" />
-                    </SelectTrigger>
-
-                    <SelectContent>
-                        {hospitals.map((hospital) => (
-                            <SelectItem
-                                key={hospital.id}
-                                value={hospital.id.toString()}
-                            >
-                                {hospital.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-
-                <InputError message={errors.hospital_id} />
-            </div>
-
             {/* Tests */}
-            <div>
-                <Label>Tests</Label>
-
-                <MultiSelect
+            <div className='md:col-span-2'>
+                <TestField
+                    tests={data.tests}
+                    setTests={(items) => setData('tests', items)}
                     options={tests}
-                    value={data.test_ids}
-                    onChange={(value) => setData('test_ids', value)}
-                    label="Select Tests"
-                    getOptionValue={(test) => test.id.toString()}
-                    getOptionLabel={(test) => test.name}
-                />
-
-                {Object.entries(errors)
-                    .filter(([key]) => key.startsWith('test_ids'))
-                    .map(([key, message]) => (
-                        <InputError key={key} message={message} />
-                    ))}
+                    errors={errors}
+                /> 
             </div>
 
             {/* Examinations */}
@@ -338,14 +331,25 @@ const PrescriptionForm = ({
             </div>
 
             {/* Medicines */}
-            <div className="space-y-4 md:col-span-2">
-                <Label>Medicines</Label>
+            <div className="space-y-3 md:col-span-2">
+                <Label>Medicines <span className="ml-1 text-red-500">*</span></Label>
 
                 {data.medicines.map((med, index) => (
                     <div
                         key={index}
-                        className="space-y-3 rounded-lg border p-4"
+                        className="relative space-y-2 rounded-lg border p-3"
                     >
+                        {/* Remove Icon */}
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            disabled={data.medicines.length === 1}
+                            onClick={() => removeMedicine(index)}
+                            className="absolute top-0.5 right-1 h-6 w-6 bg-red-500 text-white hover:text-red-50 hover:bg-red-600"
+                        >
+                            <Trash2 className="h-4 w-4" />
+                        </Button>
                         {/* Medicine + Duration */}
                         <div className="grid grid-cols-1 gap-3 md:grid-cols-12">
                             {/* Medicine - 70% */}
@@ -471,16 +475,6 @@ const PrescriptionForm = ({
                                 )}
                             />
                         </div>
-
-                        {/* Remove */}
-                        <Button
-                            type="button"
-                            variant="destructive"
-                            disabled={data.medicines.length === 1}
-                            onClick={() => removeMedicine(index)}
-                        >
-                            Remove
-                        </Button>
                     </div>
                 ))}
 
@@ -490,7 +484,8 @@ const PrescriptionForm = ({
                     className="bg-gray-700 text-white"
                     onClick={addMedicine}
                 >
-                    Add Medicine
+                    <Plus className="h-4 w-4" />
+                    Medicine
                 </Button>
             </div>
 
