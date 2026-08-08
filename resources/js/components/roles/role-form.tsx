@@ -55,6 +55,13 @@ const RoleForm = ({
         );
     };
 
+    const groupNameCapitalize = (groupName: string) => {
+        return groupName
+            .split('_')
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    };
+
     const toggleSingle = (id: number) => {
         setData(
             'permissions',
@@ -63,6 +70,7 @@ const RoleForm = ({
                 : [...selected, id],
         );
     };
+
     return (
         <form onSubmit={onSubmit} className="flex flex-col gap-6">
             <div className="grid gap-2">
@@ -110,8 +118,8 @@ const RoleForm = ({
                                     checked={groupSelected}
                                     onChange={() => toggleGroup(typedItems)}
                                 />
-                                <Label className="font-medium capitalize">
-                                    {group}
+                                <Label className="font-medium">
+                                    {groupNameCapitalize(group)}
                                 </Label>
                             </div>
 

@@ -150,9 +150,9 @@ const PaymentForm = ({
                     </SelectTrigger>
 
                     <SelectContent className="z-[99999]" position="popper">
-                        <SelectItem value="Pending">Pending</SelectItem>
                         <SelectItem value="Paid">Paid</SelectItem>
                         <SelectItem value="Partial">Partial</SelectItem>
+                        <SelectItem value="Pending">Pending</SelectItem>
                         <SelectItem value="Refunded">Refunded</SelectItem>
                     </SelectContent>
                 </Select>

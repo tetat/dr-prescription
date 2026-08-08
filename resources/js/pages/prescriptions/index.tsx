@@ -94,7 +94,7 @@ const PrescriptionIndex = ({ prescriptions, filters }: Props) => {
             prescription_id: prescription.id.toString(),
             amount: prescription.consultation_fee.toString(),
             method: 'Cash',
-            status: 'Pending',
+            status: 'Paid',
             paid_at: '',
             from: 'prescription',
         });
