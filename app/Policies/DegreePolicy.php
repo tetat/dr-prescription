@@ -13,7 +13,7 @@ class DegreePolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->can('degree-access');
     }
 
     /**
@@ -21,7 +21,7 @@ class DegreePolicy
      */
     public function view(User $user, Degree $degree): bool
     {
-        return false;
+        return $user->can('show-degree');
     }
 
     /**
@@ -29,7 +29,7 @@ class DegreePolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->can('create-degree');
     }
 
     /**
@@ -37,7 +37,7 @@ class DegreePolicy
      */
     public function update(User $user, Degree $degree): bool
     {
-        return false;
+        return $user->can('edit-degree');
     }
 
     /**
@@ -45,7 +45,7 @@ class DegreePolicy
      */
     public function delete(User $user, Degree $degree): bool
     {
-        return false;
+        return $user->can('delete-degree');
     }
 
     /**

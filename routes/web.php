@@ -38,7 +38,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('doctors', DoctorProfileController::class);
     Route::resource('institutes', InstituteController::class);
-    Route::resource('degrees', DegreeController::class);
+    Route::resource('degrees', DegreeController::class)
+        ->middlewareFor(['index'], 'can:viewAny,App\Models\Degree')
+        ->middlewareFor(['show'], 'can:view,degree')
+        ->middlewareFor(['create', 'store'], 'can:create,App\Models\Degree')
+        ->middlewareFor(['edit', 'update'], 'can:update,degree')
+        ->middlewareFor(['destroy'], 'can:delete,degree');
     Route::resource('specialities', SpecialityController::class);
     Route::resource('hospitals', HospitalController::class);
     Route::resource('patients', PatientController::class);
