@@ -51,6 +51,10 @@ class DoctorSettingController extends Controller
      */
     public function edit(DoctorSetting $doctorSetting)
     {
+        if (auth()->user()->id !== $doctorSetting->doctor_id) {
+            abort(403, 'Unauthorized action.');
+        }
+
         return inertia('settings/doctor-setting', [
             'doctorSetting' => $doctorSetting,
         ]);
@@ -61,6 +65,10 @@ class DoctorSettingController extends Controller
      */
     public function update(UpdateDoctorSettingRequest $request, DoctorSetting $doctorSetting)
     {
+        if (auth()->user()->id !== $doctorSetting->doctor_id) {
+            abort(403, 'Unauthorized action.');
+        }
+
         try {
             $this->doctorSettingService->updateDoctorSetting($request->validated(), $doctorSetting);
 

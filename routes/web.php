@@ -27,6 +27,23 @@ Route::inertia('/', 'welcome', [
     // 'canRegister' => false,
 ])->name('home');
 
+// Route::get('/test-doctor-permissions/{doctor}', function (
+//     \App\Models\DoctorProfile $doctor
+// ) {
+//     $user = auth()->user();
+
+//     return [
+//         'viewAny' => $user->can('viewAny', \App\Models\DoctorProfile::class),
+//         'view' => $user->can('view', $doctor),
+//         'update' => $user->can('update', $doctor),
+//         'delete' => $user->can('delete', $doctor),
+
+//         'show_permission' => $user->hasPermissionTo('show-doctor-profile'),
+//         'edit_permission' => $user->hasPermissionTo('edit-doctor-profile'),
+//         'delete_permission' => $user->hasPermissionTo('delete-doctor-profile'),
+//     ];
+// });
+
 Route::middleware(['auth', 'verified'])->group(function () {
     // Route::inertia('dashboard', 'dashboard')->name('dashboard');
     Route::get('dashboard', [DashboardController::class, 'dashboard'])
@@ -36,7 +53,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         [PrescriptionController::class, 'consultationFee']
     );
 
-    Route::resource('doctors', DoctorProfileController::class);
+    Route::resource('doctors', DoctorProfileController::class)
+        ->middlewareFor('index', 'can:viewAnyDoctors,App\Models\User')
+        ->middlewareFor('show', 'can:viewDoctor,doctor')
+        ->middlewareFor(['create', 'store'], 'can:createDoctor,App\Models\User')
+        ->middlewareFor(['edit', 'update'], 'can:updateDoctor,doctor')
+        ->middlewareFor('destroy', 'can:deleteDoctor,doctor');
     Route::resource('institutes', InstituteController::class);
     Route::resource('degrees', DegreeController::class)
         ->middlewareFor(['index'], 'can:viewAny,App\Models\Degree')
@@ -62,7 +84,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('print.prescription');
     Route::resource('payments', PaymentController::class)
         ->middleware('role:doctor');
-    Route::resource('doctor-settings', DoctorSettingController::class);
+    Route::resource('doctor-settings', DoctorSettingController::class)
+        ->only('edit', 'update');
 });
 
 require __DIR__ . '/settings.php';

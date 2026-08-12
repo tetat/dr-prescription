@@ -81,4 +81,39 @@ class UserPolicy
     {
         return $authUser->can('permanent-delete-user');
     }
+
+    /**
+     * Determine whether the user can view any doctors.
+     */
+    public function viewAnyDoctors(User $user): bool
+    {
+        return $user->hasPermissionTo('doctor-profile-access');
+    }
+
+    public function viewDoctor(User $user, User $doctor): bool
+    {
+        return $user->id === $doctor->id
+            || $user->hasPermissionTo('show-doctor-profile');
+    }
+
+    public function createDoctor(User $user): bool
+    {
+        return $user->hasPermissionTo('create-doctor-profile');
+    }
+
+    public function updateDoctor(User $user, User $doctor): bool
+    {
+        return $user->id === $doctor->id
+            || $user->hasPermissionTo('edit-doctor-profile');
+    }
+
+    public function deleteDoctor(User $user, User $doctor): bool
+    {
+        // Never allow deleting your own account
+        if ($user->id === $doctor->id) {
+            return false;
+        }
+
+        return $user->hasPermissionTo('delete-doctor-profile');
+    }
 }
