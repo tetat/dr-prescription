@@ -20,29 +20,17 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\PrintController;
 use Illuminate\Support\Facades\Route;
-use Laravel\Fortify\Features;
+// use Laravel\Fortify\Features;
 
-Route::inertia('/', 'welcome', [
-    'canRegister' => Features::enabled(Features::registration()),
-    // 'canRegister' => false,
-])->name('home');
+// Route::inertia('/', 'welcome', [
+//     'canRegister' => Features::enabled(Features::registration()),
+//     // 'canRegister' => false,
+// ])->name('home');
 
-// Route::get('/test-doctor-permissions/{doctor}', function (
-//     \App\Models\DoctorProfile $doctor
-// ) {
-//     $user = auth()->user();
-
-//     return [
-//         'viewAny' => $user->can('viewAny', \App\Models\DoctorProfile::class),
-//         'view' => $user->can('view', $doctor),
-//         'update' => $user->can('update', $doctor),
-//         'delete' => $user->can('delete', $doctor),
-
-//         'show_permission' => $user->hasPermissionTo('show-doctor-profile'),
-//         'edit_permission' => $user->hasPermissionTo('edit-doctor-profile'),
-//         'delete_permission' => $user->hasPermissionTo('delete-doctor-profile'),
-//     ];
-// });
+Route::get('/', fn () => auth()->check()
+    ? redirect()->route('dashboard')
+    : redirect()->route('login')
+)->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Route::inertia('dashboard', 'dashboard')->name('dashboard');
@@ -67,13 +55,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middlewareFor(['edit', 'update'], 'can:update,degree')
         ->middlewareFor(['destroy'], 'can:delete,degree');
     Route::resource('specialities', SpecialityController::class);
-    Route::resource('hospitals', HospitalController::class);
+    Route::resource('hospitals', HospitalController::class)
+        ->middlewareFor(['index'], 'can:viewAny,App\Models\Hospital')
+        ->middlewareFor(['show'], 'can:view,hospital')
+        ->middlewareFor(['create', 'store'], 'can:create,App\Models\Hospital')
+        ->middlewareFor(['edit', 'update'], 'can:update,hospital')
+        ->middlewareFor(['destroy'], 'can:delete,hospital');
     Route::resource('patients', PatientController::class);
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class)->only('index');
     Route::resource('tests', TestController::class);
-    Route::resource('examinations', ExaminationController::class);
+    Route::resource('examinations', ExaminationController::class)
+        ->middlewareFor(['index'], 'can:viewAny,App\Models\Examination')
+        ->middlewareFor(['show'], 'can:view,examination')
+        ->middlewareFor(['create', 'store'], 'can:create,App\Models\Examination')
+        ->middlewareFor(['edit', 'update'], 'can:update,examination')
+        ->middlewareFor(['destroy'], 'can:delete,examination');
     Route::resource('medicine-groups', MedicineGroupController::class);
     Route::resource('med-forms', MedFormController::class);
     Route::resource('medicines', MedicineController::class);

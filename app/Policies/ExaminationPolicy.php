@@ -13,7 +13,7 @@ class ExaminationPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->hasPermissionTo('examination-access');
     }
 
     /**
@@ -21,7 +21,7 @@ class ExaminationPolicy
      */
     public function view(User $user, Examination $examination): bool
     {
-        return false;
+        return $user->hasPermissionTo('show-examination');
     }
 
     /**
@@ -29,7 +29,7 @@ class ExaminationPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->hasPermissionTo('create-examination');
     }
 
     /**
@@ -37,7 +37,7 @@ class ExaminationPolicy
      */
     public function update(User $user, Examination $examination): bool
     {
-        return false;
+        return $user->hasPermissionTo('edit-examination');
     }
 
     /**
@@ -45,7 +45,7 @@ class ExaminationPolicy
      */
     public function delete(User $user, Examination $examination): bool
     {
-        return false;
+        return $user->hasPermissionTo('delete-examination');
     }
 
     /**

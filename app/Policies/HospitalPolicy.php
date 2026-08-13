@@ -12,7 +12,7 @@ class HospitalPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->hasPermissionTo('hospital-access');
     }
 
     /**
@@ -20,7 +20,7 @@ class HospitalPolicy
      */
     public function view(User $user, Hospital $hospital): bool
     {
-        return false;
+        return $user->hasPermissionTo('show-hospital');
     }
 
     /**
@@ -28,7 +28,7 @@ class HospitalPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->hasPermissionTo('create-hospital');
     }
 
     /**
@@ -36,7 +36,7 @@ class HospitalPolicy
      */
     public function update(User $user, Hospital $hospital): bool
     {
-        return false;
+        return $user->hasPermissionTo('edit-hospital');
     }
 
     /**
@@ -44,7 +44,7 @@ class HospitalPolicy
      */
     public function delete(User $user, Hospital $hospital): bool
     {
-        return false;
+        return $user->hasPermissionTo('delete-hospital');
     }
 
     /**
