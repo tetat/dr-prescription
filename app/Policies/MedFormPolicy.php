@@ -13,7 +13,7 @@ class MedFormPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->hasPermissionTo('med-form-access');
     }
 
     /**
@@ -21,7 +21,7 @@ class MedFormPolicy
      */
     public function view(User $user, MedForm $medForm): bool
     {
-        return false;
+        return $user->hasPermissionTo('show-med-form');
     }
 
     /**
@@ -29,7 +29,7 @@ class MedFormPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->hasPermissionTo('create-med-form');
     }
 
     /**
@@ -37,7 +37,7 @@ class MedFormPolicy
      */
     public function update(User $user, MedForm $medForm): bool
     {
-        return false;
+        return $user->hasPermissionTo('edit-med-form');
     }
 
     /**
@@ -45,7 +45,7 @@ class MedFormPolicy
      */
     public function delete(User $user, MedForm $medForm): bool
     {
-        return false;
+        return $user->hasPermissionTo('delete-med-form');
     }
 
     /**

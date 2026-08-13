@@ -227,6 +227,58 @@ class PermissionSeeder extends Seeder
                 'name' => 'delete-medicine',
                 'group' => 'medicines'
             ],
+            // 💊 MEDICINE FORMS
+            [
+                'label' => 'Medicine Form Access',
+                'name' => 'med-form-access',
+                'group' => 'med_forms'
+            ],
+            [
+                'label' => 'Create Medicine Form',
+                'name' => 'create-med-form',
+                'group' => 'med_forms'
+            ],
+            [
+                'label' => 'Show Medicine Form',
+                'name' => 'show-med-form',
+                'group' => 'med_forms'
+            ],
+            [
+                'label' => 'Edit Medicine Form',
+                'name' => 'edit-med-form',
+                'group' => 'med_forms'
+            ],
+            [
+                'label' => 'Delete Medicine Form',
+                'name' => 'delete-med-form',
+                'group' => 'med_forms'
+            ],
+            // 💊 MEDICINE GROUPS
+            [
+                'label' => 'Medicine Group Access',
+                'name' => 'medicine-group-access',
+                'group' => 'medicine_groups'
+            ],
+            [
+                'label' => 'Create Medicine Group',
+                'name' => 'create-medicine-group',
+                'group' => 'medicine_groups'
+            ],
+            [
+                'label' => 'Show Medicine Group',
+                'name' => 'show-medicine-group',
+                'group' => 'medicine_groups'
+            ],
+            [
+                'label' => 'Edit Medicine Group',
+                'name' => 'edit-medicine-group',
+                'group' => 'medicine_groups'
+            ],
+            [
+                'label' => 'Delete Medicine Group',
+                'name' => 'delete-medicine-group',
+                'group' => 'medicine_groups'
+            ],
             // 🧬 SPECIALITIES
             [
                 'label' => 'Speciality Access',

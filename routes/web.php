@@ -42,39 +42,54 @@ Route::middleware(['auth', 'verified'])->group(function () {
     );
 
     Route::resource('doctors', DoctorProfileController::class)
-        ->middlewareFor('index', 'can:viewAnyDoctors,App\Models\User')
-        ->middlewareFor('show', 'can:viewDoctor,doctor')
-        ->middlewareFor(['create', 'store'], 'can:createDoctor,App\Models\User')
-        ->middlewareFor(['edit', 'update'], 'can:updateDoctor,doctor')
-        ->middlewareFor('destroy', 'can:deleteDoctor,doctor');
+        ->middlewareFor('index', 'permission:doctor-profile-access')
+        ->middlewareFor('show', 'permission:show-doctor-profile')
+        ->middlewareFor(['create', 'store'], 'permission:create-doctor-profile')
+        ->middlewareFor(['edit', 'update'], 'permission:edit-doctor-profile')
+        ->middlewareFor('destroy', 'permission:delete-doctor-profile');
     Route::resource('institutes', InstituteController::class);
     Route::resource('degrees', DegreeController::class)
-        ->middlewareFor(['index'], 'can:viewAny,App\Models\Degree')
-        ->middlewareFor(['show'], 'can:view,degree')
-        ->middlewareFor(['create', 'store'], 'can:create,App\Models\Degree')
-        ->middlewareFor(['edit', 'update'], 'can:update,degree')
-        ->middlewareFor(['destroy'], 'can:delete,degree');
+        ->middlewareFor('index', 'permission:degree-access')
+        ->middlewareFor('show', 'permission:show-degree')
+        ->middlewareFor(['create', 'store'], 'permission:create-degree')
+        ->middlewareFor(['edit', 'update'], 'permission:edit-degree')
+        ->middlewareFor('destroy', 'permission:delete-degree');
     Route::resource('specialities', SpecialityController::class);
     Route::resource('hospitals', HospitalController::class)
-        ->middlewareFor(['index'], 'can:viewAny,App\Models\Hospital')
-        ->middlewareFor(['show'], 'can:view,hospital')
-        ->middlewareFor(['create', 'store'], 'can:create,App\Models\Hospital')
-        ->middlewareFor(['edit', 'update'], 'can:update,hospital')
-        ->middlewareFor(['destroy'], 'can:delete,hospital');
+        ->middlewareFor('index', 'permission:hospital-access')
+        ->middlewareFor('show', 'permission:show-hospital')
+        ->middlewareFor(['create', 'store'], 'permission:create-hospital')
+        ->middlewareFor(['edit', 'update'], 'permission:edit-hospital')
+        ->middlewareFor('destroy', 'permission:delete-hospital');
     Route::resource('patients', PatientController::class);
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class)->only('index');
     Route::resource('tests', TestController::class);
     Route::resource('examinations', ExaminationController::class)
-        ->middlewareFor(['index'], 'can:viewAny,App\Models\Examination')
-        ->middlewareFor(['show'], 'can:view,examination')
-        ->middlewareFor(['create', 'store'], 'can:create,App\Models\Examination')
-        ->middlewareFor(['edit', 'update'], 'can:update,examination')
-        ->middlewareFor(['destroy'], 'can:delete,examination');
-    Route::resource('medicine-groups', MedicineGroupController::class);
-    Route::resource('med-forms', MedFormController::class);
-    Route::resource('medicines', MedicineController::class);
+        ->middlewareFor('index', 'permission:examination-access')
+        ->middlewareFor('show', 'permission:show-examination')
+        ->middlewareFor(['create', 'store'], 'permission:create-examination')
+        ->middlewareFor(['edit', 'update'], 'permission:edit-examination')
+        ->middlewareFor('destroy', 'permission:delete-examination');
+    Route::resource('medicine-groups', MedicineGroupController::class)
+        ->middlewareFor('index', 'permission:medicine-group-access')
+        ->middlewareFor('show', 'permission:show-medicine-group')
+        ->middlewareFor(['create', 'store'], 'permission:create-medicine-group')
+        ->middlewareFor(['edit', 'update'], 'permission:edit-medicine-group')
+        ->middlewareFor('destroy', 'permission:delete-medicine-group');
+    Route::resource('med-forms', MedFormController::class)
+        ->middlewareFor('index', 'permission:med-form-access')
+        ->middlewareFor('show', 'permission:show-med-form')
+        ->middlewareFor(['create', 'store'], 'permission:create-med-form')
+        ->middlewareFor(['edit', 'update'], 'permission:edit-med-form')
+        ->middlewareFor('destroy', 'permission:delete-med-form');
+    Route::resource('medicines', MedicineController::class)
+        ->middlewareFor('index', 'permission:medicine-access')
+        ->middlewareFor('show', 'permission:show-medicine')
+        ->middlewareFor(['create', 'store'], 'permission:create-medicine')
+        ->middlewareFor(['edit', 'update'], 'permission:edit-medicine')
+        ->middlewareFor('destroy', 'permission:delete-medicine');
     Route::resource('prescriptions', PrescriptionController::class)
         ->middleware('role:doctor');
     Route::get('print/prescription/{prescription_id}', [PrintController::class, 'prescription'])
