@@ -149,6 +149,32 @@ class PermissionSeeder extends Seeder
                 'name' => 'delete-examination',
                 'group' => 'examinations'
             ],
+            // Institutes
+            [
+                'label' => 'Institute Access',
+                'name' => 'institute-access',
+                'group' => 'institutes'
+            ],
+            [
+                'label' => 'Create Institute',
+                'name' => 'create-institute',
+                'group' => 'institutes'
+            ],
+            [
+                'label' => 'Show Institute',
+                'name' => 'show-institute',
+                'group' => 'institutes'
+            ],
+            [
+                'label' => 'Edit Institute',
+                'name' => 'edit-institute',
+                'group' => 'institutes'
+            ],
+            [
+                'label' => 'Delete Institute',
+                'name' => 'delete-institute',
+                'group' => 'institutes'
+            ],
             // 🎓 DEGREES
             [
                 'label' => 'Degree Access',
@@ -200,6 +226,32 @@ class PermissionSeeder extends Seeder
                 'label' => 'Delete Doctor Profile',
                 'name' => 'delete-doctor-profile',
                 'group' => 'doctor_profiles'
+            ],
+            // Patients
+            [
+                'label' => 'Patient Access',
+                'name' => 'patient-access',
+                'group' => 'patients'
+            ],
+            [
+                'label' => 'Create Patient',
+                'name' => 'create-patient',
+                'group' => 'patients'
+            ],
+            [
+                'label' => 'Show Patient',
+                'name' => 'show-patient',
+                'group' => 'patients'
+            ],
+            [
+                'label' => 'Edit Patient',
+                'name' => 'edit-patient',
+                'group' => 'patients'
+            ],
+            [
+                'label' => 'Delete Patient',
+                'name' => 'delete-patient',
+                'group' => 'patients'
             ],
             // 💊 MEDICINES
             [

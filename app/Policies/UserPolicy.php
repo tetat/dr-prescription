@@ -19,6 +19,9 @@ class UserPolicy
      */
     public function view(User $authUser, User $user): bool
     {
+        if ($authUser->id === $user->id) {
+            return true;
+        }
         return $authUser->can('show-user');
     }
 
@@ -35,11 +38,8 @@ class UserPolicy
      */
     public function update(User $authUser, User $user): bool
     {
-        if (
-            $user->hasRole('super-admin') &&
-            !$authUser->hasRole('super-admin')
-        ) {
-            return false;
+        if ($authUser->id === $user->id) {
+            return true;
         }
 
         return $authUser->can('edit-user');

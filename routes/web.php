@@ -42,30 +42,61 @@ Route::middleware(['auth', 'verified'])->group(function () {
     );
 
     Route::resource('doctors', DoctorProfileController::class)
-        ->middlewareFor('index', 'permission:doctor-profile-access')
-        ->middlewareFor('show', 'permission:show-doctor-profile')
-        ->middlewareFor(['create', 'store'], 'permission:create-doctor-profile')
-        ->middlewareFor(['edit', 'update'], 'permission:edit-doctor-profile')
-        ->middlewareFor('destroy', 'permission:delete-doctor-profile');
-    Route::resource('institutes', InstituteController::class);
+        ->middlewareFor('index', 'can:viewAnyDoctors,App\Models\User')
+        ->middlewareFor('show', 'can:viewDoctor,doctor')
+        ->middlewareFor(['create', 'store'], 'can:createDoctor,App\Models\User')
+        ->middlewareFor(['edit', 'update'], 'can:updateDoctor,doctor')
+        ->middlewareFor('destroy', 'can:deleteDoctor,doctor');
+    Route::resource('institutes', InstituteController::class)
+        ->middlewareFor('index', 'permission:institute-access')
+        ->middlewareFor('show', 'permission:show-institute')
+        ->middlewareFor(['create', 'store'], 'permission:create-institute')
+        ->middlewareFor(['edit', 'update'], 'permission:edit-institute')
+        ->middlewareFor('destroy', 'permission:delete-institute');
     Route::resource('degrees', DegreeController::class)
         ->middlewareFor('index', 'permission:degree-access')
         ->middlewareFor('show', 'permission:show-degree')
         ->middlewareFor(['create', 'store'], 'permission:create-degree')
         ->middlewareFor(['edit', 'update'], 'permission:edit-degree')
         ->middlewareFor('destroy', 'permission:delete-degree');
-    Route::resource('specialities', SpecialityController::class);
+    Route::resource('specialities', SpecialityController::class)
+        ->middlewareFor('index', 'permission:speciality-access')
+        ->middlewareFor('show', 'permission:show-speciality')
+        ->middlewareFor(['create', 'store'], 'permission:create-speciality')
+        ->middlewareFor(['edit', 'update'], 'permission:edit-speciality')
+        ->middlewareFor('destroy', 'permission:delete-speciality');
     Route::resource('hospitals', HospitalController::class)
         ->middlewareFor('index', 'permission:hospital-access')
         ->middlewareFor('show', 'permission:show-hospital')
         ->middlewareFor(['create', 'store'], 'permission:create-hospital')
         ->middlewareFor(['edit', 'update'], 'permission:edit-hospital')
         ->middlewareFor('destroy', 'permission:delete-hospital');
-    Route::resource('patients', PatientController::class);
-    Route::resource('users', UserController::class);
-    Route::resource('roles', RoleController::class);
-    Route::resource('permissions', PermissionController::class)->only('index');
-    Route::resource('tests', TestController::class);
+    Route::resource('patients', PatientController::class)
+        ->middlewareFor('index', 'permission:patient-access')
+        ->middlewareFor('show', 'permission:show-patient')
+        ->middlewareFor(['create', 'store'], 'permission:create-patient')
+        ->middlewareFor(['edit', 'update'], 'permission:edit-patient')
+        ->middlewareFor('destroy', 'permission:delete-patient');
+    Route::resource('users', UserController::class)
+        ->middlewareFor('index', 'can:viewAny,App\Models\User')
+        ->middlewareFor('show', 'can:view,user')
+        ->middlewareFor(['create', 'store'], 'can:create,App\Models\User')
+        ->middlewareFor(['edit', 'update'], 'can:update,user')
+        ->middlewareFor('destroy', 'can:delete,user');
+    Route::resource('roles', RoleController::class)
+        ->middlewareFor('index', 'permission:role-access')
+        ->middlewareFor('show', 'permission:show-role')
+        ->middlewareFor(['create', 'store'], 'permission:create-role')
+        ->middlewareFor(['edit', 'update'], 'permission:edit-role')
+        ->middlewareFor('destroy', 'permission:delete-role');
+    Route::resource('permissions', PermissionController::class)->only('index')
+        ->middlewareFor('index', 'permission:permission-access');
+    Route::resource('tests', TestController::class)
+        ->middlewareFor('index', 'permission:test-access')
+        ->middlewareFor('show', 'permission:show-test')
+        ->middlewareFor(['create', 'store'], 'permission:create-test')
+        ->middlewareFor(['edit', 'update'], 'permission:edit-test')
+        ->middlewareFor('destroy', 'permission:delete-test');
     Route::resource('examinations', ExaminationController::class)
         ->middlewareFor('index', 'permission:examination-access')
         ->middlewareFor('show', 'permission:show-examination')
