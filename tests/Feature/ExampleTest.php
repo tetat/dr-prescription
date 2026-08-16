@@ -1,15 +1,9 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-// it('returns a successful response', function () {
-//     // $response = $this->get('/');
-
-//     // $response->assertStatus(200);
-//     $response = $this->get('/');
-
-//     $response->assertRedirect('/dashboard');
-// });
+uses(RefreshDatabase::class);
 
 it('redirects authenticated users to dashboard', function () {
     $user = User::factory()->create();
